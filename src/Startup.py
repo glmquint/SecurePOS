@@ -5,7 +5,7 @@ def send_message(message):
     system = {"Ingestion_system", "Preparation_system", "Segregation_system", "Development_system",
               "Production_system", "Evaluation_system"}
     for sys in system:
-        url = "http://localhost:5000/"+sys
+        url = "http://localhost:5000/system/"+sys
         headers = {"Content-Type": "application/json"}
         data = {"message": message}
 
