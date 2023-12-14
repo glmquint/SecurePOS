@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Configuration form</title>
+</head>
+<body>
+    <form action={{vars.url}} method="post">
+        {% for elem in vars.elements %}
+            <label for="{{elem['name']}}">{{elem['name']}}</label>
+            <input type="{{elem['type']}}" name="{{elem['name']}}" id="{{elem['name']}}">
+            <br>
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
