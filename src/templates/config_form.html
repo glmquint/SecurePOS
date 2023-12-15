@@ -5,10 +5,10 @@
     <title>Configuration form</title>
 </head>
 <body>
-    <form action={{vars.url}} method="post">
+    <form action={{vars.url}} method="post" enctype="multipart/form-data">
         {% for elem in vars.elements %}
-            <label for="{{elem['name']}}">{{elem['name']}}</label>
-            <input type="{{elem['type']}}" name="{{elem['name']}}" id="{{elem['name']}}">
+            <label for="{{elem['name']}}">{{elem['name']}} ({{elem['value']}})</label>
+            <input type="{{elem['type']}}" name="{{elem['name']}}" id="{{elem['name']}}" value="{{elem['value']}}">
             <br>
         {% endfor %}
         <input type="submit" value="Submit">

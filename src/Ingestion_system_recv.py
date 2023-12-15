@@ -18,16 +18,19 @@ class IngestionSystem:
             'url': '/system/Ingestion_system/config',
             'elements': [
                 {'name': 'integer_param',
-                 'type': 'number'},
+                 'type': 'number',
+                 'value': self.integer_param},
                 {'name': 'string_param',
-                 'type': 'text'},
+                 'type': 'text',
+                 'value': self.string_param},
                 {'name': 'string_param2',
-                    'type': 'text'}
+                    'type': 'text',
+                    'value': self.string_param2}
             ]}
     def setup(self, data):
-        self.integer_param = int(data['integer_param'])
-        self.string_param = data['string_param']
-        self.string_param2 = data['string_param2']
+        self.integer_param = int(data.form['integer_param'])
+        self.string_param = data.form['string_param']
+        self.string_param2 = data.form['string_param2']
     def __str__(self):
         return f"Integer param: {self.integer_param} String param: {self.string_param}, {self.string_param2}"
 
@@ -39,15 +42,18 @@ class PreparationSystem:
             'url': '/system/Preparation_system/config',
             'elements': [
                 {'name': 'prepare_int',
-                 'type': 'number'},
+                 'type': 'number',
+                 'value': self.prepare_int},
                 {'name': 'prepare_str',
-                 'type': 'text'}
+                 'type': 'text',
+                 'value': self.prepare_str}
             ]}
     def setup(self, data):
-        self.prepare_int = int(data['prepare_int'])
-        self.prepare_str = data['prepare_str']
+        self.prepare_int = int(data.form['prepare_int'])
+        self.prepare_str = data.form['prepare_str']
     def __str__(self):
         return f"Integer param: {self.prepare_str} String param: {self.prepare_str}"
+
 class SegregationSystem:
     config_file= None
     def build(self):
@@ -56,14 +62,15 @@ class SegregationSystem:
             'elements':[
                 {
                     'name': 'config_file',
-                    'type': 'file'
+                    'type': 'file',
+                    'value': self.config_file.filename if self.config_file is not None else ''
                 }
             ]
         }
     def setup(self, data):
-        self.config_file = data['config_file']
+        self.config_file = data.files['config_file']
     def __str__(self):
-        return f'{self.config_file} {type(self.config_file)}'
+        return f'type: {type(self.config_file)} content: {self.config_file}'
 
 
 systems['Ingestion_system'] = IngestionSystem()
@@ -98,9 +105,7 @@ def set_config(route):
     if (route not in systems):
         # return a 404 error to the client
         return {'status': 'error', 'message': 'Invalid route'}, 404
-    data = request.form
-    print(data)
-    systems[route].setup(data)
+    systems[route].setup(request)
     print(f"{systems[route]}")
     return {'status': 'success', 'message': 'Config saved'}, 200
 
