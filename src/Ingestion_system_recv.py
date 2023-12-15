@@ -73,9 +73,69 @@ class SegregationSystem:
         return f'type: {type(self.config_file)} content: {self.config_file}'
 
 
+class DevelopmentSystem:
+    dev_int = 0
+    dev_str = ""
+    def build(self):
+        return {
+            'url': '/system/Development_system/config',
+            'elements': [
+                {'name': 'dev_int',
+                 'type': 'number',
+                 'value': 0},
+                {'name': 'dev_str',
+                 'type': 'text',
+                 'value': ''}
+            ]}
+    def setup(self, data):
+        pass
+    def __str__(self):
+        return f""
+
+class ProductionSystem:
+    prod_int = 0
+    prod_str = ""
+    def build(self):
+        return {
+            'url': '/system/Production_system/config',
+            'elements': [
+                {'name': 'prod_int',
+                 'type': 'number',
+                 'value': 0},
+                {'name': 'prod_str',
+                 'type': 'text',
+                 'value': ''}
+            ]}
+    def setup(self, data):
+        pass
+    def __str__(self):
+        return f""
+class EvaluationSystem:
+    eval_int = 0
+    eval_str = ""
+    def build(self):
+        return {
+            'url': '/system/Evaluation_system/config',
+            'elements': [
+                {'name': 'eval_int',
+                 'type': 'number',
+                 'value': 0},
+                {'name': 'eval_str',
+                 'type': 'text',
+                 'value': ''}
+            ]}
+    def setup(self, data):
+        pass
+    def __str__(self):
+        return f""
+
+
 systems['Ingestion_system'] = IngestionSystem()
 systems['Preparation_system'] = PreparationSystem()
 systems['Segregation_system'] = SegregationSystem()
+systems['Development_system'] = DevelopmentSystem()
+systems['Production_system'] = ProductionSystem()
+systems['Evaluation_system'] = EvaluationSystem()
 
 
 @app.route('/system/<path:route>', methods=['POST'])
