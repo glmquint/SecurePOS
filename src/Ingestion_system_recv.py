@@ -48,9 +48,28 @@ class PreparationSystem:
         self.prepare_str = data['prepare_str']
     def __str__(self):
         return f"Integer param: {self.prepare_str} String param: {self.prepare_str}"
+class SegregationSystem:
+    config_file= None
+    def build(self):
+        return{
+            'url': '/system/Segregation_system/config',
+            'elements':[
+                {
+                    'name': 'config_file',
+                    'type': 'file'
+                }
+            ]
+        }
+    def setup(self, data):
+        self.config_file = data['config_file']
+    def __str__(self):
+        return f'{self.config_file} {type(self.config_file)}'
+
 
 systems['Ingestion_system'] = IngestionSystem()
 systems['Preparation_system'] = PreparationSystem()
+systems['Segregation_system'] = SegregationSystem()
+
 
 @app.route('/system/<path:route>', methods=['POST'])
 def receive_message(route):
