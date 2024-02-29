@@ -14,7 +14,7 @@ class JSONValidator:
         validator = Draft7Validator(self.schema)
         errors = list(validator.iter_errors(data))
         if errors:
-            error_messages = [error.message for error in errors]
+            error_messages = "\n".join(errors)
             raise ValidationError(error_messages)
         else:
             print("Validation successful")

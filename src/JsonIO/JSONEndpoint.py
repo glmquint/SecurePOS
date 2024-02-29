@@ -4,11 +4,19 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 class JSONEndpoint(Resource):
 
-    def post(self):
+    def __init__(self, **kwargs):
+        self.recv_callback = kwargs['recv_callback']
+        self.json_validator = JSONValidator(kwargs['json_schema_path'])
+
+    def post(self, **kwargs):
+        if not request.is_json:
+            return "Expected JSON", 460
         json_data = request.get_json()
-        if self.json_validator.validate_data(json_data):
+        try:
+            self.json_validator.validate_data(json_data)
             self.recv_callback(json_data)
             return "OK", 200
-        else:
+        except Exception as e:
+            print(e)
             return "Bad Request", 400
 

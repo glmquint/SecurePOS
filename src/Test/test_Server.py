@@ -1,23 +1,26 @@
+import os
+import signal
+from multiprocessing import Process
+from threading import Thread
+from flask import request
+
 import requests
 from src.JsonIO.Server import Server
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 
-def setup_server():
+def server_setup():
     server = Server()
-    def test_callback(json_data):
-        print(json_data)
-        pass
-    test_endpoint = JSONEndpoint(test_callback, "../DataObjects/Schema/AttackRiskLabelSchema.json")
-    server.add_resource(resource=test_endpoint, url="/test_endpoint")
-    server.run(debug=False)
+    test_callback = lambda json_data: print(f"Hello from test_callback. Received {json_data}")
+    server.add_resource(JSONEndpoint, "/test_endpoint", recv_callback=test_callback, json_schema_path="../DataObjects/Schema/AttackRiskLabelSchema.json")
+
+    # start server without blocking the main thread
+    thread = Thread(target=server.run)
+    thread.daemon = True
+    thread.start()
 
 def test_add_resource():
-    # setup on a new thread
-    import threading
-    server_thread = threading.Thread(target=setup_server)
-    server_thread.start()
-    # test
-    r = requests.post("http://localhost:5000/test_endpoint", json={"test": "test"})
-    print(r)
-    input()
-    assert r.status_code == 200
+    server_setup()
+
+    req = requests.post("http://127.0.0.1:5000/test_endpoint", json={"attackRiskLabel": "low"})
+    assert req.status_code == 200
+
