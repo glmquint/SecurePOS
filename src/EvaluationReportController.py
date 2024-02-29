@@ -23,4 +23,9 @@ class EvaluationReportController:
         self.evaluation.ConsecutiveError = consecutiverror
         self.evaluation.labels = labels
         self.reportviewer.update(self.evaluation)
+        if self.evaluation.result == "no":
+            print("Classifier has been rejected.")
+        else:
+            print("Classifier passed the check.")
         return
+
