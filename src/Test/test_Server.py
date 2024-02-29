@@ -13,14 +13,18 @@ def server_setup():
     test_callback = lambda json_data: print(f"Hello from test_callback. Received {json_data}")
     server.add_resource(JSONEndpoint, "/test_endpoint", recv_callback=test_callback, json_schema_path="../DataObjects/Schema/AttackRiskLabelSchema.json")
 
-    # start server without blocking the main thread
     thread = Thread(target=server.run)
-    thread.daemon = True
+    thread.daemon = True # this will allow the main thread to exit even if the server is still running
     thread.start()
 
-def test_add_resource():
+def test_add_resource(): # 100% coverage
     server_setup()
 
-    req = requests.post("http://127.0.0.1:5000/test_endpoint", json={"attackRiskLabel": "low"})
+    req = requests.post("http://127.0.0.1:5000/test_endpoint", json={"attackRiskLabel": "low"}) # correct key
     assert req.status_code == 200
 
+    req = requests.post("http://127.0.0.1:5000/test_endpoint", json={"attackRiskLabe": "low"}) # misspelled key
+    assert req.status_code == 400
+
+    req = requests.post("http://127.0.0.1:5000/test_endpoint", data="not valid json") # not json
+    assert req.status_code == 460
