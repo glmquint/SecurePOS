@@ -1,0 +1,10 @@
+{
+    "type": "object",
+    "properties": {
+        "attackRiskLabel": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+        }
+    },
+    "required": ["attackRiskLabel"]
+}
