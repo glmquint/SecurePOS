@@ -3,7 +3,7 @@ import numpy as np
 import PreparedSession
 
 
-class CheckDataBalance:
+class CheckDataBalanceView:
     toleraceParameter = 0
 
     def __init__(self, toleraceParameter):
@@ -52,7 +52,7 @@ class CheckDataBalance:
 
 
 def test():
-    c = CheckDataBalance(5)
+    c = CheckDataBalanceView(5)
     p1 = []
     for i in range(0, 20):
         p1.append(PreparedSession(0, 0, 0, 0, 0, 0, "High"))

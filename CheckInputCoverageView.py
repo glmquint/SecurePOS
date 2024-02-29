@@ -7,9 +7,9 @@ from random import random
 from PreparedSession import *
 
 
-class CheckInputCoverage:
+class CheckInputCoverageView:
 
-    def plotCheckinputCoverage(self, PreparedSessionList):
+    def plotCheckinputCoverageView(self, PreparedSessionList):
 
         labels = ['MeanAbsoluteDifferencingTransactionTimestamps',
                   'MeanAbsoluteDifferencingTransactionAmount',
@@ -61,7 +61,7 @@ class CheckInputCoverage:
 
 
 def test():
-    c = CheckInputCoverage()
+    c = CheckInputCoverageView()
     p1 = []
     for i in range(0, 20):
         p1.append(PreparedSession(random(), random(), random(), random(), random(), random(), "High"))
@@ -74,4 +74,4 @@ def test():
     for i in range(0, 18):
         p3.append(PreparedSession(random(), random(), random(), random(), random(), random(), "Low"))
 
-    c.plotCheckinputCoverage(p1 + p2 + p3)
+    c.plotCheckinputCoverageView(p1 + p2 + p3)
