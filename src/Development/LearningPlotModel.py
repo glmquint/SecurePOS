@@ -1,4 +1,5 @@
 from src.Storage.StorageController import StorageController
+from src.Storage.dbConfig import DBConfig
 
 
 class LearningPlotModel:
@@ -6,5 +7,6 @@ class LearningPlotModel:
     number_of_generations: int = None
     loss_threshold: float = None
 
-    def populate(self, st: StorageController):
-        list = st.retrieveAll()
+    def populate(self, storage_controller: StorageController):
+        list = storage_controller.retrieveAll()
+        print(list)
