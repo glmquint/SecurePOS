@@ -1,6 +1,6 @@
 from unittest import TestCase
-from dbConfig import DBConfig
-from StorageController import StorageController
+from src.Storage.dbConfig import DBConfig
+from src.Storage.StorageController import StorageController
 
 class TestStorageController(TestCase):
     class Object:
@@ -16,20 +16,20 @@ class TestStorageController(TestCase):
 
     def test_retrieveAll(self):
         st = StorageController(self.dbConf, type(self.obj))
-        print(st.retrieveAll())
+        print(st.retrieve_all())
 
     def test_removeAll(self):
         st = StorageController(self.dbConf, type(self.obj))
-        st.removeAll()
-        print(st.retrieveAll())
+        st.remove_all()
+        print(st.retrieve_all())
 
     def test_insertAndRemove(self):
         st = StorageController(self.dbConf, type(self.obj))
-        st.removeAll()
+        st.remove_all()
         st.save(self.obj)
-        retrieved_obj = st.retrieveAll()
+        retrieved_obj = st.retrieve_all()
         self.assertEqual(retrieved_obj[0][1], 'Giacomo') # first element is the id
         self.assertEqual(retrieved_obj[0][2], 24)
-        st.removeAll()
-        self.assertEqual(st.retrieveAll(), [])
+        st.remove_all()
+        self.assertEqual(st.retrieve_all(), [])
         self.assertTrue(True)
