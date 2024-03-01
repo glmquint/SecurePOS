@@ -32,10 +32,11 @@ class MessageBus:
 
 
 # same testing
-msg = MessageBus(["b", "c"])
-msg.addTopic("a")
-msg.pushTopic("a", 2)
-msg.pushTopic("a", 3)
-print(msg.popTopic("a"))
-print(msg.popTopic("a"))
-print(msg.popTopic("a"))
+def testMessageBus():
+    msg = MessageBus(["b", "c"])
+    msg.addTopic("a")
+    msg.pushTopic("a", 2)
+    msg.pushTopic("a", 3)
+    print(msg.popTopic("a"))
+    print(msg.popTopic("a"))
+    print(msg.popTopic("a"))

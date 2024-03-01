@@ -15,7 +15,7 @@ class PreparedSession:
         self.MedianDestIP =  MedianDestIP
         self.label = label
 
-    def __init__(self, params):
+    def ko(self, params):
         self.MeanAbsoluteDifferencingTransactionTimestamps = params[0]
         self.MeanAbsoluteDifferencingTransactionAmount = params[1]
         self.MedianLongitude = params[2]

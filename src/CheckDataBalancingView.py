@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import PreparedSession
+from PreparedSession import *
 
 
 class CheckDataBalanceView:
@@ -66,3 +66,5 @@ def test():
         p3.append(PreparedSession(0, 0, 0, 0, 0, 0, "Low"))
 
     c.plotCheckDataBalance(p1 + p2 + p3)
+
+test()

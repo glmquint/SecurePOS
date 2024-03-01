@@ -8,6 +8,8 @@ from PreparedSession import *
 
 
 class CheckInputCoverageView:
+    def __init__(self):
+        return
 
     def plotCheckinputCoverageView(self, PreparedSessionList):
 
@@ -75,3 +77,5 @@ def test():
         p3.append(PreparedSession(random(), random(), random(), random(), random(), random(), "Low"))
 
     c.plotCheckinputCoverageView(p1 + p2 + p3)
+
+test()
