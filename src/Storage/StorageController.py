@@ -1,4 +1,3 @@
-import json
 from DBConnector import DBConnector
 
 
@@ -21,7 +20,7 @@ class StorageController:
             return False
         return True
 
-    def removeAll(self):
+    def remove_all(self):
         try:
             self.DBConnector.remove()
         except Exception as e:
@@ -29,6 +28,5 @@ class StorageController:
             return False
         return True
 
-    def retrieveAll(self):
-
+    def retrieve_all(self):
         return self.DBConnector.retrieve()
