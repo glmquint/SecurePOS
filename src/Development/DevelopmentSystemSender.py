@@ -1,2 +1,2 @@
-from JsonIO.JSONSender import JSONSender
+from src.JsonIO.JSONSender import JSONSender
 
