@@ -1,0 +1,3 @@
+class PreparationSystemConfig:
+    pass
+

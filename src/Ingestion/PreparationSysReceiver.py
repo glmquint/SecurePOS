@@ -1,0 +1,2 @@
+class PreparationSysReceiver:
+    pass
