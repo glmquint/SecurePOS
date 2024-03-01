@@ -13,7 +13,7 @@ class DBConnector:
         self.tableName = dbConfig.tableName
 
         try:
-            self.connection = sqlite3.connect(f'../db/{self.name}.db')
+            self.connection = sqlite3.connect(f'../../db/{self.name}.db')
         except sqlite3.Error as e:
             print(e)
 
@@ -22,10 +22,9 @@ class DBConnector:
         insert_query = 'INSERT INTO ' + self.tableName + '(' + ' ,'.join(self.columns) + ') VALUES (' + ', '.join(
             '?' * len(self.columns)) + ')'
         cursor.executemany(
-                insert_query,
-                row)
+            insert_query,
+            row)
         self.connection.commit()
-
 
     def remove(self):
         cursor = self.connection.cursor()
