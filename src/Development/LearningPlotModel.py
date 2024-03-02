@@ -6,8 +6,6 @@ class LearningPlotModel:
     number_of_generations: int = None
     loss_threshold: float = None
 
-    def __init__(self, storage_controller: StorageController):
-        list = storage_controller.retrieve_all()
-        self.loss = list[0][0]
-        self.number_of_generations = list[0][1]
-        self.loss_threshold = list[0][2]
+    def __init__(self, from_tuple: tuple):
+        self.loss, self.number_of_generations, self.loss_threshold = from_tuple
+
