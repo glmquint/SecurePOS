@@ -1,0 +1,6 @@
+{
+    "monitoring_window": 500,
+    "evaluation_window": 50,
+    "client_url": "http://localhost:30000",
+    "evaluation_url": "http://localhost:30000/evaluate"
+}
