@@ -1,4 +1,4 @@
-from DBConnector import DBConnector
+from src.Storage.DBConnector import DBConnector
 
 
 class StorageController:
@@ -29,4 +29,6 @@ class StorageController:
         return True
 
     def retrieve_all(self):
-        return self.DBConnector.retrieve()
+        data_elem = self.DBConnector.retrieve()
+        return [self.type(elem) for elem in data_elem]
+
