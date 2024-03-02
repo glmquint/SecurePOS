@@ -30,7 +30,6 @@ class StorageController:
 
     def retrieve_all(self):
         data_elem = self.DBConnector.retrieve()
-        print(data_elem)
         return [self.type(elem) for elem in data_elem]
 
     def count(self):
