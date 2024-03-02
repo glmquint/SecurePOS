@@ -9,15 +9,17 @@ class ReportController:
     ValidationReport = None
     TestReport = None
 
+    def __init__(self) -> None:
+        pass
 
-def __init__() -> None:
-    pass
+    def create_learning_plot(self):
+        db_conf = DBConfig('training', 'learning_plot', ['loss', 'number_of_generations', 'loss_threshold'])
+        storage_controller = StorageController(db_conf, type(LearningPlotModel((0, 0, 0))))
+        learning_plot_models = storage_controller.retrieve_all()
+        print(learning_plot_models)
+        # learning_plot_view = LearningPlotView('learning_plot', learning_plot_models[0])
+        # learning_plot_view.update()
 
 
-def create_learning_plot():
-    db_conf = DBConfig('training', 'learning_plot', ['loss', 'number_of_generations', 'loss_threshold'])
-    storage_controller = StorageController(db_conf, type(None))
-    learning_plot_model = LearningPlotModel(storage_controller)
-    learning_plot_view = LearningPlotView('learning_plot', learning_plot_model)
-    learning_plot_view.update()
-
+ReportController = ReportController()
+ReportController.create_learning_plot()
