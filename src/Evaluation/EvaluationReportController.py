@@ -1,5 +1,5 @@
-from src.EvaluationReportModel import EvaluationReportModel
-from src.EvaluationReportViewer import EvaluationReportViewer
+from src.Evaluation.EvaluationReportModel import EvaluationReportModel
+from src.Evaluation.EvaluationReportViewer import EvaluationReportViewer
 
 
 class EvaluationReportController:
