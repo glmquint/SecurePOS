@@ -8,6 +8,8 @@ from PreparedSession import *
 
 
 class CheckInputCoverageView:
+    def __init__(self):
+        return
 
     def plotCheckinputCoverageView(self, PreparedSessionList):
 
@@ -64,14 +66,16 @@ def test():
     c = CheckInputCoverageView()
     p1 = []
     for i in range(0, 20):
-        p1.append(PreparedSession(random(), random(), random(), random(), random(), random(), "High"))
+        p1.append(PreparedSession([random(), random(), random(), random(), random(), random(), "High"]))
 
     p2 = []
     for i in range(0, 15):
-        p2.append(PreparedSession(random(), random(), random(), random(), random(), random(), "Medium"))
+        p2.append(PreparedSession([random(), random(), random(), random(), random(), random(), "High"]))
 
     p3 = []
     for i in range(0, 18):
-        p3.append(PreparedSession(random(), random(), random(), random(), random(), random(), "Low"))
+        p3.append(PreparedSession([random(), random(), random(), random(), random(), random(), "High"]))
 
     c.plotCheckinputCoverageView(p1 + p2 + p3)
+
+test()

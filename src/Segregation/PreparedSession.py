@@ -6,7 +6,7 @@ class PreparedSession:
     MedianTargetIP = 0
     MedianDestIP = 0
     label = ""
-    def __init__(self,selfMeanAbsoluteDifferencingTransactionTimestamps,MeanAbsoluteDifferencingTransactionAmount,MedianLongitude,MedianLatitude,MedianTargetIP,MedianDestIP,label):
+    def ko(self,selfMeanAbsoluteDifferencingTransactionTimestamps,MeanAbsoluteDifferencingTransactionAmount,MedianLongitude,MedianLatitude,MedianTargetIP,MedianDestIP,label):
         self.MeanAbsoluteDifferencingTransactionTimestamps = selfMeanAbsoluteDifferencingTransactionTimestamps
         self.MeanAbsoluteDifferencingTransactionAmount = MeanAbsoluteDifferencingTransactionAmount
         self.MedianLongitude = MedianLongitude

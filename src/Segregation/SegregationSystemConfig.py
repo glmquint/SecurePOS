@@ -1,34 +1,47 @@
+import json
+
+
 class SegregationSystemConfig:
-    sufficientSessionNumber = 0
-    messageSystemIp = 0
-    messageSystemPort = 0
-    segregationSystemIp = 0
-    segregationSystemPort = 0
-    developmentSystemIp = 0
-    developmentSystemPort = 0
-    toleraceDataBalancing = 0
+    def __init__(self):
+        with open('Configurations/segregationConfiguration.json', 'r') as file:
+            jsonParameter = json.load(file)
+        self.__sufficientSessionNumber = jsonParameter.get("sufficientSessionNumber")
+        self.__segregationSystemIp = jsonParameter.get("segregationSystemIp")
+        self.__segregationSystemPort = jsonParameter.get("segregationSystemPort")
+        self.__developmentSystemIp = jsonParameter.get("developmentSystemIp")
+        self.__developmentSystemPort = jsonParameter.get("developmentSystemPort")
+        self.__toleraceDataBalancing = jsonParameter.get("toleraceDataBalancing")
+        self.__serviceFlag = jsonParameter.get("serviceFlag")
+        self.__percentageTrainingSplit = jsonParameter.get("percentageTrainingSplit")
+        self.__percentageTestSplit = jsonParameter.get("percentageTestSplit")
+        self.__percentageValidationSplit = jsonParameter.get("percentageValidationSplit")
 
-    def __init__(self,
-                 sufficientSessionNumber ,
-                 messageSystemIp ,
-                 messageSystemPort ,
-                 segregationSystemIp ,
-                 segregationSystemPort ,
-                 developmentSystemIp ,
-                 developmentSystemPort,
-                 toleraceDataBalancing):
-        self.sufficientSessionNumber = sufficientSessionNumber
-        self.messageSystemIp = messageSystemIp
-        self.messageSystemPort = messageSystemPort
-        self.segregationSystemIp = segregationSystemIp
-        self.segregationSystemPort = segregationSystemPort
-        self.developmentSystemIp = developmentSystemIp
-        self.developmentSystemPort = developmentSystemPort
-        self.toleraceDataBalancing = toleraceDataBalancing
+    def getSufficientSessionNumber(self):
+        return self.__sufficientSessionNumber
 
+    def getSegregationSystemIp(self):
+        return self.__segregationSystemIp
 
+    def geSegregationSystemPort(self):
+        return self.__segregationSystemPort
 
+    def getDevelopmentSystemIp(self):
+        return self.__developmentSystemIp
 
+    def getDevelopmentSystemPort(self):
+        return self.__developmentSystemPort
 
+    def getToleranceDataBalancing(self):
+        return self.__toleraceDataBalancing
 
+    def getServiceFlag(self):
+        return self.__serviceFlag
 
+    def getPercentageTrainingSplit(self):
+        return self.__percentageTrainingSplit
+
+    def getPercentageTestSplit(self):
+        return self.__percentageTestSplit
+
+    def getPercentageValidationSplit(self):
+        return self.__percentageValidationSplit

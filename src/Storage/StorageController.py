@@ -1,5 +1,5 @@
 import json
-from DBConnector import DBConnector
+from src.Storage.DBConnector import DBConnector
 
 
 class StorageController:
@@ -29,6 +29,18 @@ class StorageController:
             return False
         return True
 
-    def retrieveAll(self):
+    def retrieve_all(self):
+        data_elem = self.DBConnector.retrieve()
+        return [self.type(elem) for elem in data_elem]
 
-        return self.DBConnector.retrieve()
+    def countAll(self):
+        return self.DBConnector.count()[0][0]
+
+    def createTable(self):
+        try:
+            self.DBConnector.createTable()
+        except Exception as e:
+            #FIXME handle table already existing
+            #table already exists
+            None
+

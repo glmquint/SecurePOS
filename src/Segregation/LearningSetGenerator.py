@@ -1,19 +1,29 @@
 from PreparedSession import *
+from src.Segregation.LearningSet import LearningSet
 
 
 class LearningSetGenerator:
-    trainPercentage = 0
-    testPercentage = 0
-    validationPercentage = 0
 
-    def __init__(self, trainPercentage, testPercentage, validationPercentage):
-        self.trainPercentage = trainPercentage
-        self.testPercentage = testPercentage
-        self.validationPercentage = validationPercentage
+    def __init__(self, trainPercentage, testPercentage, validationPercentage, storageController):
+        self.__trainPercentage = trainPercentage
+        self.__testPercentage = testPercentage
+        self.__validationPercentage = validationPercentage
+        self.__storageController = storageController
 
-    def generateLearningSet(self, PreparedSessionList):
-        # to be implemented
-        return ["ciao"]
+    def generateLearningSet(self):
+        preparedSessionArray = self.__storageController.retrieveAll()
+        cardinalityPreparedSession = self.__storageController.countAll()
+
+        testSetCardinality = int(cardinalityPreparedSession*self.__testPercentage)
+        valSetCardinality = int(cardinalityPreparedSession*self.__validationPercentage)
+        trainingSetCardinality = cardinalityPreparedSession - testSetCardinality-valSetCardinality
+
+        learningSet = LearningSet(
+                        preparedSessionArray[:trainingSetCardinality],
+                        preparedSessionArray[trainingSetCardinality:trainingSetCardinality+testSetCardinality],
+                        preparedSessionArray[trainingSetCardinality+testSetCardinality:]
+                    )
+        return learningSet
 
 
 def test():

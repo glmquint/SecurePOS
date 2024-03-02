@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import PreparedSession
+from PreparedSession import *
 
 
 class CheckDataBalanceView:
@@ -55,14 +55,14 @@ def test():
     c = CheckDataBalanceView(5)
     p1 = []
     for i in range(0, 20):
-        p1.append(PreparedSession(0, 0, 0, 0, 0, 0, "High"))
+        p1.append(PreparedSession([0, 0, 0, 0, 0, 0, "High"]))
 
     p2 = []
     for i in range(0, 15):
-        p2.append(PreparedSession(0, 0, 0, 0, 0, 0, "Medium"))
+        p2.append(PreparedSession([0, 0, 0, 0, 0, 0, "Medium"]))
 
     p3 = []
     for i in range(0, 18):
-        p3.append(PreparedSession(0, 0, 0, 0, 0, 0, "Low"))
+        p3.append(PreparedSession([0, 0, 0, 0, 0, 0, "Low"]))
 
     c.plotCheckDataBalance(p1 + p2 + p3)
