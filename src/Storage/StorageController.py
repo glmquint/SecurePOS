@@ -1,5 +1,5 @@
 from src.Storage.DBConnector import DBConnector
-
+from src.Storage.dbConfig import DBConfig
 
 class StorageController:
     DBConnector = None

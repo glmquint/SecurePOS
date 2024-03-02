@@ -1,9 +1,8 @@
 class DBConfig:
-    name = None
-    columns = None
-    tableName = None
+    database_name = None
+    table_name = None
 
-    def __init__(self, dbName, tableName, columns):
-        self.name = dbName
-        self.tableName = tableName
-        self.columns = columns
+    def __init__(self, database_name: str, table_name: str):
+        self.database_name = database_name
+        self.table_name = table_name
+
