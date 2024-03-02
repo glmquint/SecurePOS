@@ -1,4 +1,4 @@
-from src.Development.TestRow import TestRow
+from src.Development.Testing.TestRow import TestRow
 
 
 class TestReportView:

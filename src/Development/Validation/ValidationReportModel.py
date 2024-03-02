@@ -1,4 +1,4 @@
-from src.Development.ValidationRow import ValidationRow
+from src.Development.Validation.ValidationRow import ValidationRow
 
 
 class ValidationReportView:

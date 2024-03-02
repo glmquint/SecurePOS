@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from src.Development.LearningPlotModel import LearningPlotModel
+from src.Development.Training.LearningPlotModel import LearningPlotModel
 from src.Storage.StorageController import StorageController
 from src.Storage.dbConfig import DBConfig
 

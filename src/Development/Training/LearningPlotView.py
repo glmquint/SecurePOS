@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from src.Development.LearningPlotModel import LearningPlotModel
+from src.Development.Training.LearningPlotModel import LearningPlotModel
 
 
 class LearningPlotView:

@@ -1,5 +1,3 @@
-from src.Storage.StorageController import StorageController
-
 
 class LearningPlotModel:
     loss: float = None

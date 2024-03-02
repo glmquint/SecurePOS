@@ -1,10 +1,11 @@
-from src.Development import ValidationReportModel
+from src.Development.Testing import TestReportModel
 
-class ValidationReportView:
+
+class TestReportView:
     path_to_save: str = None
-    model: ValidationReportModel = None
+    model: TestReportModel = None
 
-    def __init__(self, filename: str, test_report_model: ValidationReportModel):
+    def __init__(self, filename: str, test_report_model: TestReportModel):
         self.path_to_save = f'src/Development/{filename}.png'
         self.model = test_report_model
 
