@@ -37,3 +37,8 @@ class DBConnector:
         cursor = self.connection.cursor()
         cursor.execute('SELECT ' + ' ,'.join(self.columns) + ' FROM ' + self.tableName)
         return cursor.fetchall()
+
+    def count(self):
+        cursor = self.connection.cursor()
+        cursor.execute('SELECT COUNT(*) FROM ' + self.tableName)
+        return cursor.fetchall()[0][0]

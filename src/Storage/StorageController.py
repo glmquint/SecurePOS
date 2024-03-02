@@ -1,5 +1,5 @@
 from src.Storage.DBConnector import DBConnector
-from src.Storage.dbConfig import DBConfig
+
 
 class StorageController:
     DBConnector = None
@@ -33,3 +33,5 @@ class StorageController:
         print(data_elem)
         return [self.type(elem) for elem in data_elem]
 
+    def count(self):
+        return self.DBConnector.count()
