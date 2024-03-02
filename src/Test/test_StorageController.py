@@ -5,6 +5,7 @@ from src.Storage.StorageController import StorageController
 class TestStorageController(TestCase):
     class Object:
         def __init__(self, name, age):
+            print('Here')
             self.name = name
             self.age = age
     obj = Object('Giacomo', 24)
