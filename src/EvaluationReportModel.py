@@ -1,8 +1,7 @@
 class EvaluationReportModel:
-    TotalErrorTollerated = 5
-    ConsecutiveErrorTollerated = 2
-    labels = []
-    TotalError = 0
-    ConsecutiveError = 0
-
-
+    def __init__(self):
+        self.TotalErrorTollerated = 5
+        self.ConsecutiveErrorTollerated = 2
+        self.labels = []
+        self.TotalError = 0
+        self.ConsecutiveError = 0

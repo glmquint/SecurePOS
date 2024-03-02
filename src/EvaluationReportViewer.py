@@ -1,26 +1,29 @@
 class EvaluationReportViewer:
-    result = ""
+
+    def __init__(self):
+        self.result = ""
 
     def update(self, evaluationreportmodel):
         print(
-            "Total error:" + evaluationreportmodel.TotalError + ",Max error tollerated:" + evaluationreportmodel.TotalErrorTollerated)
+            f'Total error: {evaluationreportmodel.TotalError},Max error tollerated: {evaluationreportmodel.TotalErrorTollerated}'
+        )
         print(
-            "Total consecutive error:" + evaluationreportmodel.ConsecutiveError + ", Max consecutive error tollerated:" + evaluationreportmodel.ConsecutiveErrorTollerated)
+            f'Total consecutive error: {evaluationreportmodel.ConsecutiveError}, Max consecutive error tollerated:{evaluationreportmodel.ConsecutiveErrorTollerated}'
+        )
+        self.getresult()
         return
 
     def getresult(self):
 
         while True:
-            print(
-                "Please write Yes to confirm, No to decline:"
-            )
-            input(self.result)
+            self.result = input("Please write Yes to confirm, No to decline, esc to leave:")
             self.result = self.result.lower()
-            if self.result != "yes" or self.result != "no":
-                print(
-                    "Answer not accepted, retry.\n"
-                )
-            else:
-                print("Answer accepted.")
+            if self.result == "esc":
+                exit()
+            if self.result == "yes":
+                print("Classifier accepted.")
+                break
+            if self.result == "no":
+                print("Classifier rejected.")
                 break
         return

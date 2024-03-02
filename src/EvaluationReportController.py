@@ -3,10 +3,14 @@ from src.EvaluationReportViewer import EvaluationReportViewer
 
 
 class EvaluationReportController:
-    evaluation = EvaluationReportModel()
-    reportviewer = EvaluationReportViewer()
+
+    def __init__(self):
+        self.evaluation = EvaluationReportModel()
+        self.reportviewer = EvaluationReportViewer()
+        self.result = False
 
     def generatereport(self, labels, securitylabels):
+        assert len(labels) == len(securitylabels)
         consecutiverror = 0
         totalerror = 0
         consecutive = False
@@ -23,9 +27,10 @@ class EvaluationReportController:
         self.evaluation.ConsecutiveError = consecutiverror
         self.evaluation.labels = labels
         self.reportviewer.update(self.evaluation)
-        if self.evaluation.result == "no":
+        if self.reportviewer.result == "no":
             print("Classifier has been rejected.")
         else:
             print("Classifier passed the check.")
+            self.result = True
         return
 
