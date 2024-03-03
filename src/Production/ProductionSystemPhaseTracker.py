@@ -10,11 +10,11 @@ class ProductionSystemPhaseTracker:
     def increseCounter(self):
         self.system_counter += 1
         if self.is_production:
-            if self.system_counter >= self.production_window:
+            if self.system_counter > self.production_window:
                 self.is_production = False
                 self.system_counter = 0
         else:
-            if self.system_counter >= self.evaluation_window:
+            if self.system_counter > self.evaluation_window:
                 self.is_production = True
                 self.system_counter = 0
 
