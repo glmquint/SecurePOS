@@ -20,6 +20,12 @@ class ReportController:
         # learning_plot_view = LearningPlotView('learning_plot', learning_plot_models[0])
         # learning_plot_view.update()
 
+    def create_validation_report(self):
+        pass
+
+    def create_test_report(self):
+        pass
+
 
 ReportController = ReportController()
 ReportController.create_learning_plot()
