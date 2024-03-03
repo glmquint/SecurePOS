@@ -2,8 +2,8 @@ import json
 
 
 class PreparedSession:
-    def __init__(self, mean_absolute_diff_timestamps=0.0,
-                 mean_absolute_diff_amount=0.0, median_longitude_latitude=(0.0, 0.0),
+    def __init__(self, mean_absolute_diff_timestamps=-1,
+                 mean_absolute_diff_amount=-1, median_longitude_latitude=(0.0, 0.0),
                  median_target_ip="", median_dest_ip=""):
         self.mean_absolute_diff_timestamps = mean_absolute_diff_timestamps
         self.mean_absolute_diff_amount = mean_absolute_diff_amount

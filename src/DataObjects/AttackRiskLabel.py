@@ -14,3 +14,5 @@ class AttackRiskLabel:
         return {
             "attackRiskLabel": self.attackRiskLabel,
         }
+    def __str__(self):
+        return f"AttackRiskLabel: {self.attackRiskLabel}"
