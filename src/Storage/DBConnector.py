@@ -46,3 +46,4 @@ class DBConnector:
         cursor.execute(
             'CREATE TABLE PreparedSessions (MeanAbsoluteDifferencingTransactionTimestamps double, MeanAbsoluteDifferencingTransactionAmount double,MedianLongitude double,MedianLatitude double,MedianTargetIP double,MedianDestIP double,Label varchar(20))')
         self.connection.commit()
+

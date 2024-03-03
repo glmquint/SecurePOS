@@ -1,5 +1,5 @@
 {
-  "sufficientSessionNumber" : 10,
+  "sufficientSessionNumber" : 3,
   "segregationSystemIp" : "127.0.0.1",
   "segregationSystemPort" : 1000,
   "developmentSystemIp" : "127.0.0.1",

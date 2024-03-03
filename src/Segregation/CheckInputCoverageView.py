@@ -1,3 +1,4 @@
+import json
 import random
 import plotly.graph_objects as go
 # from plotly import graph_objs as go
@@ -8,8 +9,6 @@ from PreparedSession import *
 
 
 class CheckInputCoverageView:
-    def __init__(self):
-        return
 
     def plotCheckinputCoverageView(self, PreparedSessionList):
 
@@ -59,7 +58,21 @@ class CheckInputCoverageView:
             title="Coverage Report",
         )
 
-        fig.write_image("radar_plot.png")
+        fig.write_image("Data/PlotCheckInputCoverage.png")
+
+    def getSimulatedCheckInputCoverage(self):
+        value = random()
+        if value < 0.2:
+            return "no"
+        else:
+            return "ok"
+
+    def getCheckInputCoverage(self):
+        with open('Data/checkInputCoverageReport.json', 'r') as checkInputCoverageFile:
+            jsonData = json.load(checkInputCoverageFile)
+            evaluationCheckInputCoverage = jsonData.get("evaluation")
+            checkInputCoverageFile.close()
+            return evaluationCheckInputCoverage
 
 
 def test():

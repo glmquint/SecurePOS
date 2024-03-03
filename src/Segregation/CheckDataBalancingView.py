@@ -1,3 +1,6 @@
+import json
+from random import random
+
 import matplotlib.pyplot as plt
 import numpy as np
 from PreparedSession import *
@@ -48,7 +51,23 @@ class CheckDataBalanceView:
         # Set x-axis tick positions and labels
         plt.xticks([pos + bar_width for pos in bar_positions1], labels)
 
-        plt.show()
+        plt.savefig('Data/PlotCheckDataBalancePlot.png')
+
+    def getSimulatedCheckDataBalance(self):
+        value = random()
+        if value < 0.1:
+            return "no"
+        else:
+            return "ok"
+
+    def getCheckDataBalance(self):
+        with open('Data/checkDataBalanceReport.json', 'r') as checkDataBalanceFile:
+            jsonData = json.load(checkDataBalanceFile)
+            evaluationCheckDataBalance = jsonData.get("evaluation")
+            checkDataBalanceFile.close()
+            return evaluationCheckDataBalance
+
+
 
 
 def test():

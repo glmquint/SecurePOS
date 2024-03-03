@@ -9,8 +9,4 @@ class CheckDataBalancingModel:
         return
 
     def retrivePreparedSession(self):
-        dataReturned = self.__storageController.retrieveAll()
-        preparedSession = []
-        for i in dataReturned:
-            preparedSession.append(PreparedSession(i))
-        return preparedSession
+        return self.__storageController.retrieveAll()

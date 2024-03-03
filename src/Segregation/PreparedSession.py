@@ -6,14 +6,6 @@ class PreparedSession:
     MedianTargetIP = 0
     MedianDestIP = 0
     label = ""
-    def ko(self,selfMeanAbsoluteDifferencingTransactionTimestamps,MeanAbsoluteDifferencingTransactionAmount,MedianLongitude,MedianLatitude,MedianTargetIP,MedianDestIP,label):
-        self.MeanAbsoluteDifferencingTransactionTimestamps = selfMeanAbsoluteDifferencingTransactionTimestamps
-        self.MeanAbsoluteDifferencingTransactionAmount = MeanAbsoluteDifferencingTransactionAmount
-        self.MedianLongitude = MedianLongitude
-        self.MedianLatitude = MedianLatitude
-        self.MedianTargetIP = MedianTargetIP
-        self.MedianDestIP =  MedianDestIP
-        self.label = label
 
     def __init__(self, params):
         self.MeanAbsoluteDifferencingTransactionTimestamps = params[0]
@@ -26,3 +18,4 @@ class PreparedSession:
 
     def returnArray(self):
         return [self.MeanAbsoluteDifferencingTransactionTimestamps,self.MeanAbsoluteDifferencingTransactionAmount,self.MedianLongitude,self.MedianLatitude,self.MedianTargetIP,self.MedianDestIP,self.label]
+
