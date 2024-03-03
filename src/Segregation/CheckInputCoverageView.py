@@ -91,4 +91,3 @@ def test():
 
     c.plotCheckinputCoverageView(p1 + p2 + p3)
 
-test()

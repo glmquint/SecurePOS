@@ -5,7 +5,7 @@
   "developmentSystemIp" : "127.0.0.1",
   "developmentSystemPort" : 1000,
   "toleraceDataBalancing" : 10,
-  "serviceFlag": false,
+  "serviceFlag": true,
   "percentageTrainingSplit" : 0.7,
   "percentageTestSplit" : 0.15,
   "percentageValidationSplit" : 0.15

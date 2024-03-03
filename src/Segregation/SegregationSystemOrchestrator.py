@@ -1,8 +1,14 @@
+from threading import Thread
+
+import requests
+
 from LearningSetGenerator import *
 from random import random
 import numpy as np
 
 from SegregationPlotController import SegregationPlotController
+from src.JsonIO.JSONEndpoint import JSONEndpoint
+from src.JsonIO.Server import Server
 from src.Segregation.SegregationSystemConfig import SegregationSystemConfig
 from src.Storage.StorageController import StorageController
 
@@ -18,8 +24,18 @@ def recive():
     label = ["High", "Medium", "Low"]
     test_array = np.array(label)
     random_num = np.random.choice(test_array)
-    params = [random(), random(), random(), random(), random(), random(), random_num]
-    p = PreparedSession(params)
+    d = {'MeanAbsoluteDifferencingTransactionTimestamps' : random(),
+         'MeanAbsoluteDifferencingTransactionAmount' : random(),
+         'MedianLongitude' : random(),
+         'MedianLatitude' : random(),
+         'MedianTargetIP' : random(),
+         'MedianDestIP' : random(),
+         'Label': "low"
+         }
+
+    #params = [random(), random(), random(), random(), random(), random(), random_num]
+
+    p = PreparedSession(d)
     return p
 
 def run():
@@ -34,8 +50,9 @@ def run():
     segregationPlotController = SegregationPlotController(storageController,
                                                           configParameter.getToleranceDataBalancing())
 
-
     # storageController.createTable()
+
+
 
     while True:
         evaluationCheckDataBalance = ""
@@ -53,12 +70,22 @@ def run():
 
         if serviceFlag is True or evaluationCheckDataBalance != "ok":
             # loop until I receive enough prepared session
+            server = 1
+            if server == 1:
+                server = Server()
+                #TODO create coda dove salvare le PS ricevute
+                test_callback = lambda json_data: storageController.save(PreparedSession(json_data))
+                server.add_resource(JSONEndpoint, "/segregationSystem", recv_callback=test_callback,json_schema_path="../DataObjects/Schema/PreparedSessionSchema.json")
+                #server.add_resource(JSONEndpoint, "/segregationSystem", recv_callback=test_callback)
+                thread = Thread(target=server.run)
+                thread.daemon = True  # this will allow the main thread to exit even if the server is still running
+                thread.start()
 
-            while (storageController.countAll()) != limitPreparedSession:
-                # TODO implementare il reciver
-                p = recive()
-                storageController.save(p)
-                print(storageController.countAll())
+            while (storageController.countAll()) != limitPreparedSession+1:
+                # TODO implementare il reciver | fare pop dalla coda e insierirle nel db
+                if server == 0:
+                    p = recive()
+                #print(storageController.countAll())
 
             # plot the graph
             segregationPlotController.plotDataBalance()
@@ -99,6 +126,9 @@ def run():
             learningSet = learningSetGenerator.generateLearningSet()
 
             send(learningSet)
+            # TODO implement learningSet to json
+            # requests.post("http://127.0.0.1:5000/GiacomoTerni", json=learningSet.toJSON())
+
             storageController.removeAll()  # remove the session
 
             # reset the evaluation in report files

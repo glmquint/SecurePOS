@@ -31,3 +31,4 @@ def test_add_resource(): # 100% coverage
 
     req = requests.post("http://127.0.0.1:5000/invalid_endpoint", json={"attackRiskLabel": "low"}) # invalid endpoint
     assert req.status_code == 404
+

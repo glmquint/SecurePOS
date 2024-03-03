@@ -3,3 +3,6 @@ class LearningSet:
         self.__trainingSet = trainingSet
         self.__validationSet = validationSet
         self.__testSet = testSet
+
+    def toJSON(self):
+        pass
