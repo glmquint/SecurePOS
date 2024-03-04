@@ -19,3 +19,9 @@ class ValidationRow:
         self.number_of_neurons = number_of_neurons
         self.error = error
         self.overfitting_tolerance = overfitting_tolerance
+
+    def to_dict(self):
+        return {'classifier_name': self.classifier_name, 'MSE': self.MSE, 'validation_error': self.validation_error,
+                'training_error': self.training_error, 'number_of_layers': self.number_of_layers,
+                'number_of_neurons': self.number_of_neurons, 'error': self.error,
+                'overfitting_tolerance': self.overfitting_tolerance}
