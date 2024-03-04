@@ -1,3 +1,5 @@
+from threading import Event
+
 from src.Storage.DBConnector import DBConnector
 from src.util import log
 
@@ -9,6 +11,8 @@ class StorageController:
     def __init__(self, dbConfig, type):
         self.type = type
         self.DBConnector = DBConnector(dbConfig)
+        self.count_updated = Event()
+        self.count_updated.set()
 
     @log
     def save(self, obj):
@@ -17,6 +21,7 @@ class StorageController:
         row = [tuple(obj.__dict__.values())]
         try:
             self.DBConnector.insert(row)
+            self.count_updated.set()
         except Exception as e:
             print(e)
             return False
@@ -26,6 +31,7 @@ class StorageController:
     def remove_all(self):
         try:
             self.DBConnector.remove()
+            self.count_updated.set()
         except Exception as e:
             print(e)
             return False
@@ -38,4 +44,6 @@ class StorageController:
 
     @log
     def count(self):
+        self.count_updated.wait()
+        self.count_updated.clear()
         return self.DBConnector.count()
