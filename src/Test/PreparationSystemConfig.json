@@ -10,6 +10,12 @@
     "table_name" : "record"
   },
   "raw_session_creator" : {
-    "sufficient_number_of_records" : 3
+    "sufficient_number_of_records" : 3,
+    "raw_session_receiver" : {
+      "url" : "http://localhost:8080/raw_session"
+    },
+    "label_receiver" : {
+      "url" : "http://localhost:8080/label"
+    }
   }
 }
