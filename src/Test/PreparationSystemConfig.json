@@ -2,8 +2,9 @@
   "raw_session_topic" : "RawSessionTopic",
   "phase_tracker" : {
       "phase" : "Development",
-      "testing" : "True"
-    },
+      "production_phase_duration" : 5,
+      "evaluation_phase_duration" : 1
+  },
   "db" : {
     "database_name" : "record",
     "table_name" : "record"
