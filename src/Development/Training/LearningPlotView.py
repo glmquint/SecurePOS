@@ -15,4 +15,4 @@ class LearningPlotView:
         # TODO: implement the figure update using the model
         plt.xlabel('Number of generations')
         plt.ylabel('Loss')
-        plt.savefig("data/learning_plot.png")
+        plt.savefig(self.path_to_save)
