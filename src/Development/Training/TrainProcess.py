@@ -11,19 +11,17 @@ class TrainProcess:
     hyperparameters: HyperParameterLimit = None
     avg_hyperparameters: dict = None
 
-    def create_hyperparameters_range(self):
-        with open('hyperparameters.json', 'r') as file:
-            self.hyperparameters = HyperParameterLimit(file.load())
-
-    def set_average_hyperparameters(self) -> dict:
+    def set_average_hyperparameters(self):
         avg_hyperparameters = {}
         for key in self.hyperparameters.dict_hyperparameters.keys():
-            avg_hyperparameters[key] = (self.hyperparameters.dict_hyperparameters[key][0] + self.hyperparameters.dict_hyperparameters[key][1]) / 2
-        return avg_hyperparameters
-    def set_number_of_iterations(self,number_of_iterations:int):
-        self.number_of_iterations=number_of_iterations
+            avg_hyperparameters[key] = (self.hyperparameters.dict_hyperparameters[key][0] +
+                                        self.hyperparameters.dict_hyperparameters[key][1]) / 2
 
-    def __init__(self):
+    def set_number_of_iterations(self, number_of_iterations: int):
+        self.number_of_iterations = number_of_iterations
+
+    def __init__(self, hyperparameters: HyperParameterLimit):
+        self.hyperparameters = hyperparameters
         self.mlp_classifier = MLPClassifier()
 
     def train(self):

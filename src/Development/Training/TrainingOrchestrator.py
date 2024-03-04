@@ -1,5 +1,7 @@
-from src.Development.LearningSetReceiver import LearningSetReceiver
+import json
+
 from src.Development.ReportController import ReportController
+from src.Development.Training.HyperParameterLimit import HyperParameterLimit
 from src.Development.Training.TrainProcess import TrainProcess
 from src.MessageBus.MessageBus import MessageBus
 
@@ -13,20 +15,28 @@ class TrainingOrchestrator:
     is_ongoing_validation: bool = False
     number_of_iter_is_fine: bool = False
 
-    def __init__(self, report_controller: ReportController, message_bus: MessageBus):
-        self.train_process = TrainProcess()
+    def __init__(self, report_controller: ReportController, message_bus: MessageBus,
+                 hyperparameters: HyperParameterLimit):
+        self.train_process = TrainProcess(hyperparameters)
         self.message_bus = message_bus
         self.report_controller = report_controller
 
-    def check_learning_plot(self):
+    def check_learning_plot(self) -> bool:
         input("> learning plot created! Please insert the decision in learning_result.txt file")
-        with open('learning_result.txt', 'r') as file:
-            return "Yes" == file.read()
+        with open('learning_result.json', 'r') as json_file:  # validate learning_result.json
+            data = json.load(json_file)
+            return data['result'] == "OK"
+
+    def get_number_of_iterations(self) -> int:
+        input("> Please insert the number of iterations in number_of_iterations.json file")
+        with open('number_of_iterations.json', 'r') as json_file:  # validate number_of_iterations.json
+            data = json.load(json_file)
+            return data['number_of_iterations']
 
     def start(self) -> bool:
         self.learning_set = self.message_bus.popTopic("LearningSet")
         self.train_process.set_average_hyperparameters()
-        self.train_process.set_number_of_iterations(0)  # dummy argument
+        self.train_process.set_number_of_iterations(self.get_number_of_iterations())
         while self.is_ongoing_validation:
             self.train_process.train()
             if not self.is_ongoing_validation:

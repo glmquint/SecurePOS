@@ -1,3 +1,5 @@
+import json
+
 from src.Development.ReportController import ReportController
 from src.MessageBus.MessageBus import MessageBus
 
@@ -11,9 +13,11 @@ class ValidationOrchestrator:
         self.message_bus = message_bus
 
     def check_validation_result(self):
-        input("> Please insert the decision in validation_result.txt file")
-        with open('validation_report.txt', 'r') as file:
-            return "Yes" == file.read()
+        input("> Please insert the decision in validation_result.json file")
+        with open('validation_report.json', 'r') as json_file:  # validate validation_result.json
+            data = json.load(json_file)
+            return data['result'] == "OK"
+
 
     def start(self):
         self.report_controller.create_validation_report()

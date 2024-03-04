@@ -20,12 +20,12 @@ class DevelopmentSystemMasterOrchestrator:
     message_bus: MessageBus = None
     report_controller: ReportController = None
 
-    def __init__(self, simulate_humane_task: bool, config: DevelopmentSystemConfigurations):
+    def __init__(self, simulate_humane_task: bool):
+        self.development_system_configurations = DevelopmentSystemConfigurations()
         self.message_bus = MessageBus(["LearningSet", "Classifier"])
         self.report_controller = ReportController()
-        self.development_system_configurations = config
         self.simulate_humane_task = simulate_humane_task
-        self.train_orchestrator = TrainingOrchestrator(self.report_controller,self.message_bus)
+        self.train_orchestrator = TrainingOrchestrator(self.report_controller,self.message_bus,self.development_system_configurations.hyperparameters)
         self.validation_orchestrator = ValidationOrchestrator(self.report_controller, self.message_bus)
         self.test_orchestrator = TestingOrchestrator(self.report_controller, self.message_bus)
         self.learning_set_receiver = LearningSetReceiver(self.message_bus)
