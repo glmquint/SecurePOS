@@ -1,7 +1,7 @@
 from src.Development.Validation.ValidationRow import ValidationRow
 
 
-class ValidationReportView:
+class ValidationReportModel:
     validation_rows: [ValidationRow] = None
 
     def __init__(self, from_tuples: [tuple]):

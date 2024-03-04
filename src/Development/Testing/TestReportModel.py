@@ -1,7 +1,7 @@
 from src.Development.Testing.TestRow import TestRow
 
 
-class TestReportView:
+class TestReportModel:
     rows: [TestRow] = None
 
     def __init__(self, from_tuples: [tuple]):
