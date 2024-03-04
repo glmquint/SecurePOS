@@ -33,6 +33,8 @@ class MessageBus:
 
 # same testing
 msg = MessageBus(["b", "c"])
+#msg.pushTopic("b",9)
+print(msg.popTopic("b"))
 msg.addTopic("a")
 msg.pushTopic("a", 2)
 msg.pushTopic("a", 3)
