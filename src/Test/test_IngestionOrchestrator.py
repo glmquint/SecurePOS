@@ -16,5 +16,6 @@ class TestPreparationSystemOrchestrator:
         orchestrator = PreparationSystemOrchestrator(config)
         Thread(target=orchestrator.run, daemon=True).start()
         record = Record()
-        r = requests.post("http://127.0.0.1:5000/record", json=record.__dict__)
-        assert r.status_code == 200
+        for i in range(10):
+            r = requests.post("http://127.0.0.1:5000/record", json=record.__dict__)
+            assert r.status_code == 200
