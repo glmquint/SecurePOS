@@ -9,36 +9,46 @@ DATAOBJ_PATH = "../DataObjects/Schema"
 
 class RawSessionCreator:
 
-    def __init__(self, storage_controller:StorageController, phase_tracker:PhaseTracker) -> None:
-        self.sufficient_number_of_records = 100
+    def __init__(self, config, storage_controller:StorageController, phase_tracker:PhaseTracker) -> None:
+        self.sufficient_number_of_records = config['sufficient_number_of_records']
         self.label_sender = JSONSender(f"{DATAOBJ_PATH}/AttackRiskLabelSchema.json", "http://127.0.0.1:8000/label")
         self.raw_session_sender = JSONSender(f"{DATAOBJ_PATH}/RawSessionSchema.json", "http://127.0.0.1:8000/raw_session")
         self.storage_controller = storage_controller
         self.phase_tracker = phase_tracker
 
+    @log
     def retrieveRecords(self) -> [Record]:
         pass
 
+    @log
     def isNumberOfRecordsSufficient(self) -> bool:
-        return self.storage_controller.count() > self.sufficient_number_of_records
+        return self.storage_controller.count() >= self.sufficient_number_of_records
 
-    def createRawSession(self, records:[Record]) -> None:
-        pass
+    @log
+    def createRawSession(self) -> None:
+        records = self.storage_controller.retrieve_all()
+        self.raw_session = RawSession()
+        self.raw_session.records = records
 
-    def markMissingSamples(self, raw_session:RawSession) -> None:
-        pass
+    @log
+    def markMissingSamples(self) -> None:
+        if self.raw_session is None:
+            return
+        self.missing_samples = [record for record in self.raw_session.records if record.isMissingSample()]
 
-    def isRawSessionValid(self, raw_session:RawSession) -> bool:
-        pass
+    @log
+    def isRawSessionValid(self) -> bool:
+        return len(self.missing_samples) == 0
 
     @log
     def run(self) -> None:
-        if self.isNumberOfRecordsSufficient():
-            self.createRawSession()
-            self.storage_controller.remove()
-            self.markMissingSamples()
-            if self.isRawSessionValid():
-                if self.phase_tracker.isEvalPhase():
-                    self.label_sender.send(self.label)
-                self.raw_session_sender.send(self.raw_session)
+        while not self.isNumberOfRecordsSufficient():
+            pass
+        self.createRawSession()
+        self.storage_controller.remove_all()
+        self.markMissingSamples()
+        if self.isRawSessionValid():
+            if self.phase_tracker.isEvalPhase():
+                self.label_sender.send(self.label)
+            self.raw_session_sender.send(self.raw_session)
 

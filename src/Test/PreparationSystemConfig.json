@@ -7,5 +7,8 @@
   "db" : {
     "database_name" : "record",
     "table_name" : "record"
+  },
+  "raw_session_creator" : {
+    "sufficient_number_of_records" : 3
   }
 }

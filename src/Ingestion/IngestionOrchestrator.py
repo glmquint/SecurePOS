@@ -1,7 +1,6 @@
 from threading import Thread
 
 from src.DataObjects.Record import Record
-from src.DataObjects.Session import RawSession
 from src.Ingestion.PhaseTracker import PhaseTracker
 from src.Ingestion.PreparationSysReceiver import PreparationSysReceiver
 from src.Ingestion.PreparationSystemConfig import PreparationSystemConfig
@@ -22,6 +21,7 @@ class PreparationSystemOrchestrator:
         self.phase_tracker = PhaseTracker(
             config=self.config.phase_tracker)
         self.raw_session_creator = RawSessionCreator(
+            config=self.config.raw_session_creator,
             storage_controller=self.storage_controller,
             phase_tracker=self.phase_tracker)
         self.prepared_session_creator = PreparedSessionCreator(
