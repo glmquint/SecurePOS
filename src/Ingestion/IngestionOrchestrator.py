@@ -1,5 +1,6 @@
 from threading import Thread
 
+from src.DataObjects.Record import Record
 from src.DataObjects.Session import RawSession
 from src.Ingestion.PhaseTracker import PhaseTracker
 from src.Ingestion.PreparationSysReceiver import PreparationSysReceiver
@@ -9,17 +10,31 @@ from src.Ingestion.RawSessionCreator import RawSessionCreator
 from src.MessageBus.MessageBus import MessageBus
 from src.Storage.StorageController import StorageController
 
+
 class PreparationSystemOrchestrator:
     def __init__(self, config:PreparationSystemConfig) -> None:
         self.config = config
-        self.storage_controller = StorageController(dbConfig={"name": "raw_session", "columns": ["device_src", "samples"], "tableName":"raw_session"}, type=type(RawSession))
-        self.message_bus = MessageBus(topics=["RawSession"])
-        self.phase_tracker = PhaseTracker()
-        self.raw_session_creator = RawSessionCreator(self.storage_controller, self.phase_tracker)
-        self.prepared_session_creator = PreparedSessionCreator(self.message_bus, self.phase_tracker)
-        self.preparation_sys_receiver = PreparationSysReceiver(self.storage_controller, self.message_bus)
+        self.storage_controller = StorageController(
+            dbConfig=self.config.db,
+            type=Record)
+        self.message_bus = MessageBus(
+            topics=[self.config.raw_session_topic])
+        self.phase_tracker = PhaseTracker(
+            config=self.config.phase_tracker)
+        self.raw_session_creator = RawSessionCreator(
+            storage_controller=self.storage_controller,
+            phase_tracker=self.phase_tracker)
+        self.prepared_session_creator = PreparedSessionCreator(
+            message_bus=self.message_bus,
+            raw_session_topic=self.config.raw_session_topic,
+            phase_tracker=self.phase_tracker)
+        self.preparation_sys_receiver = PreparationSysReceiver(
+            storage_controller=self.storage_controller,
+            message_bus=self.message_bus)
 
-    def run(self):
-        Thread(target=self.raw_session_creator.run).start()
-        Thread(target=self.prepared_session_creator.run).start()
+    def run(self) -> None:
         Thread(target=self.preparation_sys_receiver.run).start()
+        while True:
+            self.raw_session_creator.run()
+            self.prepared_session_creator.run()
+
