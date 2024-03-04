@@ -13,9 +13,7 @@ def server_setup():
     test_callback = lambda json_data: print(f"Hello from test_callback. Received {json_data}")
     server.add_resource(JSONEndpoint, "/test_endpoint", recv_callback=test_callback, json_schema_path="../DataObjects/Schema/AttackRiskLabelSchema.json")
 
-    thread = Thread(target=server.run)
-    thread.daemon = True # this will allow the main thread to exit even if the server is still running
-    thread.start()
+    Thread(target=server.run, daemon=True).start()
 
 def test_add_resource(): # 100% coverage
     server_setup()
