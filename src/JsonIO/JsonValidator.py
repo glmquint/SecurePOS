@@ -2,7 +2,7 @@ import json
 
 import jsonschema
 
-actually_validate = False # TODO: Set to True when on production
+actually_validate = True
 
 class JSONValidator:
     def __init__(self, schema_file):
