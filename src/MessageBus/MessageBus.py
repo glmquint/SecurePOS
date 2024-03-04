@@ -17,6 +17,8 @@ class MessageBus:
         return
 
     def popTopic(self, topic):
+        if topic not in self.messageQueues.keys():
+            raise ValueError("Topic not found")
         return self.messageQueues[topic].get()
 
     def addTopic(self, topic):
@@ -26,10 +28,11 @@ class MessageBus:
 
 
 # same testing
-msg = MessageBus(["b", "c"])
-msg.addTopic("a")
-msg.pushTopic("a", 2)
-msg.pushTopic("a", 3)
-print(msg.popTopic("a"))
-print(msg.popTopic("a"))
-print(msg.popTopic("a")) # would block
+if __name__ == "__main__":
+    msg = MessageBus(["b", "c"])
+    msg.addTopic("a")
+    msg.pushTopic("a", 2)
+    msg.pushTopic("a", 3)
+    print(msg.popTopic("a"))
+    print(msg.popTopic("a"))
+    print(msg.popTopic("a")) # would block
