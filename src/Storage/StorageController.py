@@ -1,5 +1,5 @@
-import json
-from DBConnector import DBConnector
+from src.Storage.DBConnector import DBConnector
+from src.util import log
 
 
 class StorageController:
@@ -10,9 +10,10 @@ class StorageController:
         self.type = type
         self.DBConnector = DBConnector(dbConfig)
 
+    @log
     def save(self, obj):
         if type(obj) is not self.type:
-            raise Exception('Invalid type')
+            raise Exception(f'Invalid type, expected {self.type} got {type(obj)}')
         row = [tuple(obj.__dict__.values())]
         try:
             self.DBConnector.insert(row)
@@ -21,7 +22,8 @@ class StorageController:
             return False
         return True
 
-    def removeAll(self):
+    @log
+    def remove_all(self):
         try:
             self.DBConnector.remove()
         except Exception as e:
@@ -29,6 +31,11 @@ class StorageController:
             return False
         return True
 
-    def retrieveAll(self):
+    @log
+    def retrieve_all(self):
+        data_elem = self.DBConnector.retrieve()
+        return [self.type(elem) for elem in data_elem]
 
-        return self.DBConnector.retrieve()
+    @log
+    def count(self):
+        return self.DBConnector.count()

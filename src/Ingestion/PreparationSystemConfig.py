@@ -1,10 +1,20 @@
 import json
 
+from src.JsonIO.JsonValidator import JSONValidator
+
 
 class PreparationSystemConfig:
-    def init_from_param(self, config:dict) -> None:
-        self.config = config
-    def init_from_file(self, config_path:str = "IngestionConfig.json") -> None:
-        with open(config_path, "r") as f:
-            self.config = json.load(f)
+    def __init__(self, schema_path:str):
+        self.phase_tracker = None
+        self.raw_session_topic = None
+        self.db = None
+        self.validator = JSONValidator(schema_path)
 
+    def init_from_json(self, json_data:dict):
+        self.validator.validate_data(json_data)
+        self.__dict__ = json_data
+
+    def init_from_file(self, file_path:str):
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+            self.init_from_json(data)
