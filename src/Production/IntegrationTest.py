@@ -42,7 +42,7 @@ class IntegrationTest(TestCase):
         threadServer.daemon = True  # this will allow the main thread to exit even if the server is still running
         threadServer.start()
 
-    def test_send(self):
+    def test_system_bus_send(self):
         systemBus = MessageBus(["PreparedSession", "Classifier"])
         self.server_setup(systemBus)
         preparedSession = PreparedSession(10.5, 25.5,
@@ -100,5 +100,5 @@ class IntegrationTest(TestCase):
             req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession.to_json())  # correct key
             assert req.status_code == 200
 
-        sleep(30)
+        sleep(10)
 
