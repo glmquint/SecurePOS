@@ -5,23 +5,14 @@ from src.DataObjects.AttackRiskLabel import AttackRiskLabel
 
 class FakeAttackRiskClassifier:
 
-    def __init__(self, messageBus):
+    def __init__(self, classifier):
         self.preparedSession = None
-        self.attackRiskClassifier = None
-        self.messageBus = messageBus
+        self.attackRiskClassifier = classifier
 
-    def loadAttackRiskClassifier(self):
-        return self.messageBus.popTopic("Classifier")
-
-    def loadPreparedSession(self):
-        return self.messageBus.popTopic("PreparedSession")
-
-    def provideAttackRiskLabel(self):
-        if self.attackRiskClassifier is None:
-            print("No classifier")
-            self.attackRiskClassifier = self.loadAttackRiskClassifier()
-        self.preparedSession = self.loadPreparedSession()
-        assert self.preparedSession is not None
-        #print(self.preparedSession)
+    def provideAttackRiskLabel(self, preparedSession):
+        self.preparedSession = preparedSession
+        # used for debug purpose
+        # assert self.preparedSession is not None
+        # fake return
         return AttackRiskLabel("medium")
 

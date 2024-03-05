@@ -8,34 +8,31 @@ from src.Production.ProductionSystemSender import ProductionSystemSender
 from src.Production.ProductuinSystemConfig import ProductionSystemConfig
 
 class ProductionSystemOrchestrator:
+
+    def __init__(self):
+        self.productionConfig = ProductionSystemConfig()
+        self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
+                                                         self.productionConfig.evaluation_window)
+        self.systemBus = MessageBus(["PreparedSession", "Classifier"])
+
     def main(self):
-        # Get an instance of the ProductionSystemConfig
-        productionConfig = ProductionSystemConfig()
-        phaseTracker = ProductionSystemPhaseTracker(productionConfig.monitoring_window, productionConfig.evaluation_window)
-        # Print the configuration
-        print(productionConfig)
-        # Print the phase tracker
-        print(phaseTracker)
-
-        systemBus = MessageBus(["PreparedSession", "Classifier"])
-
-        prodSysRec = ProductionSystemReceiver(systemBus)
+        prodSysRec = ProductionSystemReceiver(self.systemBus)
         thread = Thread(target=prodSysRec.run)
         thread.daemon = True  # this will allow the main thread to exit even if the server is still running
         thread.start()
-        fakeClassifier = FakeAttackRiskClassifier(systemBus)
+        fakeClassifier = FakeAttackRiskClassifier(self.systemBus.popTopic("Classifier"))
         while True:
             # classifier = AttackRiskClassifier(systemBus)
             # attackRiskLabel = classifier.provideAttackRiskLabel()
             #print(f"Fake classifier classifier pre {fakeClassifier.attackRiskClassifier}")
-            attackRiskLabel = fakeClassifier.provideAttackRiskLabel()
+            attackRiskLabel = fakeClassifier.provideAttackRiskLabel(self.systemBus.popTopic("PreparedSession"))
             #print(f"Fake classifier classifier post {fakeClassifier.attackRiskClassifier}")
-            phaseTracker.increseCounter()
+            self.phaseTracker.increseCounter()
             sender = ProductionSystemSender(attackRiskLabel)
-            if not (phaseTracker.isProduction()):
-                sender.send(productionConfig.evaluation_url)
+            if not (self.phaseTracker.isProduction()):
+                sender.send(self.productionConfig.evaluation_url)
                 print("Send to evaluation")
-            sender.send(productionConfig.client_url)
+            sender.send(self.productionConfig.client_url)
             print("Send to client")
 
     def run(self):
