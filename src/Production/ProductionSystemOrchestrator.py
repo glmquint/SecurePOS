@@ -10,20 +10,17 @@ from src.Production.ProductuinSystemConfig import ProductionSystemConfig
 class ProductionSystemOrchestrator:
 
     def __init__(self):
-        self.productionConfig = ProductionSystemConfig()
+        self.productionConfig = ProductionSystemConfig('./config/config.json', './config/configSchema.json')
         self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
                                                          self.productionConfig.evaluation_window)
         self.systemBus = MessageBus(["PreparedSession", "Classifier"])
-
+        self.prodSysRec = ProductionSystemReceiver(self.systemBus)
     def main(self):
-        prodSysRec = ProductionSystemReceiver(self.systemBus)
-        thread = Thread(target=prodSysRec.run)
+        thread = Thread(target=self.prodSysRec.run)
         thread.daemon = True  # this will allow the main thread to exit even if the server is still running
         thread.start()
         fakeClassifier = FakeAttackRiskClassifier(self.systemBus.popTopic("Classifier"))
         while True:
-            # classifier = AttackRiskClassifier(systemBus)
-            # attackRiskLabel = classifier.provideAttackRiskLabel()
             #print(f"Fake classifier classifier pre {fakeClassifier.attackRiskClassifier}")
             attackRiskLabel = fakeClassifier.provideAttackRiskLabel(self.systemBus.popTopic("PreparedSession"))
             #print(f"Fake classifier classifier post {fakeClassifier.attackRiskClassifier}")

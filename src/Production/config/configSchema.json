@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "monitoring_window": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "evaluation_window": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "client_url": {
+            "type": "string",
+            "format": "uri"
+        },
+        "evaluation_url": {
+            "type": "string",
+            "format": "uri"
+        }
+    },
+    "required": [
+        "monitoring_window",
+        "evaluation_window",
+        "client_url",
+        "evaluation_url"
+    ]
+}
