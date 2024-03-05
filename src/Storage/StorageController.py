@@ -43,7 +43,7 @@ class StorageController:
         return [self.type(elem) for elem in data_elem]
 
     @log
-    def count(self):
+    def count(self) -> int:
         self.count_updated.wait()
         self.count_updated.clear()
         return self.DBConnector.count()

@@ -10,7 +10,10 @@ class PreparedSessionCreator:
         self.message_bus : MessageBus = message_bus
         self.raw_session_topic : str = raw_session_topic
         self.phase_tracker : PhaseTracker = phase_tracker
-        self.prepared_session_sender : JSONSender = JSONSender(f"{DATAOBJ_PATH}/PreparedSessionSchema.json", "http://127.0.0.1:8000/prepared_session")
+        if self.phase_tracker.isDevPhase():
+            self.prepared_session_sender : JSONSender = JSONSender(f"{DATAOBJ_PATH}/PreparedSessionSchema.json", self.config.segregation_system_receiver.url)
+        else:
+            self.prepared_session_sender : JSONSender = JSONSender(f"{DATAOBJ_PATH}/PreparedSessionSchema.json", self.config.production_system_receiver.url)
         self.raw_session : RawSession = None
 
     def run(self) -> None:
@@ -19,6 +22,15 @@ class PreparedSessionCreator:
         self.detectAndCorrectAbsoluteOutliers()
         self.exrtactFeatures()
         if self.phase_tracker.isDevPhase():
-            self.prepared_session_sender.sendToSegregationSys(self.raw_session)
+            self.prepared_session_sender.send(self.raw_session)
         else:
-            self.prepared_session_sender.sendToProductionSys(self.raw_session)
+            self.prepared_session_sender.send(self.raw_session)
+
+    def correctMissingSamples(self):
+        pass
+
+    def detectAndCorrectAbsoluteOutliers(self):
+        pass
+
+    def exrtactFeatures(self):
+        pass

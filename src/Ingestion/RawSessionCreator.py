@@ -10,6 +10,7 @@ DATAOBJ_PATH = "../DataObjects/Schema"
 class RawSessionCreator:
 
     def __init__(self, config, storage_controller:StorageController, phase_tracker:PhaseTracker) -> None:
+        self.label = None
         self.sufficient_number_of_records = config['sufficient_number_of_records']
         self.label_sender = JSONSender(f"{DATAOBJ_PATH}/AttackRiskLabelSchema.json", config['label_receiver']['url'])
         self.raw_session_sender = JSONSender(f"{DATAOBJ_PATH}/RawSessionSchema.json", config['raw_session_receiver']['url'])
