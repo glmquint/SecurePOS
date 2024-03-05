@@ -8,6 +8,7 @@ class ProductionSystemPhaseTracker:
         self.is_production = True
     #
     def increseCounter(self):
+        '''
         self.system_counter += 1
         if self.is_production:
             if self.system_counter > self.production_window:
@@ -17,7 +18,10 @@ class ProductionSystemPhaseTracker:
             if self.system_counter > self.evaluation_window:
                 self.is_production = True
                 self.system_counter = 0
-
+        '''
+        self.system_counter += 1
+        self.system_counter %= (self.production_window + self.evaluation_window)
+        self.is_production = self.system_counter < self.production_window
     def isProduction(self):
         return self.is_production
     # A print function for the phase tracker
