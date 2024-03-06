@@ -1,9 +1,11 @@
 {
   "sufficientSessionNumber" : 3,
   "segregationSystemIp" : "127.0.0.1",
-  "segregationSystemPort" : 1000,
+  "segregationSystemPort" : 5000,
+  "segregationSystemEndpoint": "segregationSystem",
   "developmentSystemIp" : "127.0.0.1",
-  "developmentSystemPort" : 1000,
+  "developmentSystemPort" : 5000,
+  "developmentSystemEndpoint": "developmentSystem",
   "toleraceDataBalancing" : 10,
   "serviceFlag": true,
   "percentageTrainingSplit" : 0.7,

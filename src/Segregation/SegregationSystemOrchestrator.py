@@ -1,48 +1,52 @@
 from threading import Thread
 
-import requests
-
 from LearningSetGenerator import *
 from random import random
 import numpy as np
 
 from SegregationPlotController import SegregationPlotController
 from src.JsonIO.JSONEndpoint import JSONEndpoint
+from src.JsonIO.JSONSender import JSONSender
 from src.JsonIO.Server import Server
+from src.MessageBus.MessageBus import MessageBus
 from src.Segregation.SegregationSystemConfig import SegregationSystemConfig
 from src.Storage.StorageController import StorageController
 
 from src.Storage.dbConfig import DBConfig
 
 
-def send(data):
+def send(data): # FIXME just for debug
     # send data
     return 0
 
-def recive():
+
+def recive(): # FIXME just for debug
     # recive
     label = ["High", "Medium", "Low"]
     test_array = np.array(label)
     random_num = np.random.choice(test_array)
-    d = {'MeanAbsoluteDifferencingTransactionTimestamps' : random(),
-         'MeanAbsoluteDifferencingTransactionAmount' : random(),
-         'MedianLongitude' : random(),
-         'MedianLatitude' : random(),
-         'MedianTargetIP' : random(),
-         'MedianDestIP' : random(),
-         'Label': "low"
+    d = {'MeanAbsoluteDifferencingTransactionTimestamps': random(),
+         'MeanAbsoluteDifferencingTransactionAmount': random(),
+         'MedianLongitude': random(),
+         'MedianLatitude': random(),
+         'MedianTargetIP': random(),
+         'MedianDestIP': random(),
+         'Label': random_num
          }
 
-    #params = [random(), random(), random(), random(), random(), random(), random_num]
+    # d = [random(), random(), random(), random(), random(), random(), random_num]
 
     p = PreparedSession(d)
     return p
+
 
 def run():
     # get config parameter
     configParameter = SegregationSystemConfig()
     serviceFlag = configParameter.getServiceFlag()
     limitPreparedSession = configParameter.getSufficientSessionNumber()
+
+    messageBus = MessageBus(["preparedSession"])
 
     dbConfig = DBConfig("PreparedSessionsDataStore", "PreparedSessions")
     # ['MeanAbsoluteDifferencingTransactionTimestamps', 'MeanAbsoluteDifferencingTransactionAmount','MedianLongitude', 'MedianLatitude', 'MedianTargetIP', 'MedianDestIP', 'Label']
@@ -52,9 +56,8 @@ def run():
 
     # storageController.createTable()
 
-
-
     while True:
+        server = 1
         evaluationCheckDataBalance = ""
         evaluationCheckInputCoverage = ""
         if serviceFlag is False:
@@ -70,22 +73,24 @@ def run():
 
         if serviceFlag is True or evaluationCheckDataBalance != "ok":
             # loop until I receive enough prepared session
-            server = 1
+
             if server == 1:
                 server = Server()
-                #TODO create coda dove salvare le PS ricevute
-                test_callback = lambda json_data: storageController.save(PreparedSession(json_data))
-                server.add_resource(JSONEndpoint, "/segregationSystem", recv_callback=test_callback,json_schema_path="../DataObjects/Schema/PreparedSessionSchema.json")
-                #server.add_resource(JSONEndpoint, "/segregationSystem", recv_callback=test_callback)
+                test_callback = lambda json_data: messageBus.pushTopic("preparedSession", PreparedSession(json_data))
+                server.add_resource(JSONEndpoint, "/segregationSystem", recv_callback=test_callback,
+                                    json_schema_path="../DataObjects/Schema/PreparedSessionSchema.json")
+                # server.add_resource(JSONEndpoint, "/segregationSystem", recv_callback=test_callback)
                 thread = Thread(target=server.run)
                 thread.daemon = True  # this will allow the main thread to exit even if the server is still running
                 thread.start()
 
-            while (storageController.countAll()) != limitPreparedSession+1:
-                # TODO implementare il reciver | fare pop dalla coda e insierirle nel db
-                if server == 0:
+            while (storageController.countAll()) <= limitPreparedSession:
+                if server == 0:  # FIXME da elimnare: solo per debug
                     p = recive()
-                #print(storageController.countAll())
+                    storageController.save(p)
+                else:
+                    preparedSession = messageBus.popTopic("preparedSession")
+                    storageController.save(preparedSession)
 
             # plot the graph
             segregationPlotController.plotDataBalance()
@@ -110,7 +115,7 @@ def run():
             else:
                 evaluationCheckinputCoverage = segregationPlotController.getSimulatedCheckInputCoverage()
                 # "input not covered"
-                if evaluationCheckinputCoverage <= 0.1:
+                if evaluationCheckinputCoverage == "no":
                     continue
 
         if serviceFlag is True or (evaluationCheckDataBalance == "ok" and evaluationCheckInputCoverage == "ok"):
@@ -125,9 +130,17 @@ def run():
             # generate learning set
             learningSet = learningSetGenerator.generateLearningSet()
 
-            send(learningSet)
-            # TODO implement learningSet to json
-            # requests.post("http://127.0.0.1:5000/GiacomoTerni", json=learningSet.toJSON())
+            if server == 1:
+                # TODO implement learningSet to json
+                developmentSystemIp = configParameter.getDevelopmentSystemIp()
+                developmentSystemPort = configParameter.getDevelopmentSystemPort()
+                developmentSystemEndpoint = configParameter.getDevelopmentSystemEndpoint()
+                sender = JSONSender("../DataObjects/Schema/LearningSetSchema.json",
+                                    "http://" + str(developmentSystemIp) + ":" + str(
+                                        developmentSystemPort) + "/"+str(developmentSystemEndpoint))
+                sender.send(learningSet)
+            else:
+                send(learningSet)
 
             storageController.removeAll()  # remove the session
 

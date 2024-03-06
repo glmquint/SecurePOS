@@ -8,13 +8,16 @@ class SegregationSystemConfig:
         self.__sufficientSessionNumber = jsonParameter.get("sufficientSessionNumber")
         self.__segregationSystemIp = jsonParameter.get("segregationSystemIp")
         self.__segregationSystemPort = jsonParameter.get("segregationSystemPort")
+        self.__segregationSystemEndpoint = jsonParameter.get("segregationSystemEndpoint")
         self.__developmentSystemIp = jsonParameter.get("developmentSystemIp")
         self.__developmentSystemPort = jsonParameter.get("developmentSystemPort")
+        self.__developmentSystemEndpoint = jsonParameter.get("developmentSystemEndpoint")
         self.__toleraceDataBalancing = jsonParameter.get("toleraceDataBalancing")
         self.__serviceFlag = jsonParameter.get("serviceFlag")
         self.__percentageTrainingSplit = jsonParameter.get("percentageTrainingSplit")
         self.__percentageTestSplit = jsonParameter.get("percentageTestSplit")
         self.__percentageValidationSplit = jsonParameter.get("percentageValidationSplit")
+
 
     def getSufficientSessionNumber(self):
         return self.__sufficientSessionNumber
@@ -45,3 +48,9 @@ class SegregationSystemConfig:
 
     def getPercentageValidationSplit(self):
         return self.__percentageValidationSplit
+
+    def getSegregationSystemEndpoint(self):
+        return self.__segregationSystemEndpoint
+
+    def getDevelopmentSystemEndpoint(self):
+        return self.__developmentSystemEndpoint

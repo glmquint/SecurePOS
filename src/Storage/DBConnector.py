@@ -18,7 +18,7 @@ class DBConnector:
     def insert(self, row: list):
         cursor = self.connection.cursor()
         cursor.execute(f"PRAGMA table_info({self.tableName})")
-        column_names = [column[1] for column in cursor.fetchall()][1:]
+        column_names = [column[1] for column in cursor.fetchall()][0:]
         insert_query = 'INSERT INTO ' + self.tableName + '(' + ' ,'.join(column_names) + ') VALUES (' + ', '.join(
             '?' * len(column_names)) + ')'
         cursor.executemany(

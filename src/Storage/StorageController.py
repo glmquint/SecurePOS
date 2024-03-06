@@ -46,7 +46,8 @@ class StorageController:
             None
 
     def normalizeData(self):
-        preparedSessions = self.retrieve_all()
+        pass
+        preparedSessions = self.retrieveAll()
         tmp = []
         for p in preparedSessions:
             tmp.append(p.returnArray()[:len(p.returnArray()) - 1])

@@ -62,7 +62,7 @@ class CheckInputCoverageView:
 
     def getSimulatedCheckInputCoverage(self):
         value = random()
-        if value < 0.2:
+        if value < 0.1:
             return "no"
         else:
             return "ok"
