@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "UUID": {"type": "string"},
+    "LABEL": {"type": "string"},
+    "latitude": {"type": "number"},
+    "longitude": {"type": "number"},
+    "targetIP": {"type": "string", "format": "ipv4"},
+    "destIP": {"type": "string", "format": "ipv4"},
+    "ts": {
+      "type": "array",
+      "items": {"type": "number"}
+    },
+    "am": {
+      "type": "array",
+      "items": {"type": "number"}
+    }
+  },
+  "required": ["UUID", "LABEL", "latitude", "longitude", "targetIP", "destIP", "ts", "am"]
+}
