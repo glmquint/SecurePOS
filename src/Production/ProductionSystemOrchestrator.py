@@ -19,10 +19,10 @@ class ProductionSystemOrchestrator:
         thread = Thread(target=self.prodSysRec.run)
         thread.daemon = True  # this will allow the main thread to exit even if the server is still running
         thread.start()
-        fakeClassifier = FakeAttackRiskClassifier(self.systemBus.popTopic("Classifier"))
+        fakeClassifier = FakeAttackRiskClassifier(self.systemBus)
         while True:
             #print(f"Fake classifier classifier pre {fakeClassifier.attackRiskClassifier}")
-            attackRiskLabel = fakeClassifier.provideAttackRiskLabel(self.systemBus.popTopic("PreparedSession"))
+            attackRiskLabel = fakeClassifier.provideAttackRiskLabel()
             #print(f"Fake classifier classifier post {fakeClassifier.attackRiskClassifier}")
             self.phaseTracker.increseCounter()
             sender = ProductionSystemSender(attackRiskLabel)
