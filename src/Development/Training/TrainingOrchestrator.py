@@ -4,6 +4,7 @@ from src.Development.ReportController import ReportController
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
 from src.Development.Training.TrainProcess import TrainProcess
 from src.MessageBus.MessageBus import MessageBus
+from src.Storage.StorageController import StorageController
 
 
 class TrainingOrchestrator:
@@ -14,12 +15,15 @@ class TrainingOrchestrator:
     learning_set: LearningSet = None
     is_ongoing_validation: bool = False
     number_of_iter_is_fine: bool = False
+    storage_controller: StorageController = None
 
     def __init__(self, report_controller: ReportController, message_bus: MessageBus,
-                 hyperparameters: HyperParameterLimit):
-        self.train_process = TrainProcess(hyperparameters)
+                 hyperparameters: HyperParameterLimit, storage_controller: StorageController):
+        self.storage_controller = storage_controller
+        self.train_process = TrainProcess(hyperparameters,self.storage_controller)
         self.message_bus = message_bus
         self.report_controller = report_controller
+
 
     def check_learning_plot(self) -> bool:
         input("> learning plot created! Please insert the decision in learning_result.txt file")

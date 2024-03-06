@@ -42,8 +42,7 @@ class DevelopmentSystemMasterOrchestrator:
             not_valid_classifier = self.validation_orchestrator.start()
         test_passed = self.test_orchestrator.start()
         if test_passed:
-            pass
-            # self.development_system_sender.send_to_production(self.test_orchestrator.classifier)
+            self.development_system_sender.send_to_production(self.test_orchestrator.classifier)
         else:
             pass
             # self.development_system_sender.send_to_messaging(self.test_orchestrator.configuration)
