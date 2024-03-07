@@ -55,13 +55,14 @@ def run():
     segregationPlotController = SegregationPlotController(storageController,
                                                           configParameter.getToleranceDataBalancing())
 
-    storageController.createTable()
+    #storageController.createTable()
 
     while True:
         server = 0
         evaluationCheckDataBalance = ""
         evaluationCheckInputCoverage = ""
         if serviceFlag is False:
+            print("Server started")
             # the serviceFlag is false if the simplified stop and go interaction is not active
             evaluationCheckDataBalance = segregationPlotController.getCheckDataBalance()
             evaluationCheckInputCoverage = segregationPlotController.getCheckInputCoverage()
@@ -84,7 +85,7 @@ def run():
                 thread = Thread(target=server.run)
                 thread.daemon = True  # this will allow the main thread to exit even if the server is still running
                 thread.start()
-
+            print("Receiving data...")
             while (storageController.countAll()) <= limitPreparedSession:
                 if server == 0:  # FIXME da elimnare: solo per debug
                     p = recive()
@@ -94,8 +95,10 @@ def run():
                     # the storage controller will retrive the data from the message bus and will store into the db
                     storageController.save()
 
+            print("Data correctly stored")
             # plot the graph
             segregationPlotController.plotDataBalance()
+            print("Check data balance correctly plotted")
 
             if serviceFlag is False:
                 break
@@ -110,6 +113,7 @@ def run():
 
             # plot the checkInputCoverage graph
             segregationPlotController.plotCheckInputCoverage()
+            print("Check input coverage correctly plotted")
 
             # let's check input coverage
             if serviceFlag is False:
@@ -131,7 +135,9 @@ def run():
                                                         storageController)
             # generate learning set
             learningSet = learningSetGenerator.generateLearningSet()
+            print("Learning set generated")
 
+            # TODO if the sending returned error i have to reperformthe sending
             if server == 1:
                 developmentSystemIp = configParameter.getDevelopmentSystemIp()
                 developmentSystemPort = configParameter.getDevelopmentSystemPort()
@@ -143,12 +149,19 @@ def run():
             else:
                 send(learningSet)
 
+            print("Leaning set sent")
             storageController.removeAll()  # remove the session
 
             # reset the evaluation in report files
             segregationPlotController.setEvaluationCheckDataBalance("checking")
             segregationPlotController.setEvaluationCheckInputCoverage("checking")
-            break
+
+            x = ""
+            while "Yes" not in x and "No" not in x:
+                x = input('Do you want to continue: [Yes|No]')
+
+            if "No" in x:
+                 break
 
 
 if __name__ == "__main__":
