@@ -44,6 +44,8 @@ class DBConnector:
     def createTable(self):
         cursor = self.connection.cursor()
         cursor.execute(
-            'CREATE TABLE PreparedSessions (MeanAbsoluteDifferencingTransactionTimestamps double, MeanAbsoluteDifferencingTransactionAmount double,MedianLongitude double,MedianLatitude double,MedianTargetIP double,MedianDestIP double,Label varchar(20))')
+            'CREATE TABLE PreparedSessions (UUID varchar(40), MeanAbsoluteDifferencingTransactionTimestamps double, '
+            'MeanAbsoluteDifferencingTransactionAmount double,MedianLongitude double,MedianLatitude double,'
+            'MedianTargetIP double,MedianDestIP double,Label varchar(20))')
         self.connection.commit()
 

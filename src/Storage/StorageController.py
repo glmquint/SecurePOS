@@ -44,8 +44,8 @@ class StorageController:
             self.DBConnector.createTable()
         except Exception as e:
             # FIXME handle table already existing
-            # table already exists
-            None
+            print(e)
+            pass
 
     def normalizeData(self):
         pass

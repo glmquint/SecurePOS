@@ -1,5 +1,5 @@
 {
-  "sufficientSessionNumber" : 3,
+  "sufficientSessionNumber" : 100,
   "segregationSystemIp" : "127.0.0.1",
   "segregationSystemPort" : 5000,
   "segregationSystemEndpoint": "segregationSystem",

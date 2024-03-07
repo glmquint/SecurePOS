@@ -51,4 +51,3 @@ def test1():
     storageController = StorageController(dbConfig, PreparedSession)
     l = LearningSetGenerator(70, 15, 15,storageController)
     l.generateLearningSet()
-test1()

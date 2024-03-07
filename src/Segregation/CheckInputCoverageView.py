@@ -10,7 +10,12 @@ from PreparedSession import *
 
 class CheckInputCoverageView:
 
-    def plotCheckinputCoverageView(self, PreparedSessionList):
+    def __init__(self, model):
+        self.__checkInputCoverageModel = model
+
+    def plotCheckinputCoverageView(self):
+
+        PreparedSessionList = self.__checkInputCoverageModel.getPreparedSessionList()
 
         labels = ['MeanAbsoluteDifferencingTransactionTimestamps',
                   'MeanAbsoluteDifferencingTransactionAmount',
@@ -21,8 +26,8 @@ class CheckInputCoverageView:
 
         data = []
         for i in PreparedSessionList:
-            row = [i.MeanAbsoluteDifferencingTransactionTimestamps, i.MeanAbsoluteDifferencingTransactionAmount,
-                   i.MedianLongitude, i.MedianLatitude, i.MedianTargetIP, i.MedianDestIP]
+            row = [i.getMeanAbsoluteDifferencingTransactionTimestamps(), i.getMeanAbsoluteDifferencingTransactionAmount(),
+                   i.getMedianLongitude(), i.getMedianLatitude(), i.getMedianTargetIP(), i.getMedianDestIP()]
             data.append(row)
 
         # Create a pandas DataFrame with the generated data and labels
@@ -37,7 +42,7 @@ class CheckInputCoverageView:
 
         fig = go.Figure()
 
-        for i in range(3):
+        for i in range(len(data)):
             fig.add_trace(
                 go.Scatterpolar(
                     r=pandas_dataset.loc[i].values.tolist(),

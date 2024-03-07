@@ -25,7 +25,8 @@ def recive(): # FIXME just for debug
     label = ["High", "Medium", "Low"]
     test_array = np.array(label)
     random_num = np.random.choice(test_array)
-    d = {'MeanAbsoluteDifferencingTransactionTimestamps': random(),
+    d = { 'UUID': "ciao",
+          'MeanAbsoluteDifferencingTransactionTimestamps': random(),
          'MeanAbsoluteDifferencingTransactionAmount': random(),
          'MedianLongitude': random(),
          'MedianLatitude': random(),
@@ -34,7 +35,7 @@ def recive(): # FIXME just for debug
          'Label': random_num
          }
 
-    # d = [random(), random(), random(), random(), random(), random(), random_num]
+    # d = ["ciao": random(), random(), random(), random(), random(), random(), random_num]
 
     p = PreparedSession(d)
     return p
@@ -54,10 +55,10 @@ def run():
     segregationPlotController = SegregationPlotController(storageController,
                                                           configParameter.getToleranceDataBalancing())
 
-    # storageController.createTable()
+    storageController.createTable()
 
     while True:
-        server = 1
+        server = 0
         evaluationCheckDataBalance = ""
         evaluationCheckInputCoverage = ""
         if serviceFlag is False:
@@ -120,8 +121,8 @@ def run():
                     continue
 
         if serviceFlag is True or (evaluationCheckDataBalance == "ok" and evaluationCheckInputCoverage == "ok"):
-            # normalize data
-            storageController.normalizeData()
+            # TODO i have to normalize data?
+            #storageController.normalizeData()
 
             # here the human have checked that the data are correctly balanced
             learningSetGenerator = LearningSetGenerator(configParameter.getPercentageTrainingSplit(),
@@ -132,7 +133,6 @@ def run():
             learningSet = learningSetGenerator.generateLearningSet()
 
             if server == 1:
-                # TODO implement learningSet to json
                 developmentSystemIp = configParameter.getDevelopmentSystemIp()
                 developmentSystemPort = configParameter.getDevelopmentSystemPort()
                 developmentSystemEndpoint = configParameter.getDevelopmentSystemEndpoint()
@@ -148,6 +148,7 @@ def run():
             # reset the evaluation in report files
             segregationPlotController.setEvaluationCheckDataBalance("checking")
             segregationPlotController.setEvaluationCheckInputCoverage("checking")
+            break
 
 
 if __name__ == "__main__":

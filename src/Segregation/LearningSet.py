@@ -8,15 +8,15 @@ class LearningSet:
 
     def __init__(self, trainingSet, validationSet, testSet):
         for p in trainingSet:
-            l = [p, p.label]
+            l = [p, p.getLabel()]
             self.__trainingSet.append(l)
 
         for p in validationSet:
-            l = [p, p.label]
+            l = [p, p.getLabel()]
             self.__validationSet.append(l)
 
         for p in testSet:
-            l = [p, p.label]
+            l = [p, p.getLabel()]
             self.__testSet.append(l)
 
     def toJSON(self):

@@ -9,17 +9,20 @@ from PreparedSession import *
 class CheckDataBalanceView:
     toleraceParameter = 0
 
-    def __init__(self, toleraceParameter):
+    def __init__(self, toleraceParameter, model):
         self.toleraceParameter = toleraceParameter
+        self.__checkDataBalanceModel = model
 
-    def plotCheckDataBalance(self, PreparedSessionList):
+    def plotCheckDataBalance(self):
+
+        PreparedSessionList = self.__checkDataBalanceModel.getPreparedSessionList()
 
         labels = ['Low', 'Medium', 'High']
 
         values = [0, 0, 0]
 
         for i in PreparedSessionList:
-            match i.label:
+            match i.getLabel():
                 case "Low":
                     values[0] += 1
                 case "Medium":
@@ -42,9 +45,7 @@ class CheckDataBalanceView:
         percentage_diff = (abs(maximim - minimum) / (maximim + minimum) / 2) * 100
 
         string = 'Tolerance interal = '+str(self.toleraceParameter)+" | Difference detected = " + str(round(percentage_diff,2))
-        plt.text(1.5, 23.5, string,
-                 horizontalalignment='center',
-                 verticalalignment='top')
+
 
         plt.bar(bar_positions2, values, width=bar_width)
 
@@ -59,8 +60,10 @@ class CheckDataBalanceView:
         # Set x-axis tick positions and labels
         plt.xticks([pos + bar_width for pos in bar_positions1], labels)
 
-        # plt.savefig('Data/PlotCheckDataBalancePlot.png')
-        plt.show()
+        plt.text(0.5, 1.10, string,
+                 horizontalalignment='center', transform=plt.gca().transAxes)
+
+        plt.savefig('Data/PlotCheckDataBalancePlot.png')
 
     def getSimulatedCheckDataBalance(self):
         value = random()
@@ -94,4 +97,3 @@ def test():
     c.plotCheckDataBalance(p1 + p2 + p3)
 
 
-test()
