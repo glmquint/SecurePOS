@@ -1,6 +1,7 @@
 import requests
 
 from src.JsonIO.JsonValidator import JSONValidator
+from src.util import log
 
 
 class JSONSender:
@@ -9,10 +10,11 @@ class JSONSender:
         self.url = url
         self.validator = JSONValidator(json_schema_path)
 
+    @log
     def send(self, obj):
         try:
             self.validator.validate_data(obj)
-            requests.post(self.url, json=obj)
+            requests.post(self.url, json=obj.to_json())
         except Exception as e:
             print(e)
             return False

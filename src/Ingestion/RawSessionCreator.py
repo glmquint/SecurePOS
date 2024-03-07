@@ -17,39 +17,39 @@ class RawSessionCreator:
         self.storage_controller = storage_controller
         self.phase_tracker = phase_tracker
 
-    @log
     def retrieveRecords(self) -> [Record]:
         pass
 
-    @log
     def isNumberOfRecordsSufficient(self) -> bool:
+        if self.phase_tracker.isDevPhase(): # nocheckin
+            return self.storage_controller.count() >= 1
         return self.storage_controller.count() >= self.sufficient_number_of_records
 
-    @log
     def createRawSession(self) -> None:
         records = self.storage_controller.retrieve_all()
         self.raw_session = RawSession()
         self.raw_session.records = records
 
-    @log
     def markMissingSamples(self) -> None:
         if self.raw_session is None:
             return
         self.missing_samples = [record for record in self.raw_session.records if record.isMissingSample()]
 
-    @log
     def isRawSessionValid(self) -> bool:
+        if self.phase_tracker.isDevPhase(): # nocheckin
+            return True
         return len(self.missing_samples) == 0
 
-    @log
-    def run(self) -> None:
+    def run(self) -> bool:
         while not self.isNumberOfRecordsSufficient():
             pass
         self.createRawSession()
         self.storage_controller.remove_all()
         self.markMissingSamples()
-        if self.isRawSessionValid():
-            if self.phase_tracker.isEvalPhase():
-                self.label_sender.send(self.label)
-            self.raw_session_sender.send(self.raw_session)
+        if not self.isRawSessionValid():
+            return False
+        if self.phase_tracker.isEvalPhase():
+            self.label_sender.send(self.label)
+        self.raw_session_sender.send(self.raw_session)
+        return True
 

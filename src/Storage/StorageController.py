@@ -14,7 +14,6 @@ class StorageController:
         self.count_updated = Event()
         self.count_updated.set()
 
-    @log
     def save(self, obj):
         if type(obj) is not self.type:
             raise Exception(f'Invalid type, expected {self.type} got {type(obj)}')
@@ -27,7 +26,6 @@ class StorageController:
             return False
         return True
 
-    @log
     def remove_all(self):
         try:
             self.DBConnector.remove()
@@ -37,12 +35,10 @@ class StorageController:
             return False
         return True
 
-    @log
     def retrieve_all(self):
         data_elem = self.DBConnector.retrieve()
-        return [self.type(elem) for elem in data_elem]
+        return [self.type(**elem) for elem in data_elem]
 
-    @log
     def count(self) -> int:
         self.count_updated.wait()
         self.count_updated.clear()

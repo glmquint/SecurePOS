@@ -1,6 +1,10 @@
 
 class Feature:
-    pass
+    def __init__(self, **kwargs):
+        self.__dict__.update(kwargs)
+    def to_json(self):
+        return self.__dict__
+
 
 class MeanAbsDiffTransaction(Feature):
     time_diff: int

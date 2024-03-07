@@ -25,16 +25,19 @@ class PreparationSystemOrchestrator:
             storage_controller=self.storage_controller,
             phase_tracker=self.phase_tracker)
         self.prepared_session_creator = PreparedSessionCreator(
+            config=self.config.prepared_session_creator,
             message_bus=self.message_bus,
             raw_session_topic=self.config.raw_session_topic,
             phase_tracker=self.phase_tracker)
         self.preparation_sys_receiver = PreparationSysReceiver(
+            raw_session_topic=self.config.raw_session_topic,
             storage_controller=self.storage_controller,
             message_bus=self.message_bus)
 
     def run(self) -> None:
         Thread(target=self.preparation_sys_receiver.run).start()
         while True:
-            self.raw_session_creator.run()
+            while not self.raw_session_creator.run():
+                pass
             self.prepared_session_creator.run()
 

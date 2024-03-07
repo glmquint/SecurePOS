@@ -1,7 +1,10 @@
 class AttackRiskLabel:
     attackRiskLabel = None
-    def __init__(self, attackRiskLabel):
-        self.attackRiskLabel = attackRiskLabel
+    def __init__(self, **kwargs):
+        self.attackRiskLabel = kwargs.get("attackRiskLabel", None)
+
+    def to_json(self):
+        return self.__dict__
 
     def getAttackRiskLabel(self):
         return self.attackRiskLabel

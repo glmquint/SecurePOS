@@ -1,6 +1,7 @@
 from threading import Thread
 
 from src.DataObjects.Record import Record
+from src.DataObjects.Session import RawSession
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
@@ -11,7 +12,8 @@ DATAOBJ_PATH = "../DataObjects/Schema"
 
 
 class PreparationSysReceiver:
-    def __init__(self, storage_controller:StorageController, message_bus:MessageBus):
+    def __init__(self, raw_session_topic:str, storage_controller:StorageController, message_bus:MessageBus):
+        self.raw_session_topic = raw_session_topic
         self.storage_controller = storage_controller
         self.message_bus = message_bus
         self.server = Server()
@@ -20,13 +22,13 @@ class PreparationSysReceiver:
 
     @log
     def receiveRecord(self, json_data):
-        record = Record()
-        record.__dict__ = json_data
+        record = Record(**json_data)
         self.storage_controller.save(record)
 
     @log
     def receiveRawSession(self, json_data):
-        self.message_bus.pushTopic("RawSession", json_data)
+        raw_session = RawSession(**json_data)
+        self.message_bus.pushTopic(self.raw_session_topic, raw_session)
 
     def run(self):
         self.server.run()

@@ -12,10 +12,18 @@
   "raw_session_creator" : {
     "sufficient_number_of_records" : 3,
     "raw_session_receiver" : {
-      "url" : "http://localhost:8080/raw_session"
+      "url" : "http://localhost:5000/raw_session"
     },
     "label_receiver" : {
-      "url" : "http://localhost:8080/label"
+      "url" : "http://localhost:4000/label"
+    }
+  },
+  "prepared_session_creator" : {
+    "segregation_system_receiver" : {
+      "url" : "http://localhost:4000/segregation_system"
+    },
+    "production_system_receiver" : {
+      "url" : "http://localhost:4000/production_system"
     }
   }
 }
