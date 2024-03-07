@@ -1,5 +1,8 @@
 from threading import Thread
 from unittest import TestCase
+import pandas as pd
+import json
+import random
 
 import requests
 
@@ -75,3 +78,52 @@ class TestServiceReceiver(TestCase):
                             "http://127.0.0.1:5000/test_endpoint")
         print(rawSession.to_json())
         assert sender.send(rawSession.to_json()) == True
+
+
+    def test_sender1(self):
+        # create dataframe from csv files
+        label_df = pd.read_csv('../data/labels.csv')
+        localizationSys_df = pd.read_csv('../data/localizationSys.csv')
+        networkMonitor_df = pd.read_csv('../data/networkMonitor.csv')
+        transactionCloud_df = pd.read_csv('../data/transactionCloud.csv')
+
+        csvFiles = ["labels", "localizationSys", "networkMonitor", "transactionCloud"]
+        pandasFiles = [label_df, localizationSys_df, networkMonitor_df, transactionCloud_df]
+
+        index = random.randint(0, len(csvFiles) - 1)
+        df = pandasFiles[index]
+        label = csvFiles[index]
+
+        dic = (df.iloc[[random.randint(0, len(df))][0]].to_dict())
+        dict1 = dict()
+
+        #reformat the dictionary
+        timestamp = []
+        amount = []
+        for i in dic:
+            if "ts" in i:
+                timestamp.append(dic[i])
+            elif "am" in i:
+                amount.append(dic[i])
+            else:
+                dict1[i] = dic[i]
+
+            if len(timestamp) != 0:
+                dict1["ts"] = timestamp
+            if len(amount) != 0:
+                dict1["am"] = amount
+
+        dictToSend = dict()
+        dictToSend["record"] = label
+        dictToSend["content"] = dict1
+        df = df.drop(index).reset_index(drop=True)
+
+        # print(dictToSend)
+        print(json.dumps(dictToSend))
+
+        # dictToSend is the item to send
+
+
+
+
+

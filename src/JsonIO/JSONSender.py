@@ -17,3 +17,4 @@ class JSONSender:
             print(e)
             return False
         return True
+
