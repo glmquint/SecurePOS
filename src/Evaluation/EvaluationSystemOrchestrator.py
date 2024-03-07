@@ -14,17 +14,16 @@ class EvaluationSystemOrchestrator:
         self.receiver = LabelReceiver()
 
     def isnumberoflabelssufficient(self):
-        return self.label_counter >= 5000
+        return self.label_counter >= self.config.sufficient_label_number
 
     def run(self):
         print("start")
         self.receiver.receive()
-        time.sleep(5)
-        res = self.receiver.mbus.popTopic("label")
-        time.sleep(5)
-        while res != "empty":
-            print(f"ricevuto:{res}")
+        while not self.isnumberoflabelssufficient():
             res = self.receiver.mbus.popTopic("label")
+            self.label_counter = self.label_counter + 1
+            print(self.label_counter)
+        print("Evaluation done.")
         return
 
     def main(self):

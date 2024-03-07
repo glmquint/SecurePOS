@@ -1,6 +1,7 @@
 import json
 from jsonschema import validate, ValidationError, Draft7Validator
 
+
 class JSONValidator:
     def __init__(self, schema_file):
         with open(schema_file, 'r') as f:

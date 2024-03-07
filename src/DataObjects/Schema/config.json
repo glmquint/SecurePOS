@@ -1,0 +1,13 @@
+{
+    "type": "object",
+    "properties": {
+        "sufficient_label_number": {
+            "type": "integer"
+        },
+        "simulate_human_task": {
+            "type": "string"
+        }
+    },
+    "required": ["sufficient_label_number","simulate_human_task"]
+}
+
