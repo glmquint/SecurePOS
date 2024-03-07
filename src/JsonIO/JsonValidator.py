@@ -2,7 +2,8 @@ import json
 from jsonschema import validate, ValidationError, Draft7Validator
 
 class JSONValidator:
-    def __init__(self, schema_file):
+    def __init__(self, schema_file, skip_validation=False):
+        self.skip_validation = skip_validation
         with open(schema_file, 'r') as f:
             self.schema = json.load(f)
 
@@ -11,6 +12,8 @@ class JSONValidator:
         self.validate_data(data)
 
     def validate_data(self, data):
+        if self.skip_validation:
+            return
         validator = Draft7Validator(self.schema)
         errors = list(validator.iter_errors(data))
         if errors:
