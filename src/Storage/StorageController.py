@@ -1,20 +1,28 @@
 import json
-from DBConnector import DBConnector
+from src.Storage.CSVConnector import CSVConnector
+from src.DataObjects.ElasticitySample import ElasticitySample
+from src.Storage.DBConnector import DBConnector
 
 
 class StorageController:
     DBConnector = None
     type = None
 
-    def __init__(self, dbConfig, type):
+    def __init__(self, config, type):
         self.type = type
-        self.DBConnector = DBConnector(dbConfig)
+        if type is ElasticitySample:
+            self.CSVConnector = CSVConnector(config)
+        else:
+            self.DBConnector = DBConnector(config)
 
     def save(self, obj):
         if type(obj) is not self.type:
             raise Exception('Invalid type')
-        row = [tuple(obj.__dict__.values())]
         try:
+            if self.type is ElasticitySample:
+                self.CSVConnector.insert(obj)
+                return True
+            row = [tuple(obj.__dict__.values())]
             self.DBConnector.insert(row)
         except Exception as e:
             print(e)
