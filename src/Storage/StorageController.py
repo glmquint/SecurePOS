@@ -7,11 +7,13 @@ class StorageController:
     DBConnector = None
     type = None
 
-    def __init__(self, dbConfig, type):
+    def __init__(self, dbConfig, type, messageBus):
         self.type = type
         self.DBConnector = DBConnector(dbConfig)
+        self.messageBus = messageBus
 
-    def save(self, obj):
+    def save(self):
+        obj = self.messageBus.popTopic("preparedSession")
         if type(obj) is not self.type:
             raise Exception('Invalid type')
         row = [tuple(obj.__dict__.values())]

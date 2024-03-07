@@ -50,7 +50,7 @@ def run():
 
     dbConfig = DBConfig("PreparedSessionsDataStore", "PreparedSessions")
     # ['MeanAbsoluteDifferencingTransactionTimestamps', 'MeanAbsoluteDifferencingTransactionAmount','MedianLongitude', 'MedianLatitude', 'MedianTargetIP', 'MedianDestIP', 'Label']
-    storageController = StorageController(dbConfig, PreparedSession)
+    storageController = StorageController(dbConfig, PreparedSession, messageBus)
     segregationPlotController = SegregationPlotController(storageController,
                                                           configParameter.getToleranceDataBalancing())
 
@@ -87,10 +87,11 @@ def run():
             while (storageController.countAll()) <= limitPreparedSession:
                 if server == 0:  # FIXME da elimnare: solo per debug
                     p = recive()
-                    storageController.save(p)
+                    storageController.messageBus.pushTopic("preparedSession", p)
+                    storageController.save()
                 else:
-                    preparedSession = messageBus.popTopic("preparedSession")
-                    storageController.save(preparedSession)
+                    # the storage controller will retrive the data from the message bus and will store into the db
+                    storageController.save()
 
             # plot the graph
             segregationPlotController.plotDataBalance()
