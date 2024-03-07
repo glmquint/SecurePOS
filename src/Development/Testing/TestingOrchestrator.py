@@ -27,15 +27,14 @@ class TestingOrchestrator:
         while True:
             if self.status.status == "generate_test_report":
                 self.report_controller.create_test_report()
-                self.status.save_status("check_test_report", False)
+                self.status.status = "check_test_report"
             elif self.status.status == "check_test_report":
                 response = self.check_test_result()
                 if response == 0:
-                    self.status.save_status("send_config", False)
+                    self.status.status = "send_config"
                 elif response == 1:
-                    self.status.save_status("send_classifier", False)
+                    self.status.status = "send_classifier"
+                self.status.save_status()
                 break  # response -1 is handled, close the application
             else:
                 raise Exception("Invalid status")
-
-

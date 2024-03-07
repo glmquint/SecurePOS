@@ -40,7 +40,7 @@ class DevelopmentSystemMasterOrchestrator:
             if self.status.status == "receive_learning_set":
                 th = Thread(target=self.learning_set_receiver.run)
                 th.start()
-                self.status.save_status("set_avg_hyperparam", False)
+                self.status.status = "set_avg_hyperparam"
             elif self.status.status in ["set_avg_hyperparam", "set_number_of_iterations", "train", "check_validation",
                                         "generate_learning_plot", "check_learning_plot", "check_number_of_iterations"]:
                 self.train_orchestrator.start()

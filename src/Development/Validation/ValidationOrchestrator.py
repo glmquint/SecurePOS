@@ -8,6 +8,7 @@ from src.MessageBus.MessageBus import MessageBus
 class ValidationOrchestrator:
     report_controller: ReportController = None
     message_bus: MessageBus = None
+    status: DevSystemStatus = None
 
     def __init__(self, status: DevSystemStatus, report_controller: ReportController, message_bus: MessageBus):
         self.report_controller = report_controller
@@ -31,20 +32,24 @@ class ValidationOrchestrator:
             if self.status.status == "set_hyperparam":
                 next_hyperparam = self.set_hyperparameters()
                 if next_hyperparam:
-                    self.status.save_status("train", True)
+                    self.status.status = "train"
+                    self.status.should_validate = True
+                    self.status.save_status()
+                    #self.status.save_status()
                     break
                 else:  # if empty grid hyperparameter remember to set the status to should_validate=False
-                    self.status.save_status("generate_validation_report", False)
+                    self.status.save_status = "generate_validation_report",
+                    self.status.should_validate = False
             elif self.status.status == "generate_validation_report":
                 self.report_controller.create_validation_report()
-                self.status.save_status("check_validation_report", False)
+                self.status.status = "check_validation_report"
             elif self.status.status == "check_validation_report":
                 response = self.check_validation_result()
                 if response == 0:
-                    self.status.save_status("set_avg_hyperparam", False)
+                    self.status.status="set_avg_hyperparam"
                 elif response == 1:
-                    self.status.save_status("generate_test_report", False)
-
+                    self.status.status="generate_test_report"
+                self.status.save_status()
                 break  # response -1 is handled, close the application
             else:
                 raise Exception("Invalid status")

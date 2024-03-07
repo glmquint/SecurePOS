@@ -17,9 +17,7 @@ class DevSystemStatus:
             self.status = data['status']
             self.should_validate = data['should_validate']
 
-    def save_status(self, status: str, should_validate: bool):
-        self.status = status
-        self.should_validate = should_validate
+    def save_status(self):
         with open(self.path, 'w') as json_file:
             json.dump(self.__dict__, json_file)
 

@@ -38,18 +38,21 @@ class TrainingOrchestrator:
 
     def start(self):
         while True:
-            if self.status.status in ["receive_learning_set", "set_avg_hyperparam", "set_number_of_iterations", "train"]:
+            if self.status.status in ["receive_learning_set", "set_avg_hyperparam", "set_number_of_iterations",
+                                      "train"]:
                 self.train_process.start()
             if not self.status.should_validate:
                 self.report_controller.create_learning_plot()
-                self.status.save_status("check_learning_plot", False)
+                self.status.status = "check_learning_plot"
+                self.status.save_status()
                 break
             elif self.status.status == "check_learning_plot":
                 response = self.get_AI_export_response()
                 if response == 0:
-                    self.status.save_status("set_number_of_iterations", False)
+                    self.status.status = "set_number_of_iterations"
                 elif response == 1:
-                    self.status.save_status("set_hyperparam", False)
+                    self.status.status = "set_hyperparam"
+                self.status.save_status()
                 break
             else:
                 raise Exception("Invalid status")

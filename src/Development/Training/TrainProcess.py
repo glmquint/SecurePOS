@@ -45,20 +45,21 @@ class TrainProcess:
         while True:
             if self.status == "receive_learning_set":
                 self.learning_set = self.message_bus.popTopic("LearningSet")
-                self.status.save_status("set_avg_hyperparam", False)
+                self.status.status = "set_avg_hyperparam"
             elif self.status == "set_avg_hyperparam":
                 self.set_average_hyperparameters()
-                self.status.save_status("set_number_of_iterations", False)
+                self.status.status = "set_number_of_iterations"
             elif self.status.status == "set_number_of_iterations":
                 self.number_of_iterations = self.get_number_of_iterations()
                 if self.number_of_iterations > 0:
-                    self.status.save_status("train", False)
+                    self.status.status = "train"
                 else:
                     print("Error: number of iterations is not valid")
+                    self.status.save_status()
                     break
             elif self.status == "train":
                 self.train()
-                self.status.save_status("check_validation", False)
+                self.status.status = "check_validation"
                 break
             else:
                 raise Exception("Invalid status")
