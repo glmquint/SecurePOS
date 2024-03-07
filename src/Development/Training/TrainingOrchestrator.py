@@ -1,5 +1,6 @@
 import json
 
+from src.Development.DevSystemStatus import DevSystemStatus
 from src.Development.ReportController import ReportController
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
 from src.Development.Training.TrainProcess import TrainProcess
@@ -16,37 +17,39 @@ class TrainingOrchestrator:
     is_ongoing_validation: bool = False
     number_of_iter_is_fine: bool = False
     storage_controller: StorageController = None
+    status: DevSystemStatus = None
+    hyperparameters: HyperParameterLimit = None
 
-    def __init__(self, report_controller: ReportController, message_bus: MessageBus,
-                 hyperparameters: HyperParameterLimit, storage_controller: StorageController):
-        self.storage_controller = storage_controller
-        self.train_process = TrainProcess(hyperparameters,self.storage_controller)
+    def __init__(self, status: DevSystemStatus, report_controller: ReportController, message_bus: MessageBus,
+                 hyperparameters: HyperParameterLimit):
         self.message_bus = message_bus
         self.report_controller = report_controller
+        self.status = status
+        self.hyperparameters = hyperparameters
 
-
-    def check_learning_plot(self) -> bool:
-        input("> learning plot created! Please insert the decision in learning_result.txt file")
+    def get_AI_export_response(self) -> int:
+        ret_val = -1
         with open('learning_result.json', 'r') as json_file:  # validate learning_result.json
+            ret_val = 0
             data = json.load(json_file)
-            return data['result'] == "OK"
+            if data['result'] in ["ok", "OK", "Ok"]:
+                ret_val = 1
+        return ret_val
 
-    def get_number_of_iterations(self) -> int:
-        input("> Please insert the number of iterations in number_of_iterations.json file")
-        with open('number_of_iterations.json', 'r') as json_file:  # validate number_of_iterations.json
-            data = json.load(json_file)
-            return data['number_of_iterations']
-
-    def start(self) -> bool:
-        self.learning_set = self.message_bus.popTopic("LearningSet")
-        self.train_process.set_average_hyperparameters()
-        self.train_process.set_number_of_iterations(self.get_number_of_iterations())
-        while self.is_ongoing_validation:
-            self.train_process.train()
-            if not self.is_ongoing_validation:
+    def start(self):
+        while True:
+            if self.status.status in ["receive_learning_set", "set_avg_hyperparam", "set_number_of_iterations", "train"]:
+                self.train_process.start()
+            if not self.status.should_validate:
                 self.report_controller.create_learning_plot()
-                self.number_of_iter_is_fine = self.check_learning_plot()
-                if not self.number_of_iter_is_fine:
-                    return True
-            # increment hyperparam in grid search
-        return False
+                self.status.save_status("check_learning_plot", False)
+                break
+            elif self.status.status == "check_learning_plot":
+                response = self.get_AI_export_response()
+                if response == 0:
+                    self.status.save_status("set_number_of_iterations", False)
+                elif response == 1:
+                    self.status.save_status("set_hyperparam", False)
+                break
+            else:
+                raise Exception("Invalid status")
