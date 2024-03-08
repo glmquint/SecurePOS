@@ -7,8 +7,8 @@ class DevelopmentSystemSender:
     production_sender: JSONSender = None
 
     def __init__(self, url_messaging: str, url_production: str):
-        self.messaging_sender = JSONSender('../../json_schema/config_schema.json', url_messaging)
-        self.production_sender = JSONSender('../../json_schema/classifier_schema.json', url_production)
+        self.messaging_sender = JSONSender('schema/config_schema.json', url_messaging)
+        self.production_sender = JSONSender('schema/config_schema.json', url_production)  # TODO: Change schema
 
     def send_to_messaging(self, Config):
         self.messaging_sender.send(Config.toJSON())

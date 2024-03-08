@@ -1,4 +1,4 @@
-from src.Development.DevSystemStatus import DevSystemStatus
+from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemSender import DevelopmentSystemSender
 from src.Development.LearningSetReceiver import LearningSetReceiver
@@ -19,17 +19,17 @@ class DevelopmentSystemMasterOrchestrator:
     development_system_configurations: DevelopmentSystemConfigurations = None
     learning_set_receiver: LearningSetReceiver = None
     message_bus: MessageBus = None
-    #report_controller: ReportController = None
-    status: DevSystemStatus = None
+    report_controller: ReportController = None
+    status: DevelopmentSystemStatus = None
 
     def __init__(self, simulate_humane_task: bool):
-        self.status = DevSystemStatus("status.json")
+        self.status = DevelopmentSystemStatus("development_system_status.json", "schema/status_schema.json")
         self.status.load_status()
+        self.simulate_humane_task = simulate_humane_task
         self.development_system_configurations = DevelopmentSystemConfigurations('schema/config_schema.json')
         self.development_system_configurations.load_config('config/config.json', True)
         self.message_bus = MessageBus(self.development_system_configurations.topics)
-        self.report_controller = ReportController()
-        self.simulate_humane_task = simulate_humane_task
+        self.report_controller = ReportController(self.message_bus)
         self.train_orchestrator = TrainingOrchestrator(self.status, self.report_controller, self.message_bus,
                                                        self.development_system_configurations.hyperparameters)
         self.validation_orchestrator = ValidationOrchestrator(self.status, self.report_controller, self.message_bus)
@@ -42,8 +42,8 @@ class DevelopmentSystemMasterOrchestrator:
             if self.status.status == "receive_learning_set":
                 th = Thread(target=self.learning_set_receiver.run)
                 th.start()
-                self.status.status = "set_avg_hyperparam"
-            elif self.status.status in ["set_avg_hyperparam", "set_number_of_iterations", "train", "check_validation",
+                self.status.status = "set_avg_hyperparams"
+            elif self.status.status in ["set_avg_hyperparams", "set_number_of_iterations", "train", "check_validation",
                                         "generate_learning_plot", "check_learning_plot", "check_number_of_iterations"]:
                 self.train_orchestrator.start()
             elif self.status.status in ["set_hyperparam", "check_ongoing_validation", "generate_validation_report",
@@ -59,4 +59,5 @@ class DevelopmentSystemMasterOrchestrator:
                 raise Exception("Invalid status")
 
 # dsmo = DevelopmentSystemMasterOrchestrator(False)
+# print("Starting Development System Master Orchestrator...")
 # dsmo.start()
