@@ -10,12 +10,14 @@ class DevSystemStatus:
         self.path = path
 
     def load_status(self):
-        self.status = "receive_learning_set"
-        self.should_validate = False
-        with open(self.path, 'r') as json_file:
-            data = json.load(json_file)
-            self.status = data['status']
-            self.should_validate = data['should_validate']
+        try:
+            with open(self.path, 'r') as json_file:
+                data = json.load(json_file)
+                self.status = data['status']
+                self.should_validate = data['should_validate']
+        except FileNotFoundError as e:
+            self.status = "receive_learning_set"
+            self.should_validate = False
 
     def save_status(self):
         with open(self.path, 'w') as json_file:

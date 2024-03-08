@@ -38,5 +38,5 @@ class ReportController:
         test_report_view.update()
 
 
-ReportController = ReportController()
-ReportController.create_learning_plot()
+#ReportController = ReportController()
+#ReportController.create_learning_plot()

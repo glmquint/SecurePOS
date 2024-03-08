@@ -3,7 +3,7 @@ import json
 from src.Development.DevSystemStatus import DevSystemStatus
 from src.Development.ReportController import ReportController
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
-from src.Development.Training.TrainProcess import TrainProcess
+from src.Development.Training.TrainProcess import TrainProcess, LearningSet
 from src.MessageBus.MessageBus import MessageBus
 from src.Storage.StorageController import StorageController
 

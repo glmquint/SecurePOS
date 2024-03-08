@@ -19,14 +19,15 @@ class DevelopmentSystemMasterOrchestrator:
     development_system_configurations: DevelopmentSystemConfigurations = None
     learning_set_receiver: LearningSetReceiver = None
     message_bus: MessageBus = None
-    report_controller: ReportController = None
+    #report_controller: ReportController = None
     status: DevSystemStatus = None
 
     def __init__(self, simulate_humane_task: bool):
         self.status = DevSystemStatus("status.json")
         self.status.load_status()
-        self.development_system_configurations = DevelopmentSystemConfigurations()
-        self.message_bus = MessageBus(["LearningSet", "Classifier"])
+        self.development_system_configurations = DevelopmentSystemConfigurations('schema/config_schema.json')
+        self.development_system_configurations.load_config('config/config.json', True)
+        self.message_bus = MessageBus(self.development_system_configurations.topics)
         self.report_controller = ReportController()
         self.simulate_humane_task = simulate_humane_task
         self.train_orchestrator = TrainingOrchestrator(self.status, self.report_controller, self.message_bus,
@@ -34,6 +35,7 @@ class DevelopmentSystemMasterOrchestrator:
         self.validation_orchestrator = ValidationOrchestrator(self.status, self.report_controller, self.message_bus)
         self.test_orchestrator = TestingOrchestrator(self.status, self.report_controller, self.message_bus)
         self.learning_set_receiver = LearningSetReceiver(self.message_bus)
+        self.development_system_sender = DevelopmentSystemSender(self.development_system_configurations.messaging_system_receiver,self.development_system_configurations.production_system_receiver)
 
     def start(self):
         while True:
@@ -55,3 +57,6 @@ class DevelopmentSystemMasterOrchestrator:
                 self.development_system_sender.send_to_production(self.test_orchestrator.classifier)
             else:
                 raise Exception("Invalid status")
+
+# dsmo = DevelopmentSystemMasterOrchestrator(False)
+# dsmo.start()
