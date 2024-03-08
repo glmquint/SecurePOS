@@ -32,6 +32,7 @@ class DevelopmentSystemStatus:
     def save_status(self):
         with open(self.status_path, 'w') as json_file:
             json.dump(self.to_dict(), json_file)
+            exit(0)
 
 # dev_status = DevSystemStatus()
 # print(dev_status.__dict__)
