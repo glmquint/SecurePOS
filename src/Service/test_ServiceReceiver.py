@@ -6,6 +6,7 @@ import random
 
 import requests
 
+from src.DataObjects.Content import Content
 from src.DataObjects.Message import Message
 from src.DataObjects.NetworkMonitor import NetworkMonitor
 from src.DataObjects.RawSession import RawSession
@@ -15,6 +16,8 @@ from src.JsonIO.JSONSender import JSONSender
 from src.JsonIO.Server import Server
 from src.Service.ServiceReceiver import ServiceReceiver
 from src.DataObjects.LocalizationSys import LocalizationSys
+
+
 
 
 
@@ -96,7 +99,7 @@ class TestServiceReceiver(TestCase):
 
         index = random.randint(0, len(csvFiles) - 1)
         df = pandasFiles[index]
-        label = csvFiles[index]
+        chosen_df_name = csvFiles[index]
 
         dic = (df.iloc[[random.randint(0, len(df))][0]].to_dict())
         dict1 = dict()
@@ -118,14 +121,35 @@ class TestServiceReceiver(TestCase):
                 dict1["am"] = amount
 
         dictToSend = dict()
-        dictToSend["record"] = label
+        dictToSend["record"] = chosen_df_name
         dictToSend["content"] = dict1
         df = df.drop(index).reset_index(drop=True)
 
         # print(dictToSend)
         print(json.dumps(dictToSend))
 
+        mapped_class = None
         # dictToSend is the item to send
+        if chosen_df_name == 'labels':
+            mapped_class = 'Label'
+        elif chosen_df_name == 'localizationSys':
+            # Assuming you have a class called LocalizationSys
+            mapped_class = LocalizationSys(dict1['UUID'], dict1['longitude'],
+                                           dict1['latitude'])
+        elif chosen_df_name == 'networkMonitor':
+            # Assuming you have a class called NetworkMonitor
+            mapped_class = NetworkMonitor(dict1['UUID'], dict1['targetIP'],
+                                          dict1['destIP'])
+        elif chosen_df_name == 'transactionCloud':
+            # Assuming you have a class called TransactionCloud
+            mapped_class = TransactionCloud(dict1['UUID'], dict1['ts'],
+                                            dict1['am'])
+
+        print("Mapped class:", mapped_class)
+
+        c = Content(chosen_df_name,mapped_class)
+
+
 
     def test(self):
         # Read CSV files
@@ -170,5 +194,6 @@ class TestServiceReceiver(TestCase):
 
         # Display the randomly selected record and its mapped class
         print("Mapped class:", mapped_class)
+
 
 
