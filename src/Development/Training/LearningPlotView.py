@@ -12,7 +12,7 @@ class LearningPlotView:
         self.model = learning_plot_model
 
     def update(self):
-        # TODO: implement the figure update using the model
+        plt.plot(range(1, self.model.number_of_generations + 1), self.model.loss_curve, label='Loss')
         plt.xlabel('Number of generations')
         plt.ylabel('Loss')
         plt.savefig(self.path_to_save)
