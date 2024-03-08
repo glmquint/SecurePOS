@@ -35,11 +35,11 @@ class ValidationOrchestrator:
                     self.status.status = "train"
                     self.status.should_validate = True
                     self.status.save_status()
-                    # self.status.save_status()
                     break
                 else:  # if empty grid hyperparameter remember to set the status to should_validate=False
-                    self.status.save_status = "generate_validation_report",
+                    self.status.status = "generate_validation_report",
                     self.status.should_validate = False
+                    self.status.save_status()
             elif self.status.status == "generate_validation_report":
                 self.report_controller.create_validation_report()
                 self.status.status = "check_validation_report"
