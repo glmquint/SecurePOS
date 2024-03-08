@@ -2,6 +2,7 @@ import json
 
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.ReportController import ReportController
+from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
 
 
@@ -17,14 +18,20 @@ class ValidationOrchestrator:
 
     def check_validation_result(self) -> int:
         ret_val = -1
-        with open('validation_report.json', 'r') as json_file:  # validate learning_result.json
-            ret_val = 0
-            data = json.load(json_file)
-            if data['result'] in ["ok", "OK", "Ok"]:
-                ret_val = 1
-        return ret_val
+        try:
+            with open('Validation/validation_result.json', 'r') as json_file:
+                ret_val = 0
+                data = json.load(json_file)
+                JSONValidator.validate_data(data, "schema/result_schema.json")
+                if data['result'] in ["ok", "OK", "Ok"]:
+                    ret_val = 1
+        except FileNotFoundError as e:  # create file so that AI expert can fill it
+            with open('Validation/validation_result.json', 'w') as json_file:
+                json.dump({"result": ""}, json_file)
+        finally:
+            return ret_val
 
-    def set_hyperparameters(self):
+    def set_hyperparameters(self): # TODO: implement the grid search
         return None
 
     def start(self):

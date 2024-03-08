@@ -4,6 +4,7 @@ from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.ReportController import ReportController
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
 from src.Development.Training.TrainProcess import TrainProcess, LearningSet
+from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
 from src.Storage.StorageController import StorageController
 
@@ -28,14 +29,20 @@ class TrainingOrchestrator:
         self.hyperparameters = hyperparameters
         self.train_process = TrainProcess(self.status, self.message_bus, self.hyperparameters)
 
-    def get_AI_export_response(self) -> int:
+    def get_ai_export_response(self) -> int:
         ret_val = -1
-        with open('learning_result.json', 'r') as json_file:  # validate learning_result.json
-            ret_val = 0
-            data = json.load(json_file)
-            if data['result'] in ["ok", "OK", "Ok"]:
-                ret_val = 1
-        return ret_val
+        try:
+            with open('Training/learning_result.json', 'r') as json_file:
+                ret_val = 0
+                data = json.load(json_file)
+                JSONValidator("schema/result_schema.json").validate_data(data)
+                if data['result'] in ["ok", "OK", "Ok"]:
+                    ret_val = 1
+        except FileNotFoundError as e:  # create file so that AI expert can fill it
+            with open('Training/learning_result.json', 'w') as json_file:
+                json.dump({"result": ""}, json_file)
+        finally:
+            return ret_val
 
     def start(self):
         while True:
@@ -48,7 +55,7 @@ class TrainingOrchestrator:
                 self.status.save_status()
                 break
             elif self.status.status == "check_learning_plot":
-                response = self.get_AI_export_response()
+                response = self.get_ai_export_response()
                 if response == 0:
                     self.status.status = "set_number_of_iterations"
                 elif response == 1:

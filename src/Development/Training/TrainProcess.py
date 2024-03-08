@@ -5,6 +5,7 @@ from sklearn.model_selection import GridSearchCV
 from src.Development.Classifier import Classifier
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
+from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
 from src.Storage.StorageController import StorageController
 
@@ -30,10 +31,17 @@ class TrainProcess:
                                              self.hyperparameters.__dict__[key]['max']) / 2
 
     def get_number_of_iterations(self) -> int:
-        with open('number_of_iterations.json', 'r') as json_file:
-            data = json.load(json_file)
-            return data['number_of_iterations']
-        return -1
+        ret_val = -1
+        try:
+            with open('Training/number_of_iterations.json', 'r') as json_file:
+                data = json.load(json_file)
+                JSONValidator("schema/iteration_schema.json").validate_data(data)
+                ret_val = data['number_of_iterations']
+        except FileNotFoundError as e:  # create file so that AI expert can fill it
+            with open('Training/number_of_iterations.json', 'w') as json_file:
+                json.dump({"number_of_iterations": 0}, json_file)
+        finally:
+            return ret_val
 
     def __init__(self, status: DevelopmentSystemStatus, message_bus: MessageBus, hyperparameters: HyperParameterLimit):
         self.status = status
@@ -56,19 +64,10 @@ class TrainProcess:
                 if self.number_of_iterations > 0:
                     self.status.status = "train"
                 else:
-                    print("Error: number of iterations is not valid")
                     self.status.save_status()
-                    break
             elif self.status.status == "train":
                 self.train()
                 self.status.status = "check_validation"
                 break
             else:
                 raise Exception("Invalid status")
-
-    # def save_learning_result (self):
-    #     best_model = self.grid_search.best_estimator_
-    #     best_loss_values = best_model.loss_curve_
-    #     dbconf = DBConfig('training', 'learning_plot')
-    #     storage_controller = StorageController(dbconf, type(LearningPlotModel((0, 0, 0)))
-    #     storage_controller.save(LearningPlotModel(best_loss_values))

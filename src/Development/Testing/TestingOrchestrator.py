@@ -2,6 +2,7 @@ import json
 
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.ReportController import ReportController
+from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
 
 
@@ -15,13 +16,19 @@ class TestingOrchestrator:
         self.status = status
 
     def check_test_result(self) -> int:
-        ret_value = -1
-        with open('test_result.json', 'r') as json_file:  # validate test_result.json
-            ret_value = 0
-            data = json.load(json_file)
-            if data['result'] in ["ok", "OK", "Ok"]:
-                ret_value = 1
-        return ret_value
+        ret_val = -1
+        try:
+            with open('Testing/test_result.json', 'r') as json_file:
+                ret_val = 0
+                data = json.load(json_file)
+                JSONValidator("schema/result_schema.json").validate_data(data)
+                if data['result'] in ["ok", "OK", "Ok"]:
+                    ret_val = 1
+        except FileNotFoundError as e:  # create file so that AI expert can fill it
+            with open('Testing/test_result.json', 'w') as json_file:
+                json.dump({"result": ""}, json_file)
+        finally:
+            return ret_val
 
     def start(self):
         while True:
