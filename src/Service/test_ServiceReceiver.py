@@ -7,11 +7,15 @@ import random
 import requests
 
 from src.DataObjects.Message import Message
+from src.DataObjects.NetworkMonitor import NetworkMonitor
 from src.DataObjects.RawSession import RawSession
+from src.DataObjects.TransactionCloud import TransactionCloud
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.JSONSender import JSONSender
 from src.JsonIO.Server import Server
 from src.Service.ServiceReceiver import ServiceReceiver
+from src.DataObjects.LocalizationSys import LocalizationSys
+
 
 
 class TestServiceReceiver(TestCase):
@@ -82,10 +86,10 @@ class TestServiceReceiver(TestCase):
 
     def test_sender1(self):
         # create dataframe from csv files
-        label_df = pd.read_csv('../data/labels.csv')
-        localizationSys_df = pd.read_csv('../data/localizationSys.csv')
-        networkMonitor_df = pd.read_csv('../data/networkMonitor.csv')
-        transactionCloud_df = pd.read_csv('../data/transactionCloud.csv')
+        label_df = pd.read_csv('../../data/labels.csv')
+        localizationSys_df = pd.read_csv('../../data/localizationSys.csv')
+        networkMonitor_df = pd.read_csv('../../data/networkMonitor.csv')
+        transactionCloud_df = pd.read_csv('../../data/transactionCloud.csv')
 
         csvFiles = ["labels", "localizationSys", "networkMonitor", "transactionCloud"]
         pandasFiles = [label_df, localizationSys_df, networkMonitor_df, transactionCloud_df]
@@ -123,7 +127,48 @@ class TestServiceReceiver(TestCase):
 
         # dictToSend is the item to send
 
+    def test(self):
+        # Read CSV files
+        label_df = pd.read_csv('../../data/labels.csv')
+        localizationSys_df = pd.read_csv('../../data/localizationSys.csv')
+        networkMonitor_df = pd.read_csv('../../data/networkMonitor.csv')
+        transactionCloud_df = pd.read_csv('../../data/transactionCloud.csv')
 
+        # List of dataframes
 
+        dataframes = {
+            'labels': label_df,
+            'localizationSys': localizationSys_df,
+            'networkMonitor': networkMonitor_df,
+            'transactionCloud': transactionCloud_df
+        }
+
+        # Choose a random dataframe
+        chosen_df_name = random.choice(list(dataframes.keys()))
+        chosen_df = dataframes[chosen_df_name]
+
+        # Randomly select a single record from the chosen dataframe
+        random_record = chosen_df.sample(n=1)
+        mapped_class = None
+        print("Chose frame ", chosen_df_name)
+        print("Record ", random_record)
+        # Map the selected record to a class based on the dataframe chosen
+        if chosen_df_name == 'labels':
+            mapped_class = 'Label'
+        elif chosen_df_name == 'localizationSys':
+            # Assuming you have a class called LocalizationSys
+            mapped_class = LocalizationSys(random_record['UUID'].iloc[0], random_record['longitude'].iloc[0],
+                                           random_record['latitude'].iloc[0])
+        elif chosen_df_name == 'networkMonitor':
+            # Assuming you have a class called NetworkMonitor
+            mapped_class = NetworkMonitor(random_record['UUID'].iloc[0], random_record['targetIP'].iloc[0],
+                                          random_record['destIP'].iloc[0])
+        elif chosen_df_name == 'transactionCloud':
+            # Assuming you have a class called TransactionCloud
+            mapped_class = TransactionCloud(random_record['UUID'].iloc[0], random_record['timestamp'].iloc[0],
+                                            random_record['amount'].iloc[0])
+
+        # Display the randomly selected record and its mapped class
+        print("Mapped class:", mapped_class)
 
 
