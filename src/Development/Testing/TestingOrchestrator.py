@@ -1,6 +1,6 @@
 import json
 
-from src.Development.DevSystemStatus import DevSystemStatus
+from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.ReportController import ReportController
 from src.MessageBus.MessageBus import MessageBus
 
@@ -9,7 +9,7 @@ class TestingOrchestrator:
     report_controller: ReportController = None
     message_bus: MessageBus = None
 
-    def __init__(self, status: DevSystemStatus, report_controller: ReportController, message_bus: MessageBus):
+    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus):
         self.report_controller = report_controller
         self.message_bus = message_bus
         self.status = status

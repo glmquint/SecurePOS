@@ -1,6 +1,6 @@
 import json
 
-from src.Development.DevSystemStatus import DevSystemStatus
+from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.ReportController import ReportController
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
 from src.Development.Training.TrainProcess import TrainProcess, LearningSet
@@ -17,15 +17,16 @@ class TrainingOrchestrator:
     is_ongoing_validation: bool = False
     number_of_iter_is_fine: bool = False
     storage_controller: StorageController = None
-    status: DevSystemStatus = None
+    status: DevelopmentSystemStatus = None
     hyperparameters: HyperParameterLimit = None
 
-    def __init__(self, status: DevSystemStatus, report_controller: ReportController, message_bus: MessageBus,
+    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus,
                  hyperparameters: HyperParameterLimit):
         self.message_bus = message_bus
         self.report_controller = report_controller
         self.status = status
         self.hyperparameters = hyperparameters
+        self.train_process = TrainProcess(self.status, self.message_bus, self.hyperparameters)
 
     def get_AI_export_response(self) -> int:
         ret_val = -1
@@ -38,7 +39,7 @@ class TrainingOrchestrator:
 
     def start(self):
         while True:
-            if self.status.status in ["receive_learning_set", "set_avg_hyperparam", "set_number_of_iterations",
+            if self.status.status in ["receive_learning_set", "set_avg_hyperparams", "set_number_of_iterations",
                                       "train"]:
                 self.train_process.start()
             if not self.status.should_validate:

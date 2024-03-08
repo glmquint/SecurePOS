@@ -1,6 +1,6 @@
 import json
 
-from src.Development.DevSystemStatus import DevSystemStatus
+from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.ReportController import ReportController
 from src.MessageBus.MessageBus import MessageBus
 
@@ -8,9 +8,9 @@ from src.MessageBus.MessageBus import MessageBus
 class ValidationOrchestrator:
     report_controller: ReportController = None
     message_bus: MessageBus = None
-    status: DevSystemStatus = None
+    status: DevelopmentSystemStatus = None
 
-    def __init__(self, status: DevSystemStatus, report_controller: ReportController, message_bus: MessageBus):
+    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus):
         self.report_controller = report_controller
         self.message_bus = message_bus
         self.status = status
@@ -35,7 +35,7 @@ class ValidationOrchestrator:
                     self.status.status = "train"
                     self.status.should_validate = True
                     self.status.save_status()
-                    #self.status.save_status()
+                    # self.status.save_status()
                     break
                 else:  # if empty grid hyperparameter remember to set the status to should_validate=False
                     self.status.save_status = "generate_validation_report",
@@ -46,9 +46,9 @@ class ValidationOrchestrator:
             elif self.status.status == "check_validation_report":
                 response = self.check_validation_result()
                 if response == 0:
-                    self.status.status="set_avg_hyperparam"
+                    self.status.status = "set_avg_hyperparams"
                 elif response == 1:
-                    self.status.status="generate_test_report"
+                    self.status.status = "generate_test_report"
                 self.status.save_status()
                 break  # response -1 is handled, close the application
             else:
