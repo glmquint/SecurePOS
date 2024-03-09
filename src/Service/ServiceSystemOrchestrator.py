@@ -16,10 +16,11 @@ class ServiceSystemOrchestator:
         self.serviceReceiver = ServiceReceiver()
 
     def start(self):
+        """
         thread = Thread(target=self.serviceReceiver.run)
         thread.daemon = True  # this will allow the main thread to exit even if the server is still running
         thread.start()
-
+        """
         label_df = pd.read_csv('../../data/labels.csv')
         localizationSys_df = pd.read_csv('../../data/localizationSys.csv')
         networkMonitor_df = pd.read_csv('../../data/networkMonitor.csv')
@@ -82,12 +83,10 @@ class ServiceSystemOrchestator:
 
             print("Record: ", record.to_json())
 
-            sender = JSONSender("../DataObjects/Schema/RecordSchema.json",
+            sender = JSONSender("",
                                 "http://127.0.0.1:5000/ingestionSystem")
+            sender.send(record.to_json())
 
-            # FIXME la validazione dà errore
-            sender.send(record)
-            break
 
 
 if __name__ == "__main__":
