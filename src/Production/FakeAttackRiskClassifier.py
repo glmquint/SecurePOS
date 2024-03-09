@@ -11,9 +11,9 @@ class FakeAttackRiskClassifier:
 
     def provideAttackRiskLabel(self):
         if self.attackRiskClassifier is None:
-            self.attackRiskClassifier = self.systemBus.pop("Classifier")
+            self.attackRiskClassifier = self.systemBus.popTopic("Classifier")
             # assert self.attackRiskClassifier is not None
-        self.preparedSession = self.systemBus.pop("PreparedSession")
+        self.preparedSession = self.systemBus.popTopic("PreparedSession")
         # used for debug purpose
         # assert self.preparedSession is not None
         # fake return
