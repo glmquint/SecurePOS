@@ -23,10 +23,10 @@ from src.DataObjects.LocalizationSys import LocalizationSys
 
 class TestServiceReceiver(TestCase):
 
-    def self_server_setup(self):
+    def self_server_setup(self, endpoint_name="/test_endpoint"):
         server = Server()
         test_callback = lambda json_data: print(f"Hello from test_callback. Received {json_data}")
-        server.add_resource(JSONEndpoint, "/test_endpoint", recv_callback=test_callback,
+        server.add_resource(JSONEndpoint, endpoint_name, recv_callback=test_callback,
                             json_schema_path="../DataObjects/Schema/RawSessionSchema.json")
         thread = Thread(target=server.run)
         thread.daemon = True  # this will allow the main thread to exit even if the server is still running
@@ -150,50 +150,11 @@ class TestServiceReceiver(TestCase):
         c = Content(chosen_df_name,mapped_class)
 
 
-
-    def test(self):
-        # Read CSV files
-        label_df = pd.read_csv('../../data/labels.csv')
-        localizationSys_df = pd.read_csv('../../data/localizationSys.csv')
-        networkMonitor_df = pd.read_csv('../../data/networkMonitor.csv')
-        transactionCloud_df = pd.read_csv('../../data/transactionCloud.csv')
-
-        # List of dataframes
-
-        dataframes = {
-            'labels': label_df,
-            'localizationSys': localizationSys_df,
-            'networkMonitor': networkMonitor_df,
-            'transactionCloud': transactionCloud_df
-        }
-
-        # Choose a random dataframe
-        chosen_df_name = random.choice(list(dataframes.keys()))
-        chosen_df = dataframes[chosen_df_name]
-
-        # Randomly select a single record from the chosen dataframe
-        random_record = chosen_df.sample(n=1)
-        mapped_class = None
-        print("Chose frame ", chosen_df_name)
-        print("Record ", random_record)
-        # Map the selected record to a class based on the dataframe chosen
-        if chosen_df_name == 'labels':
-            mapped_class = 'Label'
-        elif chosen_df_name == 'localizationSys':
-            # Assuming you have a class called LocalizationSys
-            mapped_class = LocalizationSys(random_record['UUID'].iloc[0], random_record['longitude'].iloc[0],
-                                           random_record['latitude'].iloc[0])
-        elif chosen_df_name == 'networkMonitor':
-            # Assuming you have a class called NetworkMonitor
-            mapped_class = NetworkMonitor(random_record['UUID'].iloc[0], random_record['targetIP'].iloc[0],
-                                          random_record['destIP'].iloc[0])
-        elif chosen_df_name == 'transactionCloud':
-            # Assuming you have a class called TransactionCloud
-            mapped_class = TransactionCloud(random_record['UUID'].iloc[0], random_record['timestamp'].iloc[0],
-                                            random_record['amount'].iloc[0])
-
-        # Display the randomly selected record and its mapped class
-        print("Mapped class:", mapped_class)
+    # THIS SUCK PLS REWRITE
+    def test_orchestrator(self):
+        self.self_server_setup("/ingestionSystem")
+        from time import sleep
+        sleep(20)
 
 
 
