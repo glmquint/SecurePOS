@@ -42,3 +42,8 @@ class DBConnector:
         cursor = self.connection.cursor()
         cursor.execute('SELECT COUNT(*) FROM ' + self.tableName)
         return cursor.fetchall()[0][0]
+
+    def delete_by_column(self, column, value):
+        cursor = self.connection.cursor()
+        cursor.execute(f'DELETE FROM {self.tableName} WHERE {column} = ?', (value,))
+        self.connection.commit()

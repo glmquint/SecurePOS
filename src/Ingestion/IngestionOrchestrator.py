@@ -35,9 +35,9 @@ class PreparationSystemOrchestrator:
             message_bus=self.message_bus)
 
     def run(self) -> None:
+        Thread(target=self.raw_session_creator.run).start()
+        Thread(target=self.prepared_session_creator.run).start()
         Thread(target=self.preparation_sys_receiver.run).start()
         while True:
-            while not self.raw_session_creator.run():
-                pass
-            self.prepared_session_creator.run()
+            pass
 

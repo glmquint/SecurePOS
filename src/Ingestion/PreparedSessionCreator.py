@@ -19,14 +19,15 @@ class PreparedSessionCreator:
         self.raw_session : RawSession = None
 
     def run(self) -> None:
-        self.raw_session : RawSession = self.message_bus.popTopic(self.raw_session_topic)
-        self.correctMissingSamples()
-        self.detectAndCorrectAbsoluteOutliers()
-        self.exrtactFeatures()
-        if self.phase_tracker.isDevPhase():
-            self.prepared_session_sender.send(self.raw_session)
-        else:
-            self.prepared_session_sender.send(self.raw_session)
+        while True:
+            self.raw_session : RawSession = self.message_bus.popTopic(self.raw_session_topic)
+            self.correctMissingSamples()
+            self.detectAndCorrectAbsoluteOutliers()
+            self.exrtactFeatures()
+            if self.phase_tracker.isDevPhase():
+                self.prepared_session_sender.send(self.raw_session)
+            else:
+                self.prepared_session_sender.send(self.raw_session)
 
     def correctMissingSamples(self):
         pass

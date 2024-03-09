@@ -22,7 +22,7 @@ class StorageController:
             self.DBConnector.insert(row)
             self.count_updated.set()
         except Exception as e:
-            print(e)
+            print(__name__, e)
             return False
         return True
 
@@ -43,3 +43,12 @@ class StorageController:
         self.count_updated.wait()
         self.count_updated.clear()
         return self.DBConnector.count()
+
+    def delete_by_column(self, column, value) -> bool:
+        try:
+            self.DBConnector.delete_by_column(column, value)
+            self.count_updated.set()
+        except Exception as e:
+            print(e)
+            return False
+        return True

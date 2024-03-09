@@ -21,8 +21,6 @@ class RawSessionCreator:
         pass
 
     def isNumberOfRecordsSufficient(self) -> bool:
-        if self.phase_tracker.isDevPhase(): # nocheckin
-            return self.storage_controller.count() >= 1
         return self.storage_controller.count() >= self.sufficient_number_of_records
 
     def createRawSession(self) -> None:
@@ -40,16 +38,17 @@ class RawSessionCreator:
             return True
         return len(self.missing_samples) == 0
 
-    def run(self) -> bool:
-        while not self.isNumberOfRecordsSufficient():
-            pass
-        self.createRawSession()
-        self.storage_controller.remove_all()
-        self.markMissingSamples()
-        if not self.isRawSessionValid():
-            return False
-        if self.phase_tracker.isEvalPhase():
-            self.label_sender.send(self.label)
-        self.raw_session_sender.send(self.raw_session)
-        return True
+    def run(self):
+        while True:
+            while not self.isNumberOfRecordsSufficient():
+                pass
+            self.createRawSession()
+            self.storage_controller.remove_all()
+            self.markMissingSamples()
+            if not self.isRawSessionValid():
+                continue
+            if self.phase_tracker.isEvalPhase():
+                self.label_sender.send(self.label)
+            self.raw_session_sender.send(self.raw_session)
+            continue
 
