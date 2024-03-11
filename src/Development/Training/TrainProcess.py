@@ -55,10 +55,10 @@ class TrainProcess:
             self.learning_set = self.status.learning_set
         if not self.status.should_validate:
             self.classifier = Classifier(self.avg_hyperparameters['number_of_neurons'],
-                                         self.avg_hyperparameters['number_of_layers'])
+                                         self.avg_hyperparameters['number_of_layers'],self.number_of_iterations)
         else:
             self.classifier = Classifier(self.current_hyperparameter[0],
-                                         self.current_hyperparameter[1])
+                                         self.current_hyperparameter[1],self.number_of_iterations)
         self.classifier.model.fit(self.learning_set.trainingSet, self.learning_set.trainingSetLabel)
         if not self.status.should_validate:
             loss_curve = self.classifier.get_loss_curve()
