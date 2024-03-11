@@ -18,5 +18,3 @@ sender.send({"attackRiskLabel": "low"})
 
 sender.send({"attackRiskLabel": "low"})
 sender2.send({"attackRiskLabel": "high"})
-sender2.send({"attackRiskLabel": "medium"})
-sender.send({"attackRiskLabel": "low"})

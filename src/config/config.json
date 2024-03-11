@@ -1,4 +1,1 @@
-{
-    "sufficient_label_number": 5,
-    "simulate_human_task":"False"
-}
+{"sufficient_label_number": 5, "simulate_human_task": "True", "state": 0}

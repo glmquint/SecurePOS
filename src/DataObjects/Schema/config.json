@@ -5,9 +5,14 @@
             "type": "integer"
         },
         "simulate_human_task": {
-            "type": "string"
+            "type": "string",
+          "enum": ["False","True"]
+        },
+        "state": {
+            "type": "integer",
+            "enum": [0,1]
         }
     },
-    "required": ["sufficient_label_number","simulate_human_task"]
+    "required": ["sufficient_label_number","simulate_human_task","state"]
 }
 

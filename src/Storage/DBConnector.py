@@ -13,19 +13,27 @@ class DBConnector:
         self.tableName = dbConfig.tableName
 
         try:
-            self.connection = sqlite3.connect(f'../db/{self.name}.db')
+            self.connection = sqlite3.connect(f'../../db/{self.name}.db', check_same_thread=False)
+            cursor = self.connection.cursor()
+            cursor.execute(f"PRAGMA table_info({self.tableName})")
+            self.columns = [column[1] for column in cursor.fetchall()][1:]  # [1:] to remove the id column
         except sqlite3.Error as e:
+            print("error from " + self.name + ".db:")
             print(e)
 
     def insert(self, row: list):
         cursor = self.connection.cursor()
+        columns = ' ,'.join(self.columns)
+        lenght = len(self.columns)
         insert_query = 'INSERT INTO ' + self.tableName + '(' + ' ,'.join(self.columns) + ') VALUES (' + ', '.join(
             '?' * len(self.columns)) + ')'
+
+        #insert_query = 'INSERT INTO ' + self.tableName + '(' + str(columns) + ') VALUES (' + ', '.join(
+            #'?' * lenght) + ')'
         cursor.executemany(
                 insert_query,
                 row)
         self.connection.commit()
-
 
     def remove(self):
         cursor = self.connection.cursor()
