@@ -31,7 +31,6 @@ class DevelopmentSystemMasterOrchestrator:
         self.message_bus = MessageBus(self.development_system_configurations.topics)
         self.report_controller = ReportController(self.message_bus)
         self.train_orchestrator = TrainingOrchestrator(self.status, self.report_controller, self.message_bus,
-                                                       self.development_system_configurations.hyperparameters,
                                                        self.development_system_configurations)
         self.validation_orchestrator = ValidationOrchestrator(self.status, self.report_controller, self.message_bus,
                                                               self.development_system_configurations)
@@ -63,6 +62,6 @@ class DevelopmentSystemMasterOrchestrator:
             else:
                 raise Exception("Invalid status")
 
-# dsmo = DevelopmentSystemMasterOrchestrator(False)
-# print("Starting Development System Master Orchestrator...")
-# dsmo.start()
+dsmo = DevelopmentSystemMasterOrchestrator(False)
+print("Starting Development System Master Orchestrator...")
+dsmo.start()

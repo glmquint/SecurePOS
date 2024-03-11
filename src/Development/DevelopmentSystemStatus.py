@@ -1,11 +1,14 @@
 import json
 
+from src.Development.LearningSet import LearningSet
 from src.JsonIO.JsonValidator import JSONValidator
 
 
 class DevelopmentSystemStatus:
     status: str
     should_validate: bool
+    average_hyperparameters: dict
+    learning_set: LearningSet
     schema_path: str
     status_path: str
     validator: JSONValidator
@@ -22,12 +25,15 @@ class DevelopmentSystemStatus:
                 self.validator.validate_data(data)
                 self.status = data['status']
                 self.should_validate = data['should_validate']
+                self.learning_set = LearningSet(json.loads(data['learning_set']))
+                self.average_hyperparameters = data['average_hyperparameters']
         except FileNotFoundError as e:
             self.status = "receive_learning_set"
             self.should_validate = False
 
     def to_dict(self):
-        return dict(status=self.status, should_validate=self.should_validate)
+        return dict(status=self.status, should_validate=self.should_validate,
+                    average_hyperparameters=self.average_hyperparameters, learning_set=self.learning_set.json())
 
     def save_status(self):
         with open(self.status_path, 'w') as json_file:

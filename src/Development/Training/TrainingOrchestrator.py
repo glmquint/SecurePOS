@@ -22,13 +22,12 @@ class TrainingOrchestrator:
     hyperparameters: HyperParameterLimit = None
     configurations: DevelopmentSystemConfigurations = None
 
-    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus,
-                 hyperparameters: HyperParameterLimit, configurations: DevelopmentSystemConfigurations):
+    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus, configurations: DevelopmentSystemConfigurations):
         self.message_bus = message_bus
         self.report_controller = report_controller
         self.status = status
-        self.hyperparameters = hyperparameters
-        self.train_process = TrainProcess(self.status, self.message_bus, self.hyperparameters, self.configurations)
+        self.hyperparameters = configurations.hyperparameters
+        self.train_process = TrainProcess(self.status, self.message_bus, configurations)
         self.configurations = configurations
 
     def get_ai_export_response(self) -> int:

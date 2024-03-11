@@ -23,7 +23,7 @@ class ValidationOrchestrator:
         self.message_bus = message_bus
         self.status = status
         self.configurations = configurations
-        self.trainining_process = TrainProcess(self.status, self.message_bus, self.configurations.hyperparameters,
+        self.trainining_process = TrainProcess(self.status, self.message_bus,
                                                self.configurations)
 
     def check_validation_result(self) -> int:
