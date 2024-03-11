@@ -26,10 +26,9 @@ class TrainProcess:
 
     def set_average_hyperparameters(self):
         self.avg_hyperparameters = {}
-        for key in self.hyperparameters.__dict__:
-            print(self.hyperparameters.__dict__[key])
-            self.avg_hyperparameters[key] = (self.hyperparameters.__dict__[key]['min'] +
-                                             self.hyperparameters.__dict__[key]['max']) / 2
+        for key in self.configurations.hyperparameters.__dict__:
+            self.avg_hyperparameters[key] = (self.configurations.hyperparameters.__dict__[key]['min'] +
+                                             self.configurations.hyperparameters.__dict__[key]['max']) / 2
 
     def get_number_of_iterations(self) -> int:
         ret_val = -1
@@ -48,7 +47,6 @@ class TrainProcess:
                  configurations: DevelopmentSystemConfigurations):
         self.status = status
         self.message_bus = message_bus
-        self.hyperparameters = configurations.hyperparameters
         self.configurations = configurations
 
     def train(self):

@@ -25,8 +25,9 @@ class DevelopmentSystemStatus:
                 self.validator.validate_data(data)
                 self.status = data['status']
                 self.should_validate = data['should_validate']
-                self.learning_set = LearningSet(json.loads(data['learning_set']))
-                self.average_hyperparameters = data['average_hyperparameters']
+                if 'learning_set' in data.keys() and 'average_hyperparameters' in data.keys():
+                    self.learning_set = LearningSet(json.loads(data['learning_set']))
+                    self.average_hyperparameters = data['average_hyperparameters']
         except FileNotFoundError as e:
             self.status = "receive_learning_set"
             self.should_validate = False
