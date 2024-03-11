@@ -11,7 +11,7 @@ class Session:
 class RawSession(Session):
     records : [Record]
     def __init__(self, **kwargs):
-        self.records = [Record(**x) for x in kwargs.get("records", [])]
+        self.records = kwargs.get("records", [])
     def to_json(self):
         #return str([record.__repr__() for record in self.records])
         if not self.records or len(self.records) == 0:

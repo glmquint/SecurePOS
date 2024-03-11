@@ -2,14 +2,14 @@ import sqlite3
 
 
 class DBConnector:
-    name = None
+    name                           = None
     connection: sqlite3.Connection = None
-    tableName = None
-    columns = None
+    tableName                      = None
+    columns                        = None
 
-    def __init__(self, dbConfig):
-        self.name = dbConfig['database_name']
-        self.tableName = dbConfig['table_name']
+    def __init__(self, **kwargs):
+        self.name = kwargs.get('name', '')
+        self.tableName = kwargs.get('table_name', '')
 
         try:
             self.connection = sqlite3.connect(f'../../db/{self.name}.db', check_same_thread=False)

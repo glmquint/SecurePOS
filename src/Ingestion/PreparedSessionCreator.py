@@ -8,9 +8,9 @@ DATAOBJ_PATH = "../DataObjects/Schema"
 
 class PreparedSessionCreator:
     def __init__(self, config , message_bus:MessageBus, raw_session_topic:str, phase_tracker:PhaseTracker) -> None:
-        self.config = config
-        self.message_bus : MessageBus = message_bus
-        self.raw_session_topic : str = raw_session_topic
+        self.config                       = config
+        self.message_bus : MessageBus     = message_bus
+        self.raw_session_topic : str      = raw_session_topic
         self.phase_tracker : PhaseTracker = phase_tracker
         if self.phase_tracker.isDevPhase():
             self.prepared_session_sender : JSONSender = JSONSender(f"{DATAOBJ_PATH}/PreparedSessionSchema.json", self.config["segregation_system_receiver"]["url"])

@@ -6,7 +6,7 @@ from uuid import uuid1
 import requests
 
 from src.DataObjects.AttackRiskLabel import AttackRiskLabel
-from src.DataObjects.Record import Record
+from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import PreparedSession, RawSession
 from src.Ingestion.PreparationSystemConfig import PreparationSystemConfig
 from src.Ingestion.IngestionOrchestrator import PreparationSystemOrchestrator
@@ -86,7 +86,7 @@ class TestPreparationSystemOrchestrator:
         for j in range(5):
             for i in range(sufficient_records): # simulate client-side systems
                 url = "record"
-                r = requests.post(f"http://127.0.0.1:5000/{url}", json=Record(**{'uuid':str(uuid1())}).to_json())
+                r = requests.post(f"http://127.0.0.1:5000/{url}", json=RecordOld(**{'uuid':str(uuid1())}).to_json())
                 assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
             result = message_bus.popTopic("segregation_system")
             assert result is not None, "raw_session not received"

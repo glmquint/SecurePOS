@@ -10,12 +10,13 @@ class StorageController:
 
     def __init__(self, dbConfig, type):
         self.type = type
+        self.connectors = [DBConnector(name = dbConfig['name'], table_name=table_name) for table_name in dbConfig['table_names']]
         self.DBConnector = DBConnector(dbConfig)
         self.count_updated = Event()
         self.count_updated.set()
 
     def save(self, obj):
-        if type(obj) is not self.type:
+        if issubclass(type(obj), self.type)
             raise Exception(f'Invalid type, expected {self.type} got {type(obj)}')
         row = [tuple(obj.__dict__.values())]
         try:
@@ -35,7 +36,7 @@ class StorageController:
             return False
         return True
 
-    def retrieve_all(self):
+    def retrieve_all(self) -> [type]:
         data_elem = self.DBConnector.retrieve()
         return [self.type(**elem) for elem in data_elem]
 
@@ -44,7 +45,7 @@ class StorageController:
         self.count_updated.clear()
         return self.DBConnector.count()
 
-    def delete_by_column(self, column, value) -> bool:
+    def remove_by_column(self, column, value) -> bool:
         try:
             self.DBConnector.delete_by_column(column, value)
             self.count_updated.set()
