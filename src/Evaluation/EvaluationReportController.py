@@ -13,8 +13,8 @@ class EvaluationReportController:
 
     def update(self):
         self.evaluationmodel.generatereport()
+        self.reportviewer.print(self.evaluationmodel.labels)
         self.evaluationmodel.removelabels()
-        self.reportviewer.print()
         return
 
     def getresult(self,human_simulate = False):
