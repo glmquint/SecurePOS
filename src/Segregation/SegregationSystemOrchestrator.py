@@ -15,18 +15,18 @@ from src.Storage.StorageController import StorageController
 from src.Storage.dbConfig import DBConfig
 
 
-def send(data): # FIXME just for debug
+def send(data):  # FIXME just for debug
     # send data
     return 0
 
 
-def recive(): # FIXME just for debug
+def recive():  # FIXME just for debug
     # recive
     label = ["High", "Medium", "Low"]
     test_array = np.array(label)
     random_num = np.random.choice(test_array)
-    d = { 'UUID': "ciao",
-          'MeanAbsoluteDifferencingTransactionTimestamps': random(),
+    d = {'UUID': "ciao",
+         'MeanAbsoluteDifferencingTransactionTimestamps': random(),
          'MeanAbsoluteDifferencingTransactionAmount': random(),
          'MedianLongitude': random(),
          'MedianLatitude': random(),
@@ -55,7 +55,7 @@ def run():
     segregationPlotController = SegregationPlotController(storageController,
                                                           configParameter.getToleranceDataBalancing())
 
-    #storageController.createTable()
+    # storageController.createTable()
 
     while True:
         server = 0
@@ -126,7 +126,7 @@ def run():
 
         if serviceFlag is True or (evaluationCheckDataBalance == "ok" and evaluationCheckInputCoverage == "ok"):
             # TODO i have to normalize data?
-            #storageController.normalizeData()
+            # storageController.normalizeData()
 
             # here the human have checked that the data are correctly balanced
             learningSetGenerator = LearningSetGenerator(configParameter.getPercentageTrainingSplit(),
@@ -144,11 +144,13 @@ def run():
                 developmentSystemEndpoint = configParameter.getDevelopmentSystemEndpoint()
                 sender = JSONSender("../DataObjects/Schema/LearningSetSchema.json",
                                     "http://" + str(developmentSystemIp) + ":" + str(
-                                        developmentSystemPort) + "/"+str(developmentSystemEndpoint))
+                                        developmentSystemPort) + "/" + str(developmentSystemEndpoint))
                 sender.send(learningSet)
             else:
                 send(learningSet)
 
+            print(learningSet.to_json())
+            quit()
             print("Leaning set sent")
             storageController.removeAll()  # remove the session
 
@@ -161,7 +163,7 @@ def run():
                 x = input('Do you want to continue: [Yes|No]')
 
             if "No" in x:
-                 break
+                break
 
 
 if __name__ == "__main__":

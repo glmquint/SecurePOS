@@ -1,3 +1,5 @@
+import pandas as pd
+
 from PreparedSession import *
 from src.Segregation.LearningSet import LearningSet
 from src.Storage.StorageController import StorageController
@@ -21,29 +23,40 @@ class LearningSetGenerator:
         valSetCardinality = math.ceil(cardinalityPreparedSession*self.__validationPercentage/100)
         trainingSetCardinality = cardinalityPreparedSession - testSetCardinality-valSetCardinality
 
-        learningSet = LearningSet(
-                        preparedSessionArray[:trainingSetCardinality],
-                        preparedSessionArray[trainingSetCardinality:trainingSetCardinality+testSetCardinality],
-                        preparedSessionArray[trainingSetCardinality+testSetCardinality:]
-                    )
-        return learningSet
+        trainingSet = preparedSessionArray[:trainingSetCardinality]
+        validationSet = preparedSessionArray[trainingSetCardinality:trainingSetCardinality+testSetCardinality]
+        testSet = preparedSessionArray[trainingSetCardinality+testSetCardinality:]
+
+        trainingSetArray = validationSetArray = testSetArray = []
+        trainingSetLabel = validationSetLabel = testSetLabel = []
+        for i in trainingSet:
+            trainingSetArray.append(i.returnArray())
+            trainingSetLabel.append((i.getLabel()))
+
+        for i in validationSet:
+            validationSetArray.append(i.returnArray())
+            validationSetLabel.append((i.getLabel()))
+
+        for i in testSet:
+            testSetArray.append(i.returnArray())
+            testSetLabel.append((i.getLabel()))
+
+        trainingSetArray = pd.DataFrame(trainingSetArray).drop([7], axis=1)
+        validationSetArray = pd.DataFrame(validationSetArray).drop([7], axis=1)
+        testSetArray = pd.DataFrame(testSetArray).drop([7], axis=1)
+
+        leaningSet = LearningSet(
+            trainingSetArray,
+            validationSetArray,
+            testSetArray,
+            trainingSetLabel,
+            validationSetLabel,
+            testSetLabel
+        )
+        return leaningSet
 
 
-def test():
-    l = LearningSetGenerator(70, 15, 15)
-    p1 = []
-    for i in range(0, 20):
-        p1.append(PreparedSession([0, 0, 0, 0, 0, 0, "High"]))
 
-    p2 = []
-    for i in range(0, 15):
-        p2.append(PreparedSession([0, 0, 0, 0, 0, 0, "Medium"]))
-
-    p3 = []
-    for i in range(0, 18):
-        p3.append(PreparedSession([0, 0, 0, 0, 0, 0, "Low"]))
-
-    l.generateLearningSet(p1 + p2 + p3)
 
 def test1():
     dbConfig = DBConfig("PreparedSessionsDataStore", "PreparedSessions")

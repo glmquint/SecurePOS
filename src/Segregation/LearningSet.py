@@ -2,31 +2,41 @@ import json
 
 
 class LearningSet:
-    __trainingSet = []
-    __validationSet = []
-    __testSet = []
+    trainingSet = []
+    validationSet = []
+    testSet = []
+    trainingSetLabel = []
+    validationSetLabel = []
+    testSetLabel = []
 
-    def __init__(self, trainingSet, validationSet, testSet):
-        for p in trainingSet:
-            l = [p, p.getLabel()]
-            self.__trainingSet.append(l)
+    def __init__(self, trainingSet, validationSet, testSet,trainingSetLabel,validationSetLabel,testSetLabel):
+        self.trainingSet = trainingSet
+        self.validationSet = validationSet
+        self.testSet = testSet
+        self.trainingSetLabel = trainingSetLabel
+        self.validationSetLabel = validationSetLabel
+        self.testSetLabel = testSetLabel
 
-        for p in validationSet:
-            l = [p, p.getLabel()]
-            self.__validationSet.append(l)
+    def to_json(self):
+        dic = dict()
+        dic["trainingSet"] = self.trainingSet.to_json()
+        dic["validationSet"] = self.validationSet.to_json()
+        dic["testSet"] = self.testSet.to_json()
+        dic["trainingSetLabel"] = self.trainingSetLabel
+        dic["validationSetLabel"] = self.validationSetLabel
+        dic["testSetLabel"] = self.testSetLabel
 
-        for p in testSet:
-            l = [p, p.getLabel()]
-            self.__testSet.append(l)
+        ciao = ("{"
+                "trainingSet : "+self.trainingSet.to_json()
+                +",validationSet:"+self.validationSet.to_json()
+                +",testSet:"+self.testSet.to_json()+",trainingSetLabel"
+                +",trainingSetLabel: "+json.dumps(self.trainingSetLabel)
+                + ",validationSetLabel: " + json.dumps(self.trainingSetLabel)
+                + ",trainingSetLabel: " + json.dumps(self.trainingSetLabel)
+                )
 
-    def toJSON(self):
-        #TODO i label conviene metterli fuori dalla prepared session?
-        trainingSet = "["
-        for p in self.__trainingSet:
-            trainingSet += "{"
-            trainingSet += str(p[0].__dict__)
-            trainingSet += ", label: "+p[1]+"},"
 
-        ciao = 0
-        pass
+        return
+
+
 
