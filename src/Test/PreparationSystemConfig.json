@@ -7,11 +7,11 @@
   },
   "db" : {
     "name" : "record",
-    "table_names" : [
-      "LocalizationSys",
-      "NetoworkMonitorSys",
-      "TransactionCloudSys"
-    ]
+    "table_names" : {
+      "<class 'src.DataObjects.Record.LocalizationSysRecord'>": "localization_sys",
+      "<class 'src.DataObjects.Record.NetworkMonitorRecord'>": "network_monitor_sys",
+      "<class 'src.DataObjects.Record.TransactionCloudRecord'>": "transaction_cloud_sys"
+    }
   },
   "raw_session_creator" : {
     "sufficient_number_of_records" : 33,

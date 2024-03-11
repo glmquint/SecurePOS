@@ -10,17 +10,16 @@ class StorageController:
 
     def __init__(self, dbConfig, type):
         self.type = type
-        self.connectors = [DBConnector(name = dbConfig['name'], table_name=table_name) for table_name in dbConfig['table_names']]
-        self.DBConnector = DBConnector(dbConfig)
+        self.connectors = {class_name : DBConnector(name = dbConfig['name'], table_name=table_name) for (class_name, table_name) in dbConfig['table_names'].items()}
         self.count_updated = Event()
         self.count_updated.set()
 
     def save(self, obj):
-        if issubclass(type(obj), self.type)
+        if not issubclass(type(obj), self.type):
             raise Exception(f'Invalid type, expected {self.type} got {type(obj)}')
         row = [tuple(obj.__dict__.values())]
         try:
-            self.DBConnector.insert(row)
+            self.connectors[str(type(obj))].insert(row)
             self.count_updated.set()
         except Exception as e:
             print(__name__, e)
