@@ -31,11 +31,15 @@ class DevelopmentSystemMasterOrchestrator:
         self.message_bus = MessageBus(self.development_system_configurations.topics)
         self.report_controller = ReportController(self.message_bus)
         self.train_orchestrator = TrainingOrchestrator(self.status, self.report_controller, self.message_bus,
-                                                       self.development_system_configurations.hyperparameters)
-        self.validation_orchestrator = ValidationOrchestrator(self.status, self.report_controller, self.message_bus)
+                                                       self.development_system_configurations.hyperparameters,
+                                                       self.development_system_configurations)
+        self.validation_orchestrator = ValidationOrchestrator(self.status, self.report_controller, self.message_bus,
+                                                              self.development_system_configurations)
         self.test_orchestrator = TestingOrchestrator(self.status, self.report_controller, self.message_bus)
         self.learning_set_receiver = LearningSetReceiver(self.message_bus)
-        self.development_system_sender = DevelopmentSystemSender(self.development_system_configurations.messaging_system_receiver,self.development_system_configurations.production_system_receiver)
+        self.development_system_sender = DevelopmentSystemSender(
+            self.development_system_configurations.messaging_system_receiver,
+            self.development_system_configurations.production_system_receiver)
 
     def start(self):
         while True:
@@ -46,7 +50,8 @@ class DevelopmentSystemMasterOrchestrator:
             elif self.status.status in ["set_avg_hyperparams", "set_number_of_iterations", "train", "check_validation",
                                         "generate_learning_plot", "check_learning_plot", "check_number_of_iterations"]:
                 self.train_orchestrator.start()
-            elif self.status.status in ["set_hyperparam", "check_ongoing_validation", "generate_validation_report",
+            elif self.status.status in ["do_grid_search", "check_ongoing_validation",
+                                        "generate_validation_report",
                                         "check_validation_report", "check_valid_classifier"]:
                 self.validation_orchestrator.start()
             elif self.status.status in ["generate_test_report", "check_test_report"]:

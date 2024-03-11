@@ -1,12 +1,13 @@
 import json
 
+from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.ReportController import ReportController
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
 from src.Development.Training.TrainProcess import TrainProcess, LearningSet
 from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
-from src.Storage.StorageController import StorageController
+
 
 
 class TrainingOrchestrator:
@@ -17,17 +18,18 @@ class TrainingOrchestrator:
     learning_set: LearningSet = None
     is_ongoing_validation: bool = False
     number_of_iter_is_fine: bool = False
-    storage_controller: StorageController = None
     status: DevelopmentSystemStatus = None
     hyperparameters: HyperParameterLimit = None
+    configurations: DevelopmentSystemConfigurations = None
 
     def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus,
-                 hyperparameters: HyperParameterLimit):
+                 hyperparameters: HyperParameterLimit, configurations: DevelopmentSystemConfigurations):
         self.message_bus = message_bus
         self.report_controller = report_controller
         self.status = status
         self.hyperparameters = hyperparameters
-        self.train_process = TrainProcess(self.status, self.message_bus, self.hyperparameters)
+        self.train_process = TrainProcess(self.status, self.message_bus, self.hyperparameters, self.configurations)
+        self.configurations = configurations
 
     def get_ai_export_response(self) -> int:
         ret_val = -1
@@ -56,11 +58,13 @@ class TrainingOrchestrator:
                 break
             elif self.status.status == "check_learning_plot":
                 response = self.get_ai_export_response()
-                if response == 0:
+                if response < 0:
+                    self.status.save_status()
+                elif response == 0:
                     self.status.status = "set_number_of_iterations"
+                    self.status.save_status()
                 elif response == 1:
-                    self.status.status = "set_hyperparam"
-                self.status.save_status()
+                    self.status.status = "do_grid_search"
                 break
             else:
                 raise Exception("Invalid status")

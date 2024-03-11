@@ -1,7 +1,10 @@
+import itertools
 import json
 
+from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.ReportController import ReportController
+from src.Development.Training.TrainProcess import TrainProcess
 from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
 
@@ -10,11 +13,18 @@ class ValidationOrchestrator:
     report_controller: ReportController = None
     message_bus: MessageBus = None
     status: DevelopmentSystemStatus = None
+    configurations: DevelopmentSystemConfigurations = None
+    grid_search = None
+    trainining_process: TrainProcess = None
 
-    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus):
+    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus,
+                 configurations: DevelopmentSystemConfigurations):
         self.report_controller = report_controller
         self.message_bus = message_bus
         self.status = status
+        self.configurations = configurations
+        self.trainining_process = TrainProcess(self.status, self.message_bus, self.configurations.hyperparameters,
+                                               self.configurations)
 
     def check_validation_result(self) -> int:
         ret_val = -1
@@ -31,22 +41,11 @@ class ValidationOrchestrator:
         finally:
             return ret_val
 
-    def set_hyperparameters(self): # TODO: implement the grid search
-        return None
-
     def start(self):
         while True:
-            if self.status.status == "set_hyperparam":
-                next_hyperparam = self.set_hyperparameters()
-                if next_hyperparam:
-                    self.status.status = "train"
-                    self.status.should_validate = True
-                    self.status.save_status()
-                    break
-                else:  # if empty grid hyperparameter remember to set the status to should_validate=False
-                    self.status.status = "generate_validation_report",
-                    self.status.should_validate = False
-                    self.status.save_status()
+            if self.status.status == "do_grid_search":
+                self.trainining_process.start()
+                self.status.status = "generate_validation_report"
             elif self.status.status == "generate_validation_report":
                 self.report_controller.create_validation_report()
                 self.status.status = "check_validation_report"
