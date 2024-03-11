@@ -149,7 +149,7 @@ def run():
             else:
                 send(learningSet)
 
-            print(learningSet.to_json())
+            print(learningSet.json())
             quit()
             print("Leaning set sent")
             storageController.removeAll()  # remove the session
