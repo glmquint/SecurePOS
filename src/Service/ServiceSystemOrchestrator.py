@@ -97,13 +97,14 @@ class ServiceSystemOrchestator:
                                                 dict1['am'])
 
                 #print("Mapped class:", mapped_class.to_json())
-            record = Content(chosen_df_name, mapped_class)
+            #record = Content(chosen_df_name, mapped_class)
 
-            print("Record: ", record.to_json())
-
+            print("Record: ", mapped_class.to_json())
+            # Remove comment to print the record for testing without sending
+            #continue
             sender = JSONSender("",
                                 "http://127.0.0.1:5000/ingestionSystem")
-            sender.send(record.to_json())
+            sender.send(mapped_class.to_json())
 
 
 if __name__ == "__main__":
