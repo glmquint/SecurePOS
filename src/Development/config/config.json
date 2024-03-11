@@ -1,17 +1,86 @@
 {
-  "topics" : ["LearningSet","learning_plot","validation_report","test_report"],
-  "messaging_system_receiver" : "http://localhost:4000/messaging_system",
-  "production_system_receiver" :  "http://localhost:4000/production_system",
-  "hyperparameters": {
-    "number_of_layers": {
-      "min":10,
-      "max":100,
-      "step":10
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "topics": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ]
     },
-    "number_of_neurons": {
-      "min":10,
-      "max":100,
-      "step":10
+    "messaging_system_receiver": {
+      "type": "string"
+    },
+    "production_system_receiver": {
+      "type": "string"
+    },
+    "hyperparameters": {
+      "type": "object",
+      "properties": {
+        "number_of_layers": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "integer"
+            },
+            "max": {
+              "type": "integer"
+            },
+            "step": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "min",
+            "max",
+            "step"
+          ]
+        },
+        "number_of_neurons": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "integer"
+            },
+            "max": {
+              "type": "integer"
+            },
+            "step": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "min",
+            "max",
+            "step"
+          ]
+        }
+      },
+      "required": [
+        "number_of_layers",
+        "number_of_neurons"
+      ]
+    },
+    "loss_threshold": {
+      "type": "number"
     }
-  }
+  },
+  "required": [
+    "topics",
+    "messaging_system_receiver",
+    "production_system_receiver",
+    "hyperparameters",
+    "loss_threshold"
+  ]
 }
