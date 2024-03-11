@@ -1,5 +1,6 @@
 from threading import Thread
 
+from src.DataObjects.Record import LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord, Record
 from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import RawSession
 from src.JsonIO.JSONEndpoint import JSONEndpoint
@@ -22,7 +23,18 @@ class PreparationSysReceiver:
 
     @log
     def receiveRecord(self, json_data):
-        record = RecordOld(**json_data)
+        if not isinstance(json_data, dict):
+            raise Exception(f"Expected dict, got {type(json_data)}")
+        if 'uuid' not in json_data:
+            raise Exception(f"Expected uuid, got {json_data}")
+        if 'location_latitude' in json_data or 'location_longitude' in json_data:
+            record = LocalizationSysRecord(**json_data)
+        elif 'target_ip' in json_data or 'dest_ip' in json_data:
+            record = NetworkMonitorRecord(**json_data)
+        elif 'timestamp' in json_data or 'amount' in json_data:
+            record = TransactionCloudRecord(**json_data)
+        else:
+            raise Exception(f"Unknown record type: {json_data}")
         self.storage_controller.save(record)
 
     @log

@@ -23,7 +23,7 @@ class LocalizationSysRecord(Record):
 
 class NetworkMonitorRecord(Record):
     def __init__(self, **kwargs):
-        super()
+        super().__init__(**kwargs)
         self.target_ip: str = kwargs.get("target_ip", "")
         self.dest_ip: str = kwargs.get("dest_ip", "")
     def to_json(self):
@@ -35,7 +35,7 @@ class NetworkMonitorRecord(Record):
 
 class TransactionCloudRecord(Record):
     def __init__(self, **kwargs):
-        super()
+        super().__init__(**kwargs)
         self.timestamp: [int] = kwargs.get("timestamp", [])
         self.amount: [int] = kwargs.get("amount", [])
     def to_json(self):
