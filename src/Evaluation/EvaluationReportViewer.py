@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 class EvaluationReportViewer:
 
 
-    def print(self):
+    def print(self,labels,security_labels):
         print("Printing .png evaluation report.")
 
         width = 512
@@ -21,5 +21,5 @@ class EvaluationReportViewer:
         img.save('result.png')
         pass
 
-e = EvaluationReportViewer()
-e.print()
+#e = EvaluationReportViewer()
+#e.print()

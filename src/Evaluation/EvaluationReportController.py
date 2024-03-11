@@ -13,7 +13,7 @@ class EvaluationReportController:
 
     def update(self):
         self.evaluationmodel.generatereport()
-        self.reportviewer.print(self.evaluationmodel.labels)
+        #self.reportviewer.print(self.evaluationmodel.labels[0],self.evaluationmodel[1])
         self.evaluationmodel.removelabels()
         return
 

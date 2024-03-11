@@ -35,9 +35,17 @@ class DBConnector:
                 row)
         self.connection.commit()
 
-    def remove(self):
+    def remove(self, number = 0):
         cursor = self.connection.cursor()
-        cursor.execute('DELETE FROM ' + self.tableName)
+        if number <= 0:
+            cursor.execute('DELETE FROM ' + self.tableName)
+        else:
+            cursor.execute('Delete '
+                           'from '+self.tableName+' where id IN ('
+                           'Select id'
+                           'from ' + self.tableName+
+                           ' limit '+ number+' );'
+                           )
         self.connection.commit()
 
     def retrieve(self):

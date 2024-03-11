@@ -15,6 +15,7 @@ class EvaluationReportModel:
                                                       type(AttackRiskLabel(None)))
         self.labels = self.retrieve()
 
+
     def retrieve(self):
         labels = self.scontroller_label.retrieve_all()
         slabels = self.scontroller_security.retrieve_all()
