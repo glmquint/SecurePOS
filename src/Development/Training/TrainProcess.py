@@ -50,9 +50,10 @@ class TrainProcess:
         self.configurations = configurations
 
     def train(self):
+        if self.avg_hyperparameters is None and self.learning_set is None:  # if restarted load from file
+            self.avg_hyperparameters = self.status.average_hyperparameters
+            self.learning_set = self.status.learning_set
         if not self.status.should_validate:
-            if self.avg_hyperparameters is None: # load it from file if not found
-                self.avg_hyperparameters = self.status.average_hyperparameters
             self.classifier = Classifier(self.avg_hyperparameters['number_of_neurons'],
                                          self.avg_hyperparameters['number_of_layers'])
         else:
