@@ -74,6 +74,12 @@
     },
     "loss_threshold": {
       "type": "number"
+    },
+    "port": {
+      "type": "integer"
+    },
+    "learning_set": {
+      "type": "string"
     }
   },
   "required": [
@@ -81,6 +87,8 @@
     "messaging_system_receiver",
     "production_system_receiver",
     "hyperparameters",
-    "loss_threshold"
+    "loss_threshold",
+    "port",
+    "learning_set"
   ]
 }
