@@ -36,7 +36,7 @@ class EvaluationReportViewer:
             #first row
             if x <= self.row_offset:
                 imgDraw.text((self.row_id_x_offset, self.y_offset(x)), str(x) + ")", font=font, fill=(0, 0, 0))
-                imgDraw.text((self.first_label_x_offset, self.y_offset(x)), "high,", font=font, fill=(0, 0, 0))
+                imgDraw.text((self.first_label_x_offset, self.y_offset(x)), "high", font=font, fill=(0, 0, 0))
                 imgDraw.text((self.second_label_x_offset, self.y_offset(x)), "medium", font=font, fill=(0, 0, 0))
                 imgDraw.rectangle([(self.x0_rect, self.y_offset(x)), (
                 self.x0_rect + self.x1_rect_offset, self.y_offset(x) + self.x1_rect_offset)], None, "black")
@@ -44,7 +44,7 @@ class EvaluationReportViewer:
             elif self.row_offset < x <= self.row_offset *2:
                 y = x - self.row_offset
                 imgDraw.text((self.row_id_x_offset + self.second_column_offset, self.y_offset(y)), str(x) + ")", font=font, fill=(0, 0, 0))
-                imgDraw.text((self.first_label_x_offset + self.second_column_offset, self.y_offset(y)), "medium,", font=font, fill=(0, 0, 0))
+                imgDraw.text((self.first_label_x_offset + self.second_column_offset, self.y_offset(y)), "medium", font=font, fill=(0, 0, 0))
                 imgDraw.text((self.second_label_x_offset + self.second_column_offset, self.y_offset(y)), "medium", font=font, fill=(0, 0, 0))
                 imgDraw.rectangle([(self.x0_rect + self.second_column_offset, self.y_offset(y)), (
                 self.x0_rect + self.x1_rect_offset + self.second_column_offset, self.y_offset(y) + self.x1_rect_offset)], None, "black")
@@ -52,13 +52,15 @@ class EvaluationReportViewer:
             elif x <= 50:
                 y = x - self.row_offset * 2
                 imgDraw.text((self.row_id_x_offset + self.third_column_offset, self.y_offset(y)), str(x) + ")", font=font, fill=(0, 0, 0))
-                imgDraw.text((self.first_label_x_offset + self.third_column_offset, self.y_offset(y)), " medium,", font=font, fill=(0, 0, 0))
+                imgDraw.text((self.first_label_x_offset + self.third_column_offset, self.y_offset(y)), " medium", font=font, fill=(0, 0, 0))
                 imgDraw.text([self.second_label_x_offset + self.third_column_offset, self.y_offset(y)], " medium", font=font, fill=(0, 0, 0))
                 imgDraw.rectangle([(self.x0_rect + self.third_column_offset, self.y_offset(y)), (
                 self.x0_rect + self.x1_rect_offset + self.third_column_offset, self.y_offset(y) + self.x1_rect_offset)], None, "black")
-            imgDraw.text((500,420),"Max Error: "+str(50),font=font,fill=(0,0,0))
-            imgDraw.text((500,450),"Max Error Tollerated: "+str(50),font=font,fill=(0,0,0))
+            imgDraw.text((500,420),"Max Error: ",font=font,fill=(0,0,0))
+            imgDraw.text((550,450),str(50),font=font,fill=(0,0,0))
 
+            imgDraw.text((500,490),"Max Tollerated Error: ",font=font,fill=(0,0,0))
+            imgDraw.text((550,520),str(50),font=font,fill=(0,0,0))
 
         img.save('../data/result.png')
         pass
