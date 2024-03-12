@@ -11,8 +11,6 @@ class RecordOld:
         self.location_latitude:float = kwargs.get("location_latitude", 0.0)
         self.location_longitude:float = kwargs.get("location_longitude", 0.0)
 
-    def isMissingSample(self) -> bool:
-        return (self.uuid == "" or self.timestamp == "" or self.amount == 0 or self.target_ip == "" or self.dest_ip == "" or self.location_latitude == 0.0 or self.location_longitude == 0.0)
 
     def to_json(self):
         return {

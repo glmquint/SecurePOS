@@ -33,6 +33,8 @@ class LocalizationSysRecord(Record):
                 'location_longitude':self.location_longitude}
         data.update(super().to_json())
         return data
+    def isMissingSample(self):
+        return self.location_latitude == 0.0 or self.location_longitude == 0.0
 
 
 class NetworkMonitorRecord(Record):
@@ -45,6 +47,8 @@ class NetworkMonitorRecord(Record):
                 'dest_ip':self.dest_ip}
         data.update(super().to_json())
         return data
+    def isMissingSample(self):
+        return self.target_ip == '' or self.dest_ip == ''
 
 
 class TransactionCloudRecord(Record):
@@ -57,3 +61,11 @@ class TransactionCloudRecord(Record):
                 'amount':self.amount}
         data.update(super().to_json())
         return data
+    def isMissingSample(self):
+        return len(self.timestamp) == 0 or len(self.amount) == 0
+
+class Label(Record):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.label: str = kwargs.get("label", '')
+
