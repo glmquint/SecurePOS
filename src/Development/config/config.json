@@ -16,5 +16,5 @@
   },
   "loss_threshold" : 0.1,
   "port": 5001,
-  "learning_set" : "/learning_set"
+  "endpoint_url" : "/learning_set"
 }

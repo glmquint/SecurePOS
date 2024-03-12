@@ -78,7 +78,7 @@
     "port": {
       "type": "integer"
     },
-    "learning_set": {
+    "endpoint_url": {
       "type": "string"
     }
   },
@@ -89,6 +89,6 @@
     "hyperparameters",
     "loss_threshold",
     "port",
-    "learning_set"
+    "endpoint_url"
   ]
 }
