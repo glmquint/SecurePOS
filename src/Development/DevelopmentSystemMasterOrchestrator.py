@@ -45,11 +45,11 @@ class DevelopmentSystemMasterOrchestrator:
             if self.status.status == "receive_learning_set":
                 th = Thread(target=self.learning_set_receiver.run)
                 th.start()
-                self.status.status = "set_avg_hyperparams"
-            elif self.status.status in ["set_avg_hyperparams", "set_number_of_iterations", "train", "check_validation",
-                                        "generate_learning_plot", "check_learning_plot", "check_number_of_iterations"]:
+                self.status.status = "pop_learning_set"
+            elif self.status.status in ["pop_learning_set", "set_avg_hyperparams", "set_number_of_iterations", "train",
+                                        "check_learning_plot"]:
                 self.train_orchestrator.start()
-            elif self.status.status in ["do_grid_search", "check_ongoing_validation",
+            elif self.status.status in ["set_hyperparams", "do_grid_search",
                                         "generate_validation_report",
                                         "check_validation_report", "check_valid_classifier"]:
                 self.validation_orchestrator.start()
@@ -61,6 +61,7 @@ class DevelopmentSystemMasterOrchestrator:
                 self.development_system_sender.send_to_production(self.test_orchestrator.classifier)
             else:
                 raise Exception("Invalid status")
+
 
 dsmo = DevelopmentSystemMasterOrchestrator(False)
 print("Starting Development System Master Orchestrator...")
