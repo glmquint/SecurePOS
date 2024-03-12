@@ -69,8 +69,6 @@ class TrainingOrchestrator:
                     print("Creating learning plot")
                     self.report_controller.create_learning_plot()
                     self.status.status = "check_learning_plot"
-                    self.status.save_status()
-                break
             elif self.status.status == "check_learning_plot":
                 print("Checking learning plot...")
                 response = self.get_ai_export_response()
@@ -81,7 +79,7 @@ class TrainingOrchestrator:
                     self.status.status = "set_number_of_iterations"
                     self.status.save_status()
                 elif response == 1:
-                    self.status.status = "do_grid_search"
+                    self.status.status = "set_hyperparams"
                 break
             else:
                 raise Exception("Invalid status")
