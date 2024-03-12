@@ -1,3 +1,4 @@
+from src.DataObjects.Record import Record
 from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import RawSession
 from src.Ingestion.PhaseTracker import PhaseTracker
@@ -11,7 +12,7 @@ class RawSessionCreator:
 
     def __init__(self, config, storage_controller:StorageController, phase_tracker:PhaseTracker) -> None:
         self.label                         = None
-        self.sufficient_number_of_records  = config['sufficient_number_of_records']
+        self.number_of_systems             = config['number_of_systems']
         self.label_sender                  = JSONSender(f"{DATAOBJ_PATH}/AttackRiskLabelSchema.json", config['label_receiver']['url'])
         self.raw_session_sender            = JSONSender(f"{DATAOBJ_PATH}/RawSessionSchema.json", config['raw_session_receiver']['url'])
         self.storage_controller            = storage_controller
@@ -21,14 +22,14 @@ class RawSessionCreator:
         pass
 
     def isNumberOfRecordsSufficient(self) -> bool:
-        return self.storage_controller.count() >= self.sufficient_number_of_records
+        uuid_with_max_count = self.storage_controller.executeQuery("select uuid, count(distinct(type)) as different_systems from record group by uuid order by different_systems desc limit 1;")
+        self.max_uuid = uuid_with_max_count[0][0]
+        return uuid_with_max_count[0][1] >= self.number_of_systems
+
+
 
     def createRawSession(self) -> None:
-        records          = self.storage_controller.retrieve_all()
-        uidset           = set([x.uuid for x in records]) # unique uids
-        uid2records      = dict([(uid, [x for x in records if x.uuid == uid]) for uid in uidset]) # records with same uid
-        self.maxuid      = max(uid2records, key=lambda x : len(uid2records.get(x))) # we consider just the one with the most records, because it is the one that is most likely to be complete
-        self.raw_session = RawSession(records=uid2records[self.maxuid])
+        self.raw_session = RawSession(records = [Record.from_row(**x) for x in self.storage_controller.retrieve_by_column('uuid', self.max_uuid)])
 
     def markMissingSamples(self) -> None:
         if self.raw_session is None:
@@ -45,7 +46,7 @@ class RawSessionCreator:
             while not self.isNumberOfRecordsSufficient():
                 pass
             self.createRawSession()
-            self.storage_controller.remove_by_column('uuid', self.maxuid)
+            self.storage_controller.remove_by_column('uuid', self.max_uuid)
             self.markMissingSamples()
             if not self.isRawSessionValid():
                 continue

@@ -5,26 +5,29 @@ from src.util import log
 
 
 class StorageController:
-    DBConnector = None
-    type = None
 
     def __init__(self, dbConfig, type):
         self.type = type
-        self.connectors = {class_name : DBConnector(name = dbConfig['name'], table_name=table_name) for (class_name, table_name) in dbConfig['table_names'].items()}
+        self.DBConnector = DBConnector(name = dbConfig['name'], table_name = dbConfig['table_name'])
         self.count_updated = Event()
         self.count_updated.set()
 
     def save(self, obj):
         if not issubclass(type(obj), self.type):
             raise Exception(f'Invalid type, expected {self.type} got {type(obj)}')
-        row = [tuple(obj.__dict__.values())]
+        row = [obj.to_row()]
         try:
-            self.connectors[str(type(obj))].insert(row)
+            self.DBConnector.insert(row)
             self.count_updated.set()
         except Exception as e:
             print(__name__, e)
             return False
         return True
+
+    def wait_count_updated(self):
+        self.count_updated.wait()
+        self.count_updated.clear()
+        return
 
     def remove_all(self):
         try:
@@ -36,12 +39,11 @@ class StorageController:
         return True
 
     def retrieve_all(self) -> [type]:
-        data_elem = self.DBConnector.retrieve()
-        return [self.type(**elem) for elem in data_elem]
+        self.wait_count_updated()
+        return [self.type.from_row(x) for x in self.DBConnector.retrieve()]
 
     def count(self) -> int:
-        self.count_updated.wait()
-        self.count_updated.clear()
+        self.wait_count_updated()
         return self.DBConnector.count()
 
     def remove_by_column(self, column, value) -> bool:
@@ -52,3 +54,16 @@ class StorageController:
             print(e)
             return False
         return True
+
+    def executeQuery(self, param):
+        cursor = self.DBConnector.connection.cursor()
+        cursor.execute(param)
+        return cursor.fetchall()
+
+    def retrieve_by_column(self, param, value):
+        try:
+            return self.DBConnector.retrieve_by_column(param, value)
+        except Exception as e:
+            print(e)
+        return []
+

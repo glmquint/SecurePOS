@@ -47,3 +47,8 @@ class DBConnector:
         cursor = self.connection.cursor()
         cursor.execute(f'DELETE FROM {self.tableName} WHERE {column} = ?', (value,))
         self.connection.commit()
+
+    def retrieve_by_column(self, param, value):
+        cursor = self.connection.cursor()
+        cursor.execute(f'SELECT * FROM {self.tableName} WHERE {param} = ?', (value,))
+        return [dict(zip(self.columns, x)) for x in cursor.fetchall()]

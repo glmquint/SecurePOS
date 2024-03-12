@@ -9,6 +9,20 @@ class Record:
     def to_json(self):
         return {'uuid': self.uuid}
 
+    def to_row(self):
+        return tuple([self.uuid, str(type(self)), self.to_json()])
+
+    @staticmethod
+    def from_row(**row):
+        row_type = row.get('type', None)
+        if type == LocalizationSysRecord:
+            return LocalizationSysRecord(**row.get('data', {}))
+        if type == NetworkMonitorRecord:
+            return NetworkMonitorRecord(**row.get('data', {}))
+        if type == TransactionCloudRecord:
+            return TransactionCloudRecord(**row.get('data', {}))
+        return Record(**row.get('data', {}))
+
 class LocalizationSysRecord(Record):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
