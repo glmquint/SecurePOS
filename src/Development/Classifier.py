@@ -7,7 +7,6 @@ class Classifier:
     number_of_neurons: int = None
     number_of_layers: int = None
     number_of_iterations: int = None
-    validation_error: float = None
 
     def __init__(self, number_of_neurons: int, number_of_layers: int, number_of_iterations: int):
         self.number_of_neurons = number_of_neurons
