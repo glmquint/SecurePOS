@@ -1,3 +1,6 @@
+import json
+
+from src.Development.LearningSet import LearningSet
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
 from src.JsonIO.JSONEndpoint import JSONEndpoint
@@ -16,8 +19,7 @@ class LearningSetReceiver:
                                  json_schema_path="../../json_schema/learning_set_schema.json")
 
     def receive_learning_set(self,json_data):
-        self.learning_set = LearningSet(**json_data)
-        self.message_bus_ref.addTopic("LearningSet")
+        self.learning_set = LearningSet(json.loads(json_data))
         self.message_bus_ref.pushTopic("LearningSet", self.learning_set)
         return 200
 
