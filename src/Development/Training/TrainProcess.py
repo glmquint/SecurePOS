@@ -1,13 +1,14 @@
 import itertools
 import json
 import pandas as pd
+from sklearn.metrics import mean_squared_error, accuracy_score
 
 from src.Development.Classifier import Classifier
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.LearningSet import LearningSet
+from src.Development.Training.Scoreboard import Scoreboard
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
-from src.Development.Training.LearningPlotModel import LearningPlotModel
 from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
 
@@ -22,6 +23,7 @@ class TrainProcess:
     learning_set: LearningSet = None
     configurations: DevelopmentSystemConfigurations = None
     current_hyperparameter: tuple = None
+    grid_space: Scoreboard = None
 
     def set_average_hyperparameters(self):
         self.avg_hyperparameters = {}
@@ -31,7 +33,6 @@ class TrainProcess:
         self.status.average_hyperparameters = self.avg_hyperparameters
 
     def receive_learning_set(self):
-        print("Learning set before pop")
         self.learning_set = self.message_bus.popTopic("LearningSet")
         self.status.learning_set = self.learning_set
 
@@ -43,6 +44,7 @@ class TrainProcess:
                 JSONValidator("schema/iteration_schema.json").validate_data(data)
                 ret_val = data['number_of_iterations']
                 self.number_of_iterations = ret_val
+                self.status.number_of_iterations = ret_val
         except FileNotFoundError as e:  # create file so that AI expert can fill it
             with open('Training/number_of_iterations.json', 'w') as json_file:
                 json.dump({"number_of_iterations": 0}, json_file)
@@ -59,6 +61,8 @@ class TrainProcess:
         if self.avg_hyperparameters is None and self.learning_set is None:  # if restarted load from file
             self.avg_hyperparameters = self.status.average_hyperparameters
             self.learning_set = self.status.learning_set
+        if self.number_of_iterations is None:
+            self.number_of_iterations = self.status.number_of_iterations
         if not self.status.should_validate:
             self.classifier = Classifier(self.avg_hyperparameters['number_of_neurons'],
                                          self.avg_hyperparameters['number_of_layers'], self.number_of_iterations)
@@ -68,9 +72,17 @@ class TrainProcess:
         self.classifier.model.fit(self.learning_set.trainingSet, pd.Series(self.learning_set.trainingSetLabel))
         if not self.status.should_validate:
             loss_curve = self.classifier.get_loss_curve()
-            self.message_bus.pushTopic("learning_plot", [loss_curve,self.number_of_iterations, self.configurations.loss_threshold])
-        else:  # TODO implement the validation part
-            self.classifier.validation_error = 0.1
+            self.message_bus.pushTopic("learning_plot",
+                                       [loss_curve, self.number_of_iterations, self.configurations.loss_threshold])
+
+    def validate(self):
+        y_train_pred = self.classifier.model.predict(self.learning_set.trainingSet)
+        y_val_predicted = self.classifier.model.predict(self.learning_set.validationSet)
+        mse = mean_squared_error(self.learning_set.validationSetLabel, y_val_predicted)
+
+        train_error = 1.0 - accuracy_score(self.learning_set.trainingSetLabel, y_train_pred)
+        val_error = 1.0 - accuracy_score(self.learning_set.validationSetLabel, y_val_predicted)
+        self.grid_space.insert_classifier(self.classifier, mse, train_error, val_error)
 
     def set_hyperparameters(self, next_hyperparam: tuple):
         self.current_hyperparameter = next_hyperparam
@@ -89,9 +101,8 @@ class TrainProcess:
         self.grid_search = list(itertools.product(layers, neurons))
 
     def perform_grid_search(self):
+        self.grid_space = Scoreboard(self.configurations.classifiers_limit)
         for (number_of_layers, number_of_neurons) in self.grid_search:
             self.set_hyperparameters((number_of_layers, number_of_neurons))
             self.train()
-            self.classifier.save_model('model/here')  # TODO change_path
-            # TODO implement saving of the 5 best models
-
+            self.validate()
