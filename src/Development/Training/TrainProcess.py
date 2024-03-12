@@ -30,6 +30,7 @@ class TrainProcess:
         self.status.average_hyperparameters = self.avg_hyperparameters
 
     def receive_learning_set(self):
+        print("Learning set before pop")
         self.learning_set = self.message_bus.popTopic("LearningSet")
         self.status.learning_set = self.learning_set
 
