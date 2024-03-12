@@ -45,7 +45,7 @@ class ValidationOrchestrator:
         while True:
             if self.status.status == "set_hyperparams":
                 self.trainining_process.set_hyperparams()
-                self.status.should_validate=True
+                self.status.should_validate = True
                 self.status.status = "do_grid_search"
             if self.status.status == "do_grid_search":
                 self.trainining_process.perform_grid_search()
