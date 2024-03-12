@@ -14,7 +14,8 @@ class ReportController:
         self.message_bus = message_bus
 
     def create_learning_plot(self):
-        learning_plot_model = self.message_bus.popTopic("learning_plot")
+        data = self.message_bus.popTopic("learning_plot")
+        learning_plot_model = LearningPlotModel(data[0], data[1], data[2])
         learning_plot_view = LearningPlotView('learning_plot', learning_plot_model)
         learning_plot_view.update()
 

@@ -68,8 +68,7 @@ class TrainProcess:
         self.classifier.model.fit(self.learning_set.trainingSet, pd.Series(self.learning_set.trainingSetLabel))
         if not self.status.should_validate:
             loss_curve = self.classifier.get_loss_curve()
-            learning_plot_model = LearningPlotModel(loss_curve, self.number_of_iterations, self.configurations.loss_threshold)
-            self.message_bus.pushTopic("learning_plot", learning_plot_model)
+            self.message_bus.pushTopic("learning_plot", [loss_curve,self.number_of_iterations, self.configurations.loss_threshold])
         else:  # TODO implement the validation part
             self.classifier.validation_error = 0.1
 
