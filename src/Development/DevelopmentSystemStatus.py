@@ -9,6 +9,7 @@ class DevelopmentSystemStatus:
     should_validate: bool
     average_hyperparameters: dict
     learning_set: LearningSet
+    number_of_iterations: int
     schema_path: str
     status_path: str
     validator: JSONValidator
@@ -17,6 +18,7 @@ class DevelopmentSystemStatus:
         self.status_path = status_file_path
         self.schema_path = validation_schema_path
         self.validator = JSONValidator(self.schema_path)
+        self.number_of_iterations = -1
 
     def load_status(self):
         try:
@@ -29,13 +31,15 @@ class DevelopmentSystemStatus:
                     self.learning_set = LearningSet(json.loads(data['learning_set']))
                 if 'average_hyperparameters' in data.keys():
                     self.average_hyperparameters = data['average_hyperparameters']
+                if 'number_of_iterations' in data.keys():
+                    self.number_of_iterations = data['number_of_iterations']
         except FileNotFoundError as e:
             self.status = "receive_learning_set"
             self.should_validate = False
 
     def to_dict(self):
         return dict(status=self.status, should_validate=self.should_validate,
-                    average_hyperparameters=self.average_hyperparameters, learning_set=self.learning_set.json())
+                    average_hyperparameters=self.average_hyperparameters, number_of_iterations=self.number_of_iterations ,learning_set=self.learning_set.json())
 
     def save_status(self):
         with open(self.status_path, 'w') as json_file:
