@@ -1,5 +1,7 @@
 import sqlite3
 
+from src.Storage.dbConfig import DBConfig
+
 
 class DBConnector:
     name = None
@@ -42,13 +44,19 @@ class DBConnector:
         else:
             cursor.execute('Delete '
                            'from '+self.tableName+' where id IN ('
-                           'Select id'
+                           'Select id '
                            'from ' + self.tableName+
-                           ' limit '+ number+' );'
+                           ' limit '+ str(number) +' );'
                            )
         self.connection.commit()
 
-    def retrieve(self):
+    def retrieve(self,number = 2):
         cursor = self.connection.cursor()
-        cursor.execute('SELECT * FROM ' + self.tableName)
+        if number <= 0:
+            cursor.execute('SELECT * FROM ' + self.tableName)
+        else:
+            cursor.execute('SELECT* FROM ' + self.tableName +' limit '+str(number)+' ;')
         return cursor.fetchall()
+
+#db = DBConnector(DBConfig("evaluation","labels", ("label",)))
+#print(db.retrieve())

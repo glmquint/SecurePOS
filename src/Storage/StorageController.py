@@ -28,6 +28,19 @@ class StorageController:
             return False
         return True
 
+
+    def remove(self,number=0):
+        try:
+            self.DBConnector.remove(number)
+        except Exception as e:
+            print(e)
+            return False
+        return True
+
+    def retrieve(self, number=0):
+        data_elem = self.DBConnector.retrieve(number)
+        return [self.type(elem) for elem in data_elem]
+
     def retrieve_all(self):
         data_elem = self.DBConnector.retrieve()
         return [self.type(elem) for elem in data_elem]

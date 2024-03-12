@@ -6,14 +6,14 @@ from src.Evaluation.EvaluationReportViewer import EvaluationReportViewer
 
 class EvaluationReportController:
 
-    def __init__(self):
-        self.evaluationmodel = EvaluationReportModel()
+    def __init__(self,config):
+        self.evaluationmodel = EvaluationReportModel(config.sufficient_label_number)
         self.reportviewer = EvaluationReportViewer()
         self.result = False
 
     def update(self):
         self.evaluationmodel.generatereport()
-        #self.reportviewer.print(self.evaluationmodel.labels[0],self.evaluationmodel[1])
+        self.reportviewer.print(self.evaluationmodel.labels[0],self.evaluationmodel.labels[1])
         self.evaluationmodel.removelabels()
         return
 
