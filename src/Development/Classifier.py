@@ -13,7 +13,7 @@ class Classifier:
         self.number_of_neurons = number_of_neurons
         self.number_of_layers = number_of_layers
         self.number_of_iterations = number_of_iterations
-        self.model = MLPClassifier(hidden_layer_sizes=(self.number_of_neurons, self.number_of_layers),
+        self.model = MLPClassifier(hidden_layer_sizes=tuple(self.number_of_neurons for _ in range(self.number_of_layers)),
                                    max_iter=number_of_iterations)
 
     def save_model(self, path: str):
