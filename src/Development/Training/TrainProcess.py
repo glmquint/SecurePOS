@@ -1,5 +1,6 @@
 import itertools
 import json
+import pandas as pd
 
 from src.Development.Classifier import Classifier
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
@@ -26,7 +27,7 @@ class TrainProcess:
         self.avg_hyperparameters = {}
         for key in self.configurations.hyperparameters.__dict__:
             self.avg_hyperparameters[key] = (self.configurations.hyperparameters.__dict__[key]['min'] +
-                                             self.configurations.hyperparameters.__dict__[key]['max']) / 2
+                                             self.configurations.hyperparameters.__dict__[key]['max']) // 2
         self.status.average_hyperparameters = self.avg_hyperparameters
 
     def receive_learning_set(self):
@@ -64,7 +65,7 @@ class TrainProcess:
         else:
             self.classifier = Classifier(self.current_hyperparameter[0],
                                          self.current_hyperparameter[1], self.number_of_iterations)
-        self.classifier.model.fit(self.learning_set.trainingSet, self.learning_set.trainingSetLabel)
+        self.classifier.model.fit(self.learning_set.trainingSet, pd.Series(self.learning_set.trainingSetLabel))
         if not self.status.should_validate:
             loss_curve = self.classifier.get_loss_curve()
             learning_plot_model = LearningPlotModel(loss_curve, self.number_of_iterations, self.configurations.loss_threshold)
