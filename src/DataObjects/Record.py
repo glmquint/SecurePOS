@@ -15,11 +15,12 @@ class Record:
     @staticmethod
     def from_row(**row):
         row_type = row.get('type', None)
-        if type == LocalizationSysRecord:
+        # TODO: check if this is the right way to do this
+        if row_type == LocalizationSysRecord:
             return LocalizationSysRecord(**row.get('data', {}))
-        if type == NetworkMonitorRecord:
+        if row_type == NetworkMonitorRecord:
             return NetworkMonitorRecord(**row.get('data', {}))
-        if type == TransactionCloudRecord:
+        if row_type == TransactionCloudRecord:
             return TransactionCloudRecord(**row.get('data', {}))
         return Record(**row.get('data', {}))
 
@@ -68,4 +69,9 @@ class Label(Record):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.label: str = kwargs.get("label", '')
-
+    def to_json(self):
+        data = {'label':self.label}
+        data.update(super().to_json())
+        return data
+    def isMissingSample(self):
+        return self.label == ''

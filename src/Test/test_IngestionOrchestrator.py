@@ -34,7 +34,7 @@ def listener_setup(prepared_session_creator, message_bus=None):
                 if message_bus:
                     message_bus.pushTopic(url, json_data)
             return callback
-        schema = {'segregation_system':'PreparedSessionSchema', 'production_system':'PreparedSessionSchema', 'label': 'AttackRiskLabelSchema'}.get(url, None)
+        schema = {'segregation_system':'PreparedSessionSchema', 'production_system':'PreparedSessionSchema', 'label': 'RecordSchema'}.get(url, None)
         server.add_resource(JSONEndpoint, f"/{url}", recv_callback=builder(url), json_schema_path=f"../DataObjects/Schema/{schema}.json")
     Thread(target=server.run, daemon=True, kwargs={'port':TEST_PORT}).start()
 

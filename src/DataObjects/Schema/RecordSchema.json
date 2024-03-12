@@ -34,7 +34,11 @@
       "type": "number",
       "minimum": -180,
       "maximum": 180
-    }
+    },
+    "label": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
   },
   "required": ["device_src"]
 }
