@@ -35,7 +35,7 @@ class DevelopmentSystemMasterOrchestrator:
         self.validation_orchestrator = ValidationOrchestrator(self.status, self.report_controller, self.message_bus,
                                                               self.development_system_configurations)
         self.test_orchestrator = TestingOrchestrator(self.status, self.report_controller, self.message_bus)
-        self.learning_set_receiver = LearningSetReceiver(self.message_bus)
+        self.learning_set_receiver = LearningSetReceiver(self.message_bus, self.development_system_configurations.endpoint_url)
         self.development_system_sender = DevelopmentSystemSender(
             self.development_system_configurations.messaging_system_receiver,
             self.development_system_configurations.production_system_receiver)
@@ -43,7 +43,8 @@ class DevelopmentSystemMasterOrchestrator:
     def start(self):
         while True:
             if self.status.status == "receive_learning_set":
-                th = Thread(target=self.learning_set_receiver.run)
+                th = Thread(target=self.learning_set_receiver.run, kwargs={'port': self.development_system_configurations.port})
+                th.daemon = True
                 th.start()
                 self.status.status = "pop_learning_set"
             elif self.status.status in ["pop_learning_set", "set_avg_hyperparams", "set_number_of_iterations", "train",
