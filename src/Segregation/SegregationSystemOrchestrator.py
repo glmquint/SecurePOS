@@ -138,7 +138,7 @@ def run():
             print("Learning set generated")
 
             # TODO if the sending returned error i have to reperformthe sending
-            if server == 1:
+            if server == 1 or True:
                 developmentSystemIp = configParameter.getDevelopmentSystemIp()
                 developmentSystemPort = configParameter.getDevelopmentSystemPort()
                 developmentSystemEndpoint = configParameter.getDevelopmentSystemEndpoint()
@@ -150,8 +150,7 @@ def run():
                 send(learningSet)
 
             print(learningSet.json())
-            quit()
-            print("Leaning set sent")
+
             storageController.removeAll()  # remove the session
 
             # reset the evaluation in report files

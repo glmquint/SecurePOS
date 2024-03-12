@@ -45,14 +45,15 @@ class LearningSetGenerator:
         validationSetArray = pd.DataFrame(validationSetArray).drop([7], axis=1)
         testSetArray = pd.DataFrame(testSetArray).drop([7], axis=1)
 
-        leaningSet = LearningSet(
-            trainingSetArray,
-            validationSetArray,
-            testSetArray,
-            trainingSetLabel,
-            validationSetLabel,
-            testSetLabel
-        )
+        dic = dict()
+        dic['trainingSet'] = trainingSetArray
+        dic['validationSet'] = validationSetArray
+        dic['testSet'] = testSetArray
+        dic['trainingSetLabel'] = trainingSetLabel
+        dic['validationSetLabel'] = validationSetLabel
+        dic['testSetLabel'] = testSetLabel
+
+        leaningSet = LearningSet(dic)
         return leaningSet
 
 
