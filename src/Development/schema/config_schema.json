@@ -80,6 +80,9 @@
     },
     "endpoint_url": {
       "type": "string"
+    },
+    "classifiers_limit": {
+      "type": "integer"
     }
   },
   "required": [
@@ -89,6 +92,7 @@
     "hyperparameters",
     "loss_threshold",
     "port",
-    "endpoint_url"
+    "endpoint_url",
+    "classifiers_limit"
   ]
 }
