@@ -36,6 +36,7 @@ class PreparationSystemOrchestrator:
             phase_tracker      = self.phase_tracker
         )
         self.preparation_sys_receiver = PreparationSysReceiver(
+            config             = self.config.preparation_sys_receiver,
             raw_session_topic  = self.config.raw_session_topic,
             storage_controller = self.storage_controller,
             message_bus        = self.message_bus

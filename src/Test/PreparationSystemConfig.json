@@ -9,6 +9,20 @@
     "name" : "record",
     "table_name" : "record"
   },
+  "preparation_sys_receiver" : {
+    "endpoints" : [
+      {
+        "endpoint" : "/record",
+        "callback" : "receiveRecord",
+        "schema"   : "RecordSchema.json"
+      },
+      {
+        "endpoint" : "/raw_session",
+        "callback" : "receiveRawSession",
+        "schema"   : "RawSessionSchema.json"
+      }
+    ]
+  },
   "raw_session_creator" : {
     "number_of_systems" : 3,
     "raw_session_receiver" : {

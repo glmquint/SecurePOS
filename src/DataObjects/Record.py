@@ -7,7 +7,7 @@ class Record:
         self.uuid:str = kwargs.get('uuid', '')
 
     def to_json(self):
-        return {'uuid': self.uuid}
+        return {"uuid": self.uuid}
 
     def to_row(self):
         return tuple([self.uuid, str(type(self)), self.to_json()])
@@ -30,8 +30,8 @@ class LocalizationSysRecord(Record):
         self.location_latitude: float = kwargs.get("location_latitude", 0.0)
         self.location_longitude: float = kwargs.get("location_longitude", 0.0)
     def to_json(self):
-        data = {'location_latitude':self.location_latitude,
-                'location_longitude':self.location_longitude}
+        data = {"location_latitude":self.location_latitude,
+                "location_longitude":self.location_longitude}
         data.update(super().to_json())
         return data
     def isMissingSample(self):
@@ -44,8 +44,8 @@ class NetworkMonitorRecord(Record):
         self.target_ip: str = kwargs.get("target_ip", "")
         self.dest_ip: str = kwargs.get("dest_ip", "")
     def to_json(self):
-        data = {'target_ip':self.target_ip,
-                'dest_ip':self.dest_ip}
+        data = {"target_ip":self.target_ip,
+                "dest_ip":self.dest_ip}
         data.update(super().to_json())
         return data
     def isMissingSample(self):
@@ -58,8 +58,8 @@ class TransactionCloudRecord(Record):
         self.timestamp: [int] = kwargs.get("timestamp", [])
         self.amount: [int] = kwargs.get("amount", [])
     def to_json(self):
-        data = {'timestamp':self.timestamp,
-                'amount':self.amount}
+        data = {"timestamp":self.timestamp,
+                "amount":self.amount}
         data.update(super().to_json())
         return data
     def isMissingSample(self):
@@ -70,7 +70,7 @@ class Label(Record):
         super().__init__(**kwargs)
         self.label: str = kwargs.get("label", '')
     def to_json(self):
-        data = {'label':self.label}
+        data = {"label":self.label}
         data.update(super().to_json())
         return data
     def isMissingSample(self):

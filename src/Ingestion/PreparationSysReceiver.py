@@ -13,13 +13,14 @@ DATAOBJ_PATH = "../DataObjects/Schema"
 
 
 class PreparationSysReceiver:
-    def __init__(self, raw_session_topic:str, storage_controller:StorageController, message_bus:MessageBus):
+    def __init__(self, config:dict, raw_session_topic:str, storage_controller:StorageController, message_bus:MessageBus):
         self.raw_session_topic  = raw_session_topic
         self.storage_controller = storage_controller
         self.message_bus        = message_bus
         self.server             = Server()
-        self.server.add_resource(JSONEndpoint, "/record", recv_callback=self.receiveRecord, json_schema_path=f"{DATAOBJ_PATH}/RecordSchema.json")
-        self.server.add_resource(JSONEndpoint, "/raw_session", recv_callback=self.receiveRawSession, json_schema_path=f"{DATAOBJ_PATH}/RawSessionSchema.json")
+        for endpoint in config['endpoints']:
+            print(f"now adding {endpoint}")
+            self.server.add_resource(JSONEndpoint, endpoint['endpoint'], recv_callback=self.__getattribute__(endpoint['callback']), json_schema_path=f"{DATAOBJ_PATH}/{endpoint['schema']}")
 
     @log
     def receiveRecord(self, json_data):
