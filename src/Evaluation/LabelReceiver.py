@@ -31,13 +31,12 @@ class LabelReceiver:
         thread.start()
 
     def callback_s(self, json_data):
-        print(f"Received from security {json_data}")
+        #print(f"Received from security {json_data}")
         self.mbus.pushTopic("sec_label", json_data)
         self.scontroller_security.save(AttackRiskLabel(json_data["attackRiskLabel"]))
 
     def callback_f(self, json_data):
-        print(f"Received {json_data}")
+        #print(f"Received {json_data}")
         self.mbus.pushTopic("label", json_data)
         self.scontroller_label.save(AttackRiskLabel(json_data["attackRiskLabel"]))
 
-    # def store_lab(self,label):

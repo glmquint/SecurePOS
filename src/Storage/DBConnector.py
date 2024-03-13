@@ -59,4 +59,4 @@ class DBConnector:
         return cursor.fetchall()
 
 #db = DBConnector(DBConfig("evaluation","labels", ("label",)))
-#print(db.retrieve())
+#print(db.retrieve(10))

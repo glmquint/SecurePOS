@@ -5,11 +5,14 @@ from src.JsonIO.JsonValidator import JSONValidator
 class EvaluationSystemConfig:
 
     def __init__(self):
-        self.sufficient_label_number = 5
+        self.sufficient_label_number = 0
         self.simulate_human_task = False
         self.state = 0
         self.path_config_validator = "../DataObjects/Schema/config.json"
         self.path_config = "../config/config.json"
+        self.tollerated_error = 0
+        self.tollerated_consecutive_error = 0
+        self.load()
 
     def write_state(self,state=0):
         with open(self.path_config, "r") as jsonFile:
@@ -29,6 +32,8 @@ class EvaluationSystemConfig:
 
         self.sufficient_label_number = data["sufficient_label_number"]
         self.state = data["state"]
+        self.tollerated_error = data["tollerated_error"]
+        self.tollerated_consecutive_error = data["tollerated_consecutive_error"]
         if data["simulate_human_task"] == "True":
             self.simulate_human_task = True
         else:
@@ -41,4 +46,4 @@ class EvaluationSystemConfig:
 #conf.load()
 #conf.write_state(0)
 #conf.load()
-#print(conf.state)
+#print(conf.tollerated_error)

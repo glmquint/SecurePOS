@@ -7,13 +7,13 @@ from src.Evaluation.EvaluationReportViewer import EvaluationReportViewer
 class EvaluationReportController:
 
     def __init__(self,config):
-        self.evaluationmodel = EvaluationReportModel(config.sufficient_label_number)
+        self.evaluationmodel = EvaluationReportModel(config)
         self.reportviewer = EvaluationReportViewer()
         self.result = False
 
     def update(self):
         self.evaluationmodel.generatereport()
-        self.reportviewer.print(self.evaluationmodel.labels[0],self.evaluationmodel.labels[1])
+        self.reportviewer.print(self.evaluationmodel,self.evaluationmodel.tick_array)
         self.evaluationmodel.removelabels()
         return
 
@@ -24,6 +24,9 @@ class EvaluationReportController:
                 self.result = input("Please write Yes to confirm, No to decline, esc to leave:")
                 self.result = self.result.lower()
                 if self.result == "esc":
+                    print("Closing...")
+                    self.evaluationmodel.sufficient_label_number = -1
+                    self.evaluationmodel.removelabels()
                     exit()
                 if self.result == "yes":
                     print("Classifier accepted.")

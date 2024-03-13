@@ -22,29 +22,36 @@ class EvaluationSystemOrchestrator:
 
     def run(self):
         print("start")
-        self.receiver.receive()
         while not self.isnumberoflabelssufficient():
             self.receiver.mbus.popTopic("label")
             self.label_counter = self.label_counter + 1
             self.receiver.mbus.popTopic("sec_label")
             self.security_label_counter = self.security_label_counter + 1
+        time.sleep(1)
         self.evaluation.update()
+        self.label_counter = 0
+        self.security_label_counter = 0
         print("Development phase done.")
         return
 
     def main(self):
         self.config.load()
-        if self.config.state == 0:
+        self.receiver.receive()
+        while True:
+            self.config.load()
+            print("=====================================")
+            #if self.config.state == 0:
             self.run()
-            self.config.write_state(1)
+            #self.config.write_state(1)
             if self.config.simulate_human_task:
                 self.evaluation.getresult(True)
-                self.config.write_state(0)
-        else:
-            self.evaluation.getresult()
-            self.config.write_state(0)
-        return
+                #self.config.write_state(0)
+                #self.config.state == 1
+            else:
+                self.evaluation.getresult()
+                #self.config.write_state(0)
+                #return
 
 
 if __name__ == "__main__":
-    EvaluationSystemOrchestrator().main()
+        EvaluationSystemOrchestrator().main()

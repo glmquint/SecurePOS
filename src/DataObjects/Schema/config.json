@@ -11,8 +11,14 @@
         "state": {
             "type": "integer",
             "enum": [0,1]
+        },
+        "tollerated_error":{
+            "type": "integer"
+        }       ,
+        "tollerated_consecutive_error":{
+            "type": "integer"
         }
     },
-    "required": ["sufficient_label_number","simulate_human_task","state"]
+    "required": ["sufficient_label_number","simulate_human_task","state","tollerated_error","tollerated_consecutive_error"]
 }
 

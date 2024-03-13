@@ -4,16 +4,17 @@ from src.Storage.dbConfig import DBConfig
 
 
 class EvaluationReportModel:
-    def __init__(self,number):
-        self.TotalErrorTollerated = 5
+    def __init__(self,config):
+        self.TotalErrorTollerated = config.tollerated_error
         self.TotalError = 0
-        self.ConsecutiveErrorTollerated = 2
+        self.ConsecutiveErrorTollerated = config.tollerated_consecutive_error
         self.ConsecutiveError = 0
+        self.tick_array = []
         self.scontroller_label = StorageController(DBConfig("evaluation", "labels", "label", ),
                                                    type(AttackRiskLabel(None)))
         self.scontroller_security = StorageController(DBConfig("evaluation", "security_labels", "label"),
                                                       type(AttackRiskLabel(None)))
-        self.sufficient_label_number = number
+        self.sufficient_label_number = config.sufficient_label_number
         self.labels = self.retrieve()
 
 
@@ -34,15 +35,31 @@ class EvaluationReportModel:
         consecutiverror = 0
         totalerror = 0
         consecutive = False
+        if len(labels) != len(security_labels):
+            self.labels = self.retrieve()
+            for x in range(0,len(self.labels[0])):
+                print(self.labels[0][x].attackRiskLabel)
+            for x in range(0, len(labels)):
+                print(self.labels[1][x].attackRiskLabel)
+            exit()
+        maxconsecutive = 0
         for x in range(0, len(labels)):
             if labels[x].attackRiskLabel[1] != security_labels[x].attackRiskLabel[1] :
+                totalerror = totalerror + 1
+                self.tick_array.append("X")
                 if not consecutive:
                     consecutive = True
-                consecutiverror = consecutiverror + 1
-                totalerror = totalerror + 1
+                    if consecutive == 0:
+                        consecutiverror = 1
+                    else:
+                        consecutiverror = consecutiverror + 1
+                else:
+                    consecutiverror = consecutiverror + 1
             else:
+                self.tick_array.append("V")
                 consecutive = False
+                maxconsecutive= max(consecutiverror,maxconsecutive)
                 consecutiverror = 0
         self.TotalError = totalerror
-        self.ConsecutiveError = consecutiverror
+        self.ConsecutiveError = maxconsecutive
         return

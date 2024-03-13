@@ -17,5 +17,5 @@ class JSONValidator:
         if errors:
             error_messages = "\n".join(errors)
             raise ValidationError(error_messages)
-        else:
-            print("Validation successful")
+        #else:
+            #print("Validation successful")

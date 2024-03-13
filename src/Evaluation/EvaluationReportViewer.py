@@ -1,8 +1,12 @@
 from datetime import datetime
+from random import randint
 from tkinter import font
 
 from PIL import Image, ImageDraw, ImageFont
 from pip._vendor.pygments.formatters import img
+
+from src.Evaluation.EvaluationReportModel import EvaluationReportModel
+from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 
 
 class EvaluationReportViewer:
@@ -19,53 +23,103 @@ class EvaluationReportViewer:
         self.x0_rect = 200
         self.x1_rect_offset = 20
         self.row_offset = 19
+        self.tick_x_offset = 203
+        self.black = (0,0,0)
+        self.green = (34,139,34)
+        self.red = (255,0,0)
 
     def y_offset(self, y: int):
         return 10 + 30 * y
 
-    def print(self, labels, security_labels):
+    def print(self, modelcontroller,tick_array):
         print("Printing .png evaluation report.")
+        self.title = "Evaluation report, " + str(datetime.now().strftime(self.format_date))
+        labels = modelcontroller.labels[0]
+        security_labels = modelcontroller.labels[1]
         font = ImageFont.truetype("arial.ttf", size=20)
         img = Image.new('RGB', (self.width,self.height), color='white')
         imgDraw = ImageDraw.Draw(img)
-        imgDraw.text((10, 5), self.title, font=font, fill=(0, 0, 0))
+        imgDraw.text((10, 5), self.title, font=font, fill=self.black)
         # for x in range(0,len(labels)):
         # imgDraw.text((15, 10+30*x), str(x)+") "+labels[0].attackRiskLabel[1], font=font, fill=(255, 255, 0))
         # imgDraw.text((95, 10+30*x), security_labels[0].attackRiskLabel[1], font=font, fill=(255, 255, 0))
-        for x in range(1, 51):
+        for x in range(1, modelcontroller.sufficient_label_number+1):
             #first row
             if x <= self.row_offset:
-                imgDraw.text((self.row_id_x_offset, self.y_offset(x)), str(x) + ")", font=font, fill=(0, 0, 0))
-                imgDraw.text((self.first_label_x_offset, self.y_offset(x)), "high", font=font, fill=(0, 0, 0))
-                imgDraw.text((self.second_label_x_offset, self.y_offset(x)), "medium", font=font, fill=(0, 0, 0))
+                imgDraw.text((self.row_id_x_offset, self.y_offset(x)), str(x) + ")", font=font, fill=self.black)
+                imgDraw.text((self.first_label_x_offset, self.y_offset(x)), str(labels[x-1].attackRiskLabel[1]), font=font, fill=self.black)
+                imgDraw.text((self.second_label_x_offset, self.y_offset(x)), security_labels[x-1].attackRiskLabel[1], font=font, fill=self.black)
                 imgDraw.rectangle([(self.x0_rect, self.y_offset(x)), (
                 self.x0_rect + self.x1_rect_offset, self.y_offset(x) + self.x1_rect_offset)], None, "black")
+                if tick_array[x-1] == "V":
+                    tick_color = self.green
+                else:
+                    tick_color = self.red
+                imgDraw.text((self.tick_x_offset,self.y_offset(x)),tick_array[x-1],font=font,fill=tick_color)
             #second row
             elif self.row_offset < x <= self.row_offset *2:
                 y = x - self.row_offset
                 imgDraw.text((self.row_id_x_offset + self.second_column_offset, self.y_offset(y)), str(x) + ")", font=font, fill=(0, 0, 0))
-                imgDraw.text((self.first_label_x_offset + self.second_column_offset, self.y_offset(y)), "medium", font=font, fill=(0, 0, 0))
-                imgDraw.text((self.second_label_x_offset + self.second_column_offset, self.y_offset(y)), "medium", font=font, fill=(0, 0, 0))
+                imgDraw.text((self.first_label_x_offset + self.second_column_offset, self.y_offset(y)), labels[x-1].attackRiskLabel[1], font=font, fill=(0, 0, 0))
+                imgDraw.text((self.second_label_x_offset + self.second_column_offset, self.y_offset(y)), security_labels[x-1].attackRiskLabel[1], font=font, fill=(0, 0, 0))
                 imgDraw.rectangle([(self.x0_rect + self.second_column_offset, self.y_offset(y)), (
                 self.x0_rect + self.x1_rect_offset + self.second_column_offset, self.y_offset(y) + self.x1_rect_offset)], None, "black")
+                if tick_array[x - 1] == "V":
+                    tick_color = self.green
+                else:
+                    tick_color = self.red
+                imgDraw.text((self.tick_x_offset+self.second_column_offset, self.y_offset(y)), tick_array[x-1], font=font, fill=tick_color)
             #third row
             elif x <= 50:
                 y = x - self.row_offset * 2
-                imgDraw.text((self.row_id_x_offset + self.third_column_offset, self.y_offset(y)), str(x) + ")", font=font, fill=(0, 0, 0))
-                imgDraw.text((self.first_label_x_offset + self.third_column_offset, self.y_offset(y)), " medium", font=font, fill=(0, 0, 0))
-                imgDraw.text([self.second_label_x_offset + self.third_column_offset, self.y_offset(y)], " medium", font=font, fill=(0, 0, 0))
+                imgDraw.text((self.row_id_x_offset + self.third_column_offset, self.y_offset(y)), str(x) + ")", font=font, fill=self.black)
+                imgDraw.text((self.first_label_x_offset + self.third_column_offset, self.y_offset(y)), labels[x-1].attackRiskLabel[1], font=font, fill=self.black)
+                imgDraw.text([self.second_label_x_offset + self.third_column_offset, self.y_offset(y)], " "+security_labels[x-1].attackRiskLabel[1], font=font, fill=self.black)
                 imgDraw.rectangle([(self.x0_rect + self.third_column_offset, self.y_offset(y)), (
                 self.x0_rect + self.x1_rect_offset + self.third_column_offset, self.y_offset(y) + self.x1_rect_offset)], None, "black")
-            imgDraw.text((500,420),"Max Error: ",font=font,fill=(0,0,0))
-            imgDraw.text((550,450),str(50),font=font,fill=(0,0,0))
+                if tick_array[x - 1] == "V":
+                    tick_color = self.green
+                else:
+                    tick_color = self.red
+                imgDraw.text((self.tick_x_offset+self.third_column_offset, self.y_offset(y)), tick_array[x-1],font=font,fill=tick_color)
 
-            imgDraw.text((500,490),"Max Tollerated Error: ",font=font,fill=(0,0,0))
-            imgDraw.text((550,520),str(50),font=font,fill=(0,0,0))
+        report_x = 490
+        report_y = 680
+        report_first_row = 420
+        report_second_row = 460
+        report_third_row = 500
+        report_forth_row = 540
+
+        imgDraw.text((report_x,report_first_row),"Errors: ",font=font,fill=(0,0,0))
+        imgDraw.text((report_y,report_first_row),str(modelcontroller.TotalError),font=font,fill=(0,0,0))
+
+        imgDraw.text((report_x,report_second_row),"Max Toll. Error: ",font=font,fill=(0,0,0))
+        imgDraw.text((report_y,report_second_row),str(modelcontroller.TotalErrorTollerated),font=font,fill=(0,0,0))
+
+        imgDraw.text((report_x, report_third_row), "Max Consec. Error: ", font=font, fill=(0, 0, 0))
+        imgDraw.text((report_y, report_third_row), str(modelcontroller.ConsecutiveError), font=font, fill=(0, 0, 0))
+
+        imgDraw.text((report_x, report_forth_row), "Consecutive Toll.: ", font=font, fill=(0, 0, 0))
+        imgDraw.text((report_y, report_forth_row), str(modelcontroller.ConsecutiveErrorTollerated), font=font, fill=(0, 0, 0))
+
+        self.widthline = 4
+        self.firstcorner = 480
+        self.secondcorner = 400
+        imgDraw.line([(self.firstcorner,self.secondcorner),(self.firstcorner,self.height)],fill=(self.black),width=self.widthline)
+        imgDraw.line([(self.firstcorner,self.secondcorner),(self.width,self.secondcorner)],fill=(self.black),width=self.widthline)
 
         img.save('../data/result.png')
         pass
 
 
+#e = EvaluationReportViewer()
+#eva = EvaluationReportModel(EvaluationSystemConfig())
+#a = [""]*50
+#b = [""]*50
+#for x in range(0,50):
+#    a[x] = "ciao"+str(randint(1,2))
+#for x in range(0,50):
+#    b[x] = "ciao"+str(randint(1,2))
+#tick = ["A"]*50
+#e.print(eva,tick)
 
-e = EvaluationReportViewer()
-e.print(["ciao"], ["nonno"])
