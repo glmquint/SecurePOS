@@ -44,7 +44,6 @@ class TrainProcess:
                 JSONValidator("schema/iteration_schema.json").validate_data(data)
                 ret_val = data['number_of_iterations']
                 self.number_of_iterations = ret_val
-                self.status.number_of_iterations = ret_val
         except FileNotFoundError as e:  # create file so that AI expert can fill it
             with open('Training/number_of_iterations.json', 'w') as json_file:
                 json.dump({"number_of_iterations": 0}, json_file)
@@ -56,13 +55,14 @@ class TrainProcess:
         self.status = status
         self.message_bus = message_bus
         self.configurations = configurations
+        if self.status.learning_set is not None:
+            self.learning_set = self.status.learning_set
+        if self.status.number_of_iterations != -1:
+            self.number_of_iterations = self.status.number_of_iterations
+        if self.status.average_hyperparameters is not None:
+            self.avg_hyperparameters = self.status.average_hyperparameters
 
     def train(self):
-        if self.avg_hyperparameters is None and self.learning_set is None:  # if restarted load from file
-            self.avg_hyperparameters = self.status.average_hyperparameters
-            self.learning_set = self.status.learning_set
-        if self.number_of_iterations is None:
-            self.number_of_iterations = self.status.number_of_iterations
         if not self.status.should_validate:
             self.classifier = Classifier(self.avg_hyperparameters['number_of_neurons'],
                                          self.avg_hyperparameters['number_of_layers'], self.number_of_iterations)
