@@ -7,9 +7,9 @@ from src.JsonIO.JsonValidator import JSONValidator
 class DevelopmentSystemStatus:
     status: str
     should_validate: bool
-    average_hyperparameters: dict
-    learning_set: LearningSet
-    number_of_iterations: int
+    average_hyperparameters: dict = None
+    learning_set: LearningSet = None
+    number_of_iterations: int = -1
     schema_path: str
     status_path: str
     validator: JSONValidator
@@ -18,7 +18,6 @@ class DevelopmentSystemStatus:
         self.status_path = status_file_path
         self.schema_path = validation_schema_path
         self.validator = JSONValidator(self.schema_path)
-        self.number_of_iterations = -1
 
     def load_status(self):
         try:
