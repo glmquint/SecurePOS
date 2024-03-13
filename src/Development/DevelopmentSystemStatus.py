@@ -27,7 +27,7 @@ class DevelopmentSystemStatus:
                 self.status = data['status']
                 self.should_validate = data['should_validate']
                 if 'learning_set' in data.keys():
-                    self.learning_set = LearningSet(json.loads(data['learning_set']))
+                    self.learning_set = LearningSet(data['learning_set'], True)
                 if 'average_hyperparameters' in data.keys():
                     self.average_hyperparameters = data['average_hyperparameters']
                 if 'number_of_iterations' in data.keys():
@@ -38,7 +38,7 @@ class DevelopmentSystemStatus:
 
     def to_dict(self):
         return dict(status=self.status, should_validate=self.should_validate,
-                    average_hyperparameters=self.average_hyperparameters, number_of_iterations=self.number_of_iterations ,learning_set=self.learning_set.json())
+                    average_hyperparameters=self.average_hyperparameters, number_of_iterations=self.number_of_iterations ,learning_set=self.learning_set.toJson())
 
     def save_status(self):
         with open(self.status_path, 'w') as json_file:
