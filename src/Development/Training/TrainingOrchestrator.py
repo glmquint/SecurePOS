@@ -59,6 +59,7 @@ class TrainingOrchestrator:
                 print("Setting number of iterations")
                 number_of_iterations = self.train_process.get_number_of_iterations()
                 if number_of_iterations > 0:
+                    self.status.number_of_iterations = number_of_iterations
                     self.status.status = "train"
                 else:
                     self.status.save_status()
