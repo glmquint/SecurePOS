@@ -50,5 +50,5 @@ class DBConnector:
 
     def retrieve_by_column(self, param, value):
         cursor = self.connection.cursor()
-        cursor.execute(f'SELECT * FROM {self.tableName} WHERE {param} = ?', (value,))
+        cursor.execute(f'SELECT {" ,".join(self.columns)} FROM {self.tableName} WHERE {param} = ?', (value,))
         return [dict(zip(self.columns, x)) for x in cursor.fetchall()]

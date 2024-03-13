@@ -23,11 +23,14 @@ class RawSessionCreator:
 
     def isNumberOfRecordsSufficient(self) -> bool:
         uuid_with_max_count = self.storage_controller.executeQuery("select uuid, count(distinct(type)) as different_systems from record group by uuid order by different_systems desc limit 1;")
+        if len(uuid_with_max_count) == 0:
+            return False
         self.max_uuid = uuid_with_max_count[0][0]
         return uuid_with_max_count[0][1] >= self.number_of_systems
 
     def createRawSession(self) -> None:
-        self.raw_session = RawSession(records = [Record.from_row(**x) for x in self.storage_controller.retrieve_by_column('uuid', self.max_uuid)])
+        rows_with_max_count = self.storage_controller.retrieve_by_column('uuid', self.max_uuid)
+        self.raw_session = RawSession(records = [Record.from_row(**x) for x in rows_with_max_count])
 
     def markMissingSamples(self) -> None:
         if self.raw_session is None:
@@ -37,7 +40,7 @@ class RawSessionCreator:
     def isRawSessionValid(self) -> bool:
         if self.phase_tracker.isEvalPhase() and self.label is None:
             return False
-        return len(self.missing_samples) == 0
+        return len(self.missing_samples) == 0 # FIXME: should be true only if any property has no sample across all records
 
     def run(self):
         while True:

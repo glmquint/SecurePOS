@@ -16,6 +16,6 @@ class JSONSender:
             self.validator.validate_data(obj)
             requests.post(self.url, json=obj.to_json())
         except Exception as e:
-            print(e)
+            print(e, f"({__file__})")
             return False
         return True

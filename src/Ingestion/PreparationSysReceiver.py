@@ -19,7 +19,6 @@ class PreparationSysReceiver:
         self.message_bus        = message_bus
         self.server             = Server()
         for endpoint in config['endpoints']:
-            print(f"now adding {endpoint}")
             self.server.add_resource(JSONEndpoint, endpoint['endpoint'], recv_callback=self.__getattribute__(endpoint['callback']), json_schema_path=f"{DATAOBJ_PATH}/{endpoint['schema']}")
 
     @log
@@ -35,8 +34,9 @@ class PreparationSysReceiver:
         elif 'timestamp' in json_data or 'amount' in json_data:
             record = TransactionCloudRecord(**json_data)
         else:
-            raise Exception(f"Unknown record type: {json_data}")
-        self.storage_controller.save(record)
+            record = Record(**json_data)
+        if not self.storage_controller.save(record):
+            raise Exception(f"Failed to save {record}")
 
     @log
     def receiveRawSession(self, json_data):

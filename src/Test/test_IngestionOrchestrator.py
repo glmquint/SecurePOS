@@ -6,7 +6,7 @@ from uuid import uuid1
 import requests
 
 from src.DataObjects.AttackRiskLabel import AttackRiskLabel
-from src.DataObjects.Record import Label, Record
+from src.DataObjects.Record import Label, Record, TransactionCloudRecord, NetworkMonitorRecord, LocalizationSysRecord
 from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import PreparedSession, RawSession
 from src.Ingestion.PreparationSystemConfig import PreparationSystemConfig
@@ -90,11 +90,13 @@ class TestPreparationSystemOrchestrator:
         sufficient_records = config.raw_session_creator['number_of_systems']
         num_of_runs = 5
         for j in range(num_of_runs):
+            uuid = str(uuid1())
             for i in range(sufficient_records): # simulate client-side systems
                 url = "record"
-                r = requests.post(f"http://127.0.0.1:5000/{url}", json=Record(**{'uuid':str(uuid1())}).to_json())
+                record = [ LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord][i](**{"uuid":uuid, "location_longitude":random(), "location_latitude":random(), "target_ip":str(random()), "dest_ip":str(random()), "timestamp":[random() for i in range(10)], "amount":[random() for i in range(10)]})
+                r = requests.post(f"http://127.0.0.1:5000/{url}", json=record.to_json())
                 assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
-        for i in range(num_of_runs):
+        #for i in range(num_of_runs):
             result = message_bus.popTopic("segregation_system")
             assert result is not None, "raw_session not received"
-        assert len(message_bus.messageQueues['segregation_system'].queue) == 0, "still something in queue"
+            assert len(message_bus.messageQueues['segregation_system'].queue) == 0, "still something in queue"

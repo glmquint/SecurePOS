@@ -13,16 +13,15 @@ class Record:
         return tuple([self.uuid, str(type(self)), self.to_json()])
 
     @staticmethod
-    def from_row(**row):
-        row_type = row.get('type', None)
-        # TODO: check if this is the right way to do this
-        if row_type == LocalizationSysRecord:
-            return LocalizationSysRecord(**row.get('data', {}))
-        if row_type == NetworkMonitorRecord:
-            return NetworkMonitorRecord(**row.get('data', {}))
-        if row_type == TransactionCloudRecord:
-            return TransactionCloudRecord(**row.get('data', {}))
-        return Record(**row.get('data', {}))
+    def from_row(uuid='', type='', data='{}'):
+        data = json.loads(data)
+        if type == str(LocalizationSysRecord):
+            return LocalizationSysRecord(**data)
+        if type == str(NetworkMonitorRecord):
+            return NetworkMonitorRecord(**data)
+        if type == str(TransactionCloudRecord):
+            return TransactionCloudRecord(**data)
+        return Record(**data)
 
 class LocalizationSysRecord(Record):
     def __init__(self, **kwargs):

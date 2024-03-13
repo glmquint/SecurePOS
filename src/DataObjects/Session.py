@@ -18,7 +18,6 @@ class RawSession(Session):
             return {"records": []}
         return {"records": [record.to_json() for record in self.records]}
 
-@dataclass
 class PreparedSession(Session):
     features: [Feature]
 

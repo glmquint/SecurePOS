@@ -1,3 +1,6 @@
+import statistics
+from timeit import timeit
+
 from src.DataObjects.Session import RawSession
 from src.Ingestion.PhaseTracker import PhaseTracker
 from src.JsonIO.JSONSender import JSONSender
@@ -12,10 +15,8 @@ class PreparedSessionCreator:
         self.message_bus : MessageBus     = message_bus
         self.raw_session_topic : str      = raw_session_topic
         self.phase_tracker : PhaseTracker = phase_tracker
-        if self.phase_tracker.isDevPhase():
-            self.prepared_session_sender : JSONSender = JSONSender(f"{DATAOBJ_PATH}/PreparedSessionSchema.json", self.config["segregation_system_receiver"]["url"])
-        else:
-            self.prepared_session_sender : JSONSender = JSONSender(f"{DATAOBJ_PATH}/PreparedSessionSchema.json", self.config["production_system_receiver"]["url"])
+        # dev/prod phase doesn't change during execution. We switch between segregation_sys and production_sys only once
+        self.prepared_session_sender : JSONSender = JSONSender(f"{DATAOBJ_PATH}/PreparedSessionSchema.json", self.config["segregation_system_receiver" if self.phase_tracker.isDevPhase() else "production_system_receiver"]["url"])
         self.raw_session : RawSession = None
 
     def run(self) -> None:
@@ -23,17 +24,17 @@ class PreparedSessionCreator:
             self.raw_session : RawSession = self.message_bus.popTopic(self.raw_session_topic)
             self.correctMissingSamples()
             self.detectAndCorrectAbsoluteOutliers()
-            self.exrtactFeatures()
-            if self.phase_tracker.isDevPhase():
-                self.prepared_session_sender.send(self.raw_session)
-            else:
-                self.prepared_session_sender.send(self.raw_session)
+            self.extractFeatures()
+            self.prepared_session_sender.send(self.raw_session)
 
+    @log
     def correctMissingSamples(self):
         pass
 
+    @log
     def detectAndCorrectAbsoluteOutliers(self):
         pass
 
-    def exrtactFeatures(self):
+    @log
+    def extractFeatures(self):
         pass
