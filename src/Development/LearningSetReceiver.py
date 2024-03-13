@@ -19,7 +19,7 @@ class LearningSetReceiver:
                                  json_schema_path="schema/learning_set_schema.json")
 
     def receive_learning_set(self, json_data):
-        self.learning_set = LearningSet(json.loads(json_data))
+        self.learning_set = LearningSet(json_data,True)
         self.message_bus_ref.pushTopic("LearningSet", self.learning_set)
         print("Learning set received and pushed to message bus")
         return 200
