@@ -7,6 +7,27 @@
     },
     "should_validate": {
       "type": "boolean"
+    },
+    "average_hyperparameters": {
+      "type": "object",
+      "properties": {
+        "number_of_layers": {
+          "type": "integer"
+        },
+        "number_of_neurons": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "number_of_layers",
+        "number_of_neurons"
+      ]
+    },
+    "number_of_iterations": {
+      "type": "integer"
+    },
+    "learning_set": {
+      "type": "string"
     }
   },
   "required": [
