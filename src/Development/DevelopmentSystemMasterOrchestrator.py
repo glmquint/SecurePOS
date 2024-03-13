@@ -59,7 +59,7 @@ class DevelopmentSystemMasterOrchestrator:
             elif self.status.status == "send_config":
                 self.development_system_sender.send_to_messaging(self.test_orchestrator.config)
             elif self.status.status == "send_classifier":
-                self.development_system_sender.send_to_production(self.test_orchestrator.classifier)
+                self.development_system_sender.send_to_production()
             else:
                 raise Exception("Invalid status")
 
