@@ -70,6 +70,7 @@ class TrainProcess:
             self.classifier = Classifier(self.current_hyperparameter[0],
                                          self.current_hyperparameter[1], self.number_of_iterations)
         self.classifier.model.fit(self.learning_set.trainingSet, pd.Series(self.learning_set.trainingSetLabel))
+        self.classifier.dump_model()  # TODO remove me
         if not self.status.should_validate:
             loss_curve = self.classifier.get_loss_curve()
             self.message_bus.pushTopic("learning_plot",
