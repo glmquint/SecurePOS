@@ -1,7 +1,7 @@
 class PreparedSession:
 
     def __init__(self, params):
-        if type(params) != dict:  # this if a create a preparedSession from a list
+        if type(params) is not dict:  # this if a create a preparedSession from a list
             self.__UUID = params[0]
             self.__MeanAbsoluteDifferencingTransactionTimestamps = params[1]
             self.__MeanAbsoluteDifferencingTransactionAmount = params[2]

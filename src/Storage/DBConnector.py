@@ -41,11 +41,3 @@ class DBConnector:
         cursor.execute('SELECT COUNT(*) FROM ' + self.tableName)
         return cursor.fetchall()
 
-    def createTable(self):
-        cursor = self.connection.cursor()
-        cursor.execute(
-            'CREATE TABLE PreparedSessions (UUID varchar(40), MeanAbsoluteDifferencingTransactionTimestamps double, '
-            'MeanAbsoluteDifferencingTransactionAmount double,MedianLongitude double,MedianLatitude double,'
-            'MedianTargetIP double,MedianDestIP double,Label varchar(20))')
-        self.connection.commit()
-

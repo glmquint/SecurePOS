@@ -1,9 +1,7 @@
 import json
 import random
 import plotly.graph_objects as go
-# from plotly import graph_objs as go
 import pandas as pd
-import numpy as np
 from random import random
 from PreparedSession import *
 
@@ -13,7 +11,7 @@ class CheckInputCoverageView:
     def __init__(self, model):
         self.__checkInputCoverageModel = model
 
-    def plotCheckinputCoverageView(self):
+    def plotCheckInputCoverageView(self):
 
         PreparedSessionList = self.__checkInputCoverageModel.getPreparedSessionList()
 
@@ -63,7 +61,7 @@ class CheckInputCoverageView:
             title="Coverage Report",
         )
 
-        fig.write_image("Data/PlotCheckInputCoverage.png")
+        fig.write_image("Data/Plot/PlotCheckInputCoverage.png")
 
     def getSimulatedCheckInputCoverage(self):
         value = random()
@@ -79,20 +77,4 @@ class CheckInputCoverageView:
             checkInputCoverageFile.close()
             return evaluationCheckInputCoverage
 
-
-def test():
-    c = CheckInputCoverageView()
-    p1 = []
-    for i in range(0, 20):
-        p1.append(PreparedSession([random(), random(), random(), random(), random(), random(), "High"]))
-
-    p2 = []
-    for i in range(0, 15):
-        p2.append(PreparedSession([random(), random(), random(), random(), random(), random(), "High"]))
-
-    p3 = []
-    for i in range(0, 18):
-        p3.append(PreparedSession([random(), random(), random(), random(), random(), random(), "High"]))
-
-    c.plotCheckinputCoverageView(p1 + p2 + p3)
 

@@ -1,7 +1,3 @@
-# takes data from the model
-# gives info to the view
-# ask the view to plot
-
 from CheckInputCoverageModel import *
 from CheckInputCoverageView import *
 from CheckDataBalancingModel import *
@@ -25,9 +21,9 @@ class SegregationPlotController:
 
     def plotCheckInputCoverage(self):
         # retrive data from the model
-        self.__checkInputCoverageModel.retrivePreparedSession()
+        self.__checkInputCoverageModel.retrievePreparedSession()
         # pass data to the view to plot
-        self.__checkInputCoverageView.plotCheckinputCoverageView()
+        self.__checkInputCoverageView.plotCheckInputCoverageView()
 
     def getSimulatedCheckDataBalance(self):
         return self.__checkDataBalancingView.getSimulatedCheckDataBalance()

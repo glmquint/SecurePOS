@@ -7,10 +7,10 @@ from PreparedSession import *
 
 
 class CheckDataBalanceView:
-    toleraceParameter = 0
+    __toleranceParameter = 0
 
     def __init__(self, toleraceParameter, model):
-        self.toleraceParameter = toleraceParameter
+        self.__toleranceParameter = toleraceParameter
         self.__checkDataBalanceModel = model
 
     def plotCheckDataBalance(self):
@@ -23,11 +23,11 @@ class CheckDataBalanceView:
 
         for i in PreparedSessionList:
             match i.getLabel():
-                case "Low":
+                case "low":
                     values[0] += 1
-                case "Medium":
+                case "medium":
                     values[1] += 1
-                case "High":
+                case "high":
                     values[2] += 1
                 case _:
                     continue
@@ -44,8 +44,8 @@ class CheckDataBalanceView:
 
         percentage_diff = (abs(maximim - minimum) / (maximim + minimum) / 2) * 100
 
-        string = 'Tolerance interal = '+str(self.toleraceParameter)+" | Difference detected = " + str(round(percentage_diff,2))
-
+        string = 'Tolerance interal = ' + str(self.__toleranceParameter) + " | Difference detected = " + str(
+            round(percentage_diff, 2))
 
         plt.bar(bar_positions2, values, width=bar_width)
 
@@ -63,7 +63,7 @@ class CheckDataBalanceView:
         plt.text(0.5, 1.10, string,
                  horizontalalignment='center', transform=plt.gca().transAxes)
 
-        plt.savefig('Data/PlotCheckDataBalancePlot.png')
+        plt.savefig('Data/Plot/PlotCheckDataBalancePlot.png')
 
     def getSimulatedCheckDataBalance(self):
         value = random()
@@ -78,22 +78,3 @@ class CheckDataBalanceView:
             evaluationCheckDataBalance = jsonData.get("evaluation")
             checkDataBalanceFile.close()
             return evaluationCheckDataBalance
-
-
-def test():
-    c = CheckDataBalanceView(5)
-    p1 = []
-    for i in range(0, 20):
-        p1.append(PreparedSession([0, 0, 0, 0, 0, 0, "High"]))
-
-    p2 = []
-    for i in range(0, 15):
-        p2.append(PreparedSession([0, 0, 0, 0, 0, 0, "Medium"]))
-
-    p3 = []
-    for i in range(0, 18):
-        p3.append(PreparedSession([0, 0, 0, 0, 0, 0, "Low"]))
-
-    c.plotCheckDataBalance(p1 + p2 + p3)
-
-

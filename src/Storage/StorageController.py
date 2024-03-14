@@ -39,14 +39,6 @@ class StorageController:
     def countAll(self):
         return self.DBConnector.count()[0][0]
 
-    def createTable(self):
-        try:
-            self.DBConnector.createTable()
-        except Exception as e:
-            # FIXME handle table already existing
-            print(e)
-            pass
-
     def normalizeData(self):
         pass
         preparedSessions = self.retrieveAll()

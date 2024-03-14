@@ -4,7 +4,7 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 
 class JSONSender:
-    def __init__(self, json_schema_path : str, url : str):
+    def __init__(self, json_schema_path: str, url: str):
         self.json_schema_path = json_schema_path
         self.url = url
         self.validator = JSONValidator(json_schema_path)
