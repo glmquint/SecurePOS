@@ -1,3 +1,5 @@
+import os
+
 from src.Development import Classifier
 import bisect
 
@@ -16,16 +18,30 @@ class Scoreboard:
         self.train_error = []
         self.validation_error = []
 
+    def save_classifiers(self, path: str):
+        for i in range(len(self.mse)):
+            self.classifiers[i].save_model(path)
+
+    def remove_classifiers(self):
+        for i in range(len(self.mse)):
+            filename = f'classifiers/{self.classifiers[i].name}.sav'
+            if os.path.exists(filename):
+                os.remove(filename)
+
     def insert_classifier(self, classifier: Classifier, mse: float, train_error: float, validation_error: float):
         index = bisect.bisect(self.mse, mse)
-        if index < self.limit:
+        if len(self.mse) < self.limit:
             self.mse.insert(index, mse)
             self.train_error.insert(index, train_error)
             self.validation_error.insert(index, validation_error)
-            classifier.save_model(f"models/{index}.sav")
             self.classifiers.insert(index, classifier)
-            # remove last classifier since the inserted one is better
-            self.mse.pop()
-            self.classifiers.pop()
-            self.train_error.pop()
-            self.validation_error.pop()
+        else:
+            if index < self.limit:
+                self.mse.pop()
+                self.classifiers.pop()
+                self.train_error.pop()
+                self.validation_error.pop()
+                self.mse.insert(index, mse)
+                self.train_error.insert(index, train_error)
+                self.validation_error.insert(index, validation_error)
+                self.classifiers.insert(index, classifier)
