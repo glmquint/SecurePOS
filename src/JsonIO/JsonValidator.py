@@ -1,7 +1,6 @@
 import json
 from jsonschema import validate, ValidationError, Draft7Validator
 
-
 class JSONValidator:
     def __init__(self, schema_file):
         with open(schema_file, 'r') as f:
@@ -17,5 +16,5 @@ class JSONValidator:
         if errors:
             error_messages = "\n".join(errors)
             raise ValidationError(error_messages)
-        #else:
-            #print("Validation successful")
+        else:
+            print("Validation successful")
