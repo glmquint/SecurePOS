@@ -14,6 +14,7 @@ def run():
     configParameter = SegregationSystemConfig()
     serviceFlag = configParameter.getServiceFlag()
     limitPreparedSession = configParameter.getSufficientSessionNumber()
+    segregationSystemPort = configParameter.getSegregationSystemPort()
 
     # declare message bus
     messageBus = MessageBus(["preparedSession", "leaningSet"])
@@ -24,7 +25,7 @@ def run():
     segregationPlotController = SegregationPlotController(storageController,
                                                           configParameter.getToleranceDataBalancing())
     # instantiate and run receiver
-    preparedSessionReceiver = PreparedSessionReceiver(messageBus)
+    preparedSessionReceiver = PreparedSessionReceiver(messageBus, segregationSystemPort)
     # the server starts to run
     preparedSessionReceiver.run()
     while True:

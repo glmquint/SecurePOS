@@ -5,9 +5,10 @@ from src.Segregation.PreparedSession import PreparedSession
 
 
 class PreparedSessionReceiver:
-    def __init__(self, messageBus):
+    def __init__(self, messageBus,port):
         self.__server = Server()
         self.__messageBus = messageBus
+        self.__port = port
         pass
 
     def run(self):
