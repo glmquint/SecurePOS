@@ -1,8 +1,13 @@
+from socket import inet_aton
+
 from threading import Thread
 from time import sleep
 from unittest import TestCase
 
+import joblib
 import requests
+from sklearn.neural_network import MLPClassifier
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 
 from src.DataObjects.AttackRiskLabel import AttackRiskLabel
 from src.DataObjects.ClassifierTest import ClassifierTest
@@ -102,3 +107,57 @@ class IntegrationTest(TestCase):
 
         sleep(10)
 
+    def test_real_classfier(self):
+        #self.main_setup()
+        self.main_receiver()
+        preparedSession = PreparedSession(10.5, 25.5,
+                                         (-73.9857, 40.7484), "192.168.1.1",
+                                         "203.0.113.5")
+        with open('AverageClassifier.sav', 'rb') as f:
+            req = requests.post("http://127.0.0.1:5000/Classifier", files={"uploaded": f})
+            assert req.status_code == 200, f'Expected 200, got {req}'
+        req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession.to_json())
+        assert req.status_code == 200  # correct key
+        sleep(5)
+
+    def test_internal(self):
+        from sklearn.neural_network import MLPClassifier
+        from sklearn.preprocessing import StandardScaler
+        from sklearn.pipeline import Pipeline
+        import joblib
+
+        # Load the trained classifier
+        mlp_classifier = joblib.load('AverageClassifier.sav')
+
+        # Define a function to predict the Attack Risk Label
+        def predict_attack_risk(prepared_session):
+            # Transform the input features as necessary
+            import ipaddress
+            prepared_session_features = [
+                prepared_session.mean_absolute_diff_timestamps,
+                prepared_session.mean_absolute_diff_amount,
+                prepared_session.median_longitude_latitude[0],
+                prepared_session.median_longitude_latitude[1],
+                #le.transform([prepared_session.median_target_ip]),
+                #le.transform([prepared_session.median_dest_ip])
+                int(ipaddress.ip_address(prepared_session.median_target_ip)),
+                int(ipaddress.ip_address(prepared_session.median_dest_ip))
+
+                # Add more numeric features here if necessary
+            ]
+            # Predict the Attack Risk Label
+            attack_risk_label = mlp_classifier.predict([prepared_session_features])[0]
+
+            return attack_risk_label
+
+        # Example usage:
+        # Create a Prepared Session object
+        prepared_session = PreparedSession(mean_absolute_diff_timestamps=10,
+                                           mean_absolute_diff_amount=0.5,
+                                           median_longitude_latitude=(40.7128, -74.0060),
+                                           median_target_ip="192.168.203.48",
+                                           median_dest_ip="8.8.8.8")
+
+        # Predict the Attack Risk Label
+        predicted_label = predict_attack_risk(prepared_session)
+        print("Predicted Attack Risk Label:", predicted_label)

@@ -27,9 +27,8 @@ class ProductionSystemReceiver:
         classifier = joblib.load(file)
         #classifierTest = ClassifierTest(classifier)
         # push the classifierTest into the Messegebus
-        #self.systemBus.pushTopic("ClassifierTest", classifierTest)
+        self.systemBus.pushTopic("Classifier", classifier)
         print("Received Classifier")
-        print(classifier)
         return 200
 
     def run(self):

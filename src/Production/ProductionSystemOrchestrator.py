@@ -1,5 +1,6 @@
 from threading import Thread
 
+from src.DataObjects.AttackRiskLabel import AttackRiskLabel
 from src.MessageBus.MessageBus import MessageBus
 from src.Production.FakeAttackRiskClassifier import FakeAttackRiskClassifier
 from src.Production.ProductionSystemPhaseTracker import ProductionSystemPhaseTracker
@@ -22,7 +23,8 @@ class ProductionSystemOrchestrator:
         fakeClassifier = FakeAttackRiskClassifier(self.systemBus)
         while True:
             #print(f"Fake classifier classifier pre {fakeClassifier.attackRiskClassifier}")
-            attackRiskLabel = fakeClassifier.provideAttackRiskLabel()
+            attackRiskLabel = AttackRiskLabel(fakeClassifier.provideAttackRiskLabel())
+            print(type(attackRiskLabel))
             #print(f"Fake classifier classifier post {fakeClassifier.attackRiskClassifier}")
             self.phaseTracker.increseCounter()
             sender = ProductionSystemSender(attackRiskLabel)
