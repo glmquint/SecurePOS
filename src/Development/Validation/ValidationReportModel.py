@@ -6,6 +6,7 @@ class ValidationReportModel:
     validation_rows: [ValidationRow] = None
 
     def __init__(self, scoreboard: Scoreboard):
+        self.validation_rows = []
         for i in range(len(scoreboard.mse)):
             self.validation_rows.append(ValidationRow(scoreboard.classifiers[i].name,
                                                       scoreboard.mse[i],
