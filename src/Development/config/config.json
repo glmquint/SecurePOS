@@ -4,14 +4,14 @@
   "production_system_receiver" :  "http://192.168.131.243:5000/Classifier",
   "hyperparameters": {
     "number_of_layers": {
-      "min":10,
-      "max":100,
-      "step":10
+      "min":5,
+      "max":10,
+      "step":5
     },
     "number_of_neurons": {
-      "min":10,
-      "max":100,
-      "step":10
+      "min":5,
+      "max":10,
+      "step":5
     }
   },
   "loss_threshold" : 0.1,
