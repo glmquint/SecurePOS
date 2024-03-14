@@ -2,7 +2,6 @@ import itertools
 import json
 import pandas as pd
 from sklearn.metrics import mean_squared_error, accuracy_score
-
 from src.Development.Classifier import Classifier
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
@@ -80,8 +79,8 @@ class TrainProcess:
     def validate(self):
         y_train_pred = self.classifier.model.predict(self.learning_set.trainingSet)
         y_val_predicted = self.classifier.model.predict(self.learning_set.validationSet)
-        mse = mean_squared_error(self.learning_set.validationSetLabel, y_val_predicted)
-
+        # TODO: maybe change to minimum
+        mse = self.classifier.model.best_loss_
         train_error = 1.0 - accuracy_score(self.learning_set.trainingSetLabel, y_train_pred)
         val_error = 1.0 - accuracy_score(self.learning_set.validationSetLabel, y_val_predicted)
         self.grid_space.insert_classifier(self.classifier, mse, train_error, val_error)
@@ -110,3 +109,5 @@ class TrainProcess:
             self.set_hyperparameters((number_of_layers, number_of_neurons))
             self.train(iteration)
             self.validate()
+        # grid search is finished, push the scoreboard in order to obtain validation report
+        self.message_bus.pushTopic("Scoreboard", self.grid_space)
