@@ -62,15 +62,16 @@ class TrainProcess:
         if self.status.average_hyperparameters is not None:
             self.avg_hyperparameters = self.status.average_hyperparameters
 
-    def train(self):
+    def train(self, current_iteration: int = 0):
         if not self.status.should_validate:
             self.classifier = Classifier(self.avg_hyperparameters['number_of_neurons'],
                                          self.avg_hyperparameters['number_of_layers'], self.number_of_iterations)
         else:
             self.classifier = Classifier(self.current_hyperparameter[0],
-                                         self.current_hyperparameter[1], self.number_of_iterations)
+                                         self.current_hyperparameter[1], self.number_of_iterations,
+                                         f'Classifier {current_iteration}')
         self.classifier.model.fit(self.learning_set.trainingSet, pd.Series(self.learning_set.trainingSetLabel))
-        self.classifier.dump_model()  # TODO remove me
+        self.classifier.save_model('Training')  # TODO remove me
         if not self.status.should_validate:
             loss_curve = self.classifier.get_loss_curve()
             self.message_bus.pushTopic("learning_plot",
@@ -102,8 +103,10 @@ class TrainProcess:
         self.grid_search = list(itertools.product(layers, neurons))
 
     def perform_grid_search(self):
+        iteration = 0
         self.grid_space = Scoreboard(self.configurations.classifiers_limit)
         for (number_of_layers, number_of_neurons) in self.grid_search:
+            iteration = iteration + 1
             self.set_hyperparameters((number_of_layers, number_of_neurons))
-            self.train()
+            self.train(iteration)
             self.validate()
