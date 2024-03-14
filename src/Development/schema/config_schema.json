@@ -75,6 +75,9 @@
     "loss_threshold": {
       "type": "number"
     },
+    "overfitting_tolerance": {
+      "type": "number"
+    },
     "port": {
       "type": "integer"
     },
@@ -91,6 +94,7 @@
     "production_system_receiver",
     "hyperparameters",
     "loss_threshold",
+    "overfitting_tolerance",
     "port",
     "endpoint_url",
     "classifiers_limit"
