@@ -1,12 +1,5 @@
 from datetime import datetime
-from random import randint
-from tkinter import font
-
 from PIL import Image, ImageDraw, ImageFont
-from pip._vendor.pygments.formatters import img
-
-from src.Evaluation.EvaluationReportModel import EvaluationReportModel
-from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 
 
 class EvaluationReportViewer:
@@ -96,11 +89,11 @@ class EvaluationReportViewer:
         imgDraw.text((report_x,report_second_row),"Max Toll. Error: ",font=font,fill=(0,0,0))
         imgDraw.text((report_y,report_second_row),str(modelcontroller.TotalErrorTollerated),font=font,fill=(0,0,0))
 
-        imgDraw.text((report_x, report_third_row), "Max Consec. Error: ", font=font, fill=(0, 0, 0))
-        imgDraw.text((report_y, report_third_row), str(modelcontroller.ConsecutiveError), font=font, fill=(0, 0, 0))
-
         imgDraw.text((report_x, report_forth_row), "Consecutive Toll.: ", font=font, fill=(0, 0, 0))
         imgDraw.text((report_y, report_forth_row), str(modelcontroller.ConsecutiveErrorTollerated), font=font, fill=(0, 0, 0))
+
+        imgDraw.text((report_x, report_third_row), "Max Consec. Error: ", font=font, fill=(0, 0, 0))
+        imgDraw.text((report_y, report_third_row), str(modelcontroller.ConsecutiveError), font=font, fill=(0, 0, 0))
 
         self.widthline = 4
         self.firstcorner = 480

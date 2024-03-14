@@ -8,7 +8,7 @@ from src.JsonIO.Server import Server
 
 sender2 = JSONSender("../DataObjects/Schema/AttackRiskLabelSchema.json", "http://127.0.0.1:5000/security_expert_endpoint")
 sender = JSONSender("../DataObjects/Schema/AttackRiskLabelSchema.json", "http://127.0.0.1:5000/label_endpoint")
-for x in range(0,50):
+for x in range(0,55):
     #print(x)
     y = randint(1,2)
     x = randint(1,20)

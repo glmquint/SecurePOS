@@ -19,9 +19,6 @@ class LabelReceiver:
         return
 
     def receive(self):
-        # test_callback = lambda json_data: print(f"Hello from test_callback. Received {json_data}")
-        # self.server_sec.add_resource(JSONEndpoint, "/security_expert_endpoint", recv_callback=self.callback_s,
-        #                             json_schema_path="../DataObjects/Schema/AttackRiskLabelSchema.json")
         self.server.add_resource(JSONEndpoint, "/label_endpoint", recv_callback=self.callback_f,
                                  json_schema_path="../DataObjects/Schema/AttackRiskLabelSchema.json")
         self.server.add_resource(JSONEndpoint, "/security_expert_endpoint", recv_callback=self.callback_s,

@@ -30,18 +30,12 @@ class EvaluationReportModel:
 
     def generatereport(self):
         self.labels = self.retrieve()
+        self.tick_array.clear()
         labels = self.labels[0]
         security_labels = self.labels[1]
         consecutiverror = 0
         totalerror = 0
         consecutive = False
-        if len(labels) != len(security_labels):
-            self.labels = self.retrieve()
-            for x in range(0,len(self.labels[0])):
-                print(self.labels[0][x].attackRiskLabel)
-            for x in range(0, len(labels)):
-                print(self.labels[1][x].attackRiskLabel)
-            exit()
         maxconsecutive = 0
         for x in range(0, len(labels)):
             if labels[x].attackRiskLabel[1] != security_labels[x].attackRiskLabel[1] :
