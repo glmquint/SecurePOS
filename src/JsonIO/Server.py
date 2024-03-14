@@ -14,12 +14,15 @@ class Server:
         self.api = Api(self.app)
         self.timeout = timeout
 
-    def run(self, debug=False):
+    def run(self, debug=False, port=5000):
         self.app.run(debug=debug)
+        #self.app.run(debug=debug, port=port,host="0.0.0.0")
 
     def add_resource(self, resource, url, **kwargs):
         self.api.add_resource(resource, url, endpoint=url, resource_class_kwargs=kwargs)
 
 
 if __name__ == "__main__":
-   pass
+    #server=Server()
+    #server.run()
+    pass

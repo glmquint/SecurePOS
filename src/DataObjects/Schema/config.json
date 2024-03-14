@@ -1,0 +1,24 @@
+{
+    "type": "object",
+    "properties": {
+        "sufficient_label_number": {
+            "type": "integer"
+        },
+        "simulate_human_task": {
+            "type": "string",
+          "enum": ["False","True"]
+        },
+        "state": {
+            "type": "integer",
+            "enum": [0,1]
+        },
+        "tollerated_error":{
+            "type": "integer"
+        }       ,
+        "tollerated_consecutive_error":{
+            "type": "integer"
+        }
+    },
+    "required": ["sufficient_label_number","simulate_human_task","state","tollerated_error","tollerated_consecutive_error"]
+}
+
