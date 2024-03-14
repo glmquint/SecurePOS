@@ -12,7 +12,8 @@ class LearningPlotView:
         self.model = learning_plot_model
 
     def update(self):
-        plt.plot(range(1, self.model.number_of_generations + 1), self.model.loss_curve, label='Loss')
+        plt.plot(range(1, self.model.number_of_generations), self.model.loss_curve, label='Loss')
+        plt.xticks(range(1, self.model.number_of_generations))
         plt.xlabel('Number of generations')
         plt.ylabel('Loss')
         plt.title(f'Learning plot (Loss threshold: {self.model.loss_threshold})')
