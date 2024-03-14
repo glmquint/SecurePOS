@@ -51,8 +51,8 @@ class TrainProcess:
         finally:
             return ret_val
 
-    def remove_precedent_response(self, filename: str):
-        ai_expert_response_path = f'Training/{filename}.json'
+    def remove_precedent_response(self, path: str):
+        ai_expert_response_path = f'{path}.json'
         if os.path.exists(ai_expert_response_path):
             os.remove(ai_expert_response_path)
 

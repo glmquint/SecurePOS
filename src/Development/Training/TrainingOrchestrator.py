@@ -80,8 +80,8 @@ class TrainingOrchestrator:
                     self.status.save_status()
                 elif response == 0:
                     self.status.status = "set_number_of_iterations"
-                    self.train_process.remove_precedent_response('learning_result')
-                    self.train_process.remove_precedent_response('number_of_iterations')
+                    self.train_process.remove_precedent_response('Training/learning_result')
+                    self.train_process.remove_precedent_response('Training/number_of_iterations')
                     self.status.save_status()
                 elif response == 1:
                     self.status.status = "set_hyperparams"
