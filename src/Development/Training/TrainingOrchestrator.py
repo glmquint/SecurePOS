@@ -38,6 +38,7 @@ class TrainingOrchestrator:
         except FileNotFoundError as e:  # create file so that AI expert can fill it
             print('File learning_result.json not found, creating it...')
             with open('Training/learning_result.json', 'w') as json_file:
+                print("Please insert your decision in learning_result.json")
                 json.dump({"result": ""}, json_file)
         finally:
             return ret_val
@@ -62,6 +63,8 @@ class TrainingOrchestrator:
                     self.status.number_of_iterations = number_of_iterations
                     self.status.status = "train"
                 else:
+                    print("Please insert a number >0 for the number of iterations")
+                    self.status.status = "set_number_of_iterations"
                     self.status.save_status()
             elif self.status.status == "train":
                 print("Starting training")
@@ -74,10 +77,11 @@ class TrainingOrchestrator:
                 print("Checking learning plot...")
                 response = self.get_ai_export_response()
                 if response < 0:
-                    print("Number of iterations not set")
                     self.status.save_status()
                 elif response == 0:
                     self.status.status = "set_number_of_iterations"
+                    self.train_process.remove_precedent_response('learning_result')
+                    self.train_process.remove_precedent_response('number_of_iterations')
                     self.status.save_status()
                 elif response == 1:
                     self.status.status = "set_hyperparams"
