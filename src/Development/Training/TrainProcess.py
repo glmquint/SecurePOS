@@ -1,5 +1,7 @@
 import itertools
 import json
+import os
+
 import pandas as pd
 from sklearn.metrics import mean_squared_error, accuracy_score
 from src.Development.Classifier import Classifier
@@ -49,6 +51,11 @@ class TrainProcess:
         finally:
             return ret_val
 
+    def remove_precedent_response(self, filename: str):
+        ai_expert_response_path = f'Training/{filename}.json'
+        if os.path.exists(ai_expert_response_path):
+            os.remove(ai_expert_response_path)
+
     def __init__(self, status: DevelopmentSystemStatus, message_bus: MessageBus,
                  configurations: DevelopmentSystemConfigurations):
         self.status = status
@@ -70,13 +77,16 @@ class TrainProcess:
                                          self.current_hyperparameter[1], self.number_of_iterations,
                                          f'Classifier {current_iteration}')
         self.classifier.model.fit(self.learning_set.trainingSet, pd.Series(self.learning_set.trainingSetLabel))
-        self.classifier.save_model('Training')  # TODO remove me
         if not self.status.should_validate:
+            self.classifier.save_model('classifiers')  # TODO remove me
             loss_curve = self.classifier.get_loss_curve()
+            self.classifier.number_of_iterations = len(loss_curve)+1
             self.message_bus.pushTopic("learning_plot",
-                                       [loss_curve, self.number_of_iterations, self.configurations.loss_threshold])
+                                       [loss_curve, self.classifier.number_of_iterations,
+                                        self.configurations.loss_threshold])
 
     def validate(self):
+        self.classifier.number_of_iterations = len(self.classifier.get_loss_curve())+1
         y_train_pred = self.classifier.model.predict(self.learning_set.trainingSet)
         y_val_predicted = self.classifier.model.predict(self.learning_set.validationSet)
         # TODO: maybe change to minimum
