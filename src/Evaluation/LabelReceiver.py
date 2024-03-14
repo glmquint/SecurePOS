@@ -29,11 +29,11 @@ class LabelReceiver:
 
     def callback_s(self, json_data):
         #print(f"Received from security {json_data}")
-        self.mbus.pushTopic("sec_label", json_data)
         self.scontroller_security.save(AttackRiskLabel(json_data["attackRiskLabel"]))
+        self.mbus.pushTopic("sec_label", json_data)
 
     def callback_f(self, json_data):
         #print(f"Received {json_data}")
-        self.mbus.pushTopic("label", json_data)
         self.scontroller_label.save(AttackRiskLabel(json_data["attackRiskLabel"]))
+        self.mbus.pushTopic("label", json_data)
 

@@ -27,7 +27,7 @@ class EvaluationSystemOrchestrator:
             self.label_counter = self.label_counter + 1
             self.receiver.mbus.popTopic("sec_label")
             self.security_label_counter = self.security_label_counter + 1
-        time.sleep(1)
+        #time.sleep(1)
         self.evaluation.update()
         self.label_counter = 0
         self.security_label_counter = 0
