@@ -20,8 +20,9 @@ class ReportController:
         learning_plot_view.update()
 
     def create_validation_report(self):
-        validation_report_model = self.message_bus.popTopic("validation_report")
-        validation_report_view = ValidationReportView('validation_report', validation_report_model)
+        scoreboard = self.message_bus.popTopic("Scoreboard")
+        validation_report_model = ValidationReportModel(scoreboard)
+        validation_report_view = ValidationReportView('Validation', validation_report_model)
         validation_report_view.update()
 
     def create_test_report(self):

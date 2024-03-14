@@ -1,12 +1,18 @@
+from src.Development.Training.Scoreboard import Scoreboard
 from src.Development.Validation.ValidationRow import ValidationRow
 
 
 class ValidationReportModel:
     validation_rows: [ValidationRow] = None
 
-    def __init__(self, from_tuples: [tuple]):
-        for row in from_tuples:
-            self.validation_rows.append(ValidationRow(row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]))
+    def __init__(self, scoreboard: Scoreboard):
+        for i in range(len(scoreboard.mse)):
+            self.validation_rows.append(ValidationRow(scoreboard.classifiers[i].name,
+                                                      scoreboard.mse[i],
+                                                      scoreboard.validation_error[i],
+                                                      scoreboard.train_error[i],
+                                                      scoreboard.classifiers[i].number_of_layers,
+                                                      scoreboard.classifiers[i].number_of_neurons))
 
     def to_dict(self):
         return [row.to_dict() for row in self.validation_rows]
