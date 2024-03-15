@@ -1,19 +1,25 @@
 import json
 
+from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.ReportController import ReportController
+from src.Development.Training.TrainProcess import TrainProcess
 from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
 
 
 class TestingOrchestrator:
+    training_process: TrainProcess = None
     report_controller: ReportController = None
     message_bus: MessageBus = None
+    configurations: DevelopmentSystemConfigurations = None
 
-    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus):
+    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus, configurations: DevelopmentSystemConfigurations):
         self.report_controller = report_controller
         self.message_bus = message_bus
         self.status = status
+        self.configurations = configurations
+        self.training_process = TrainProcess(self.status, self.message_bus, self.configurations)
 
     def check_test_result(self) -> int:
         ret_val = -1
@@ -33,6 +39,7 @@ class TestingOrchestrator:
     def start(self):
         while True:
             if self.status.status == "generate_test_report":
+                self.training_process.test_classifier()
                 self.report_controller.create_test_report()
                 self.status.status = "check_test_report"
             elif self.status.status == "check_test_report":
