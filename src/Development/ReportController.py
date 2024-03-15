@@ -26,9 +26,11 @@ class ReportController:
         validation_report_view.update()
 
     def create_test_report(self):
-        best_classifier_data = self.message_bus.popTopic("BestClassifier")
-        #test_report_view = TestReportView('test_report', test_report_model)
-        #test_report_view.update()
+        test_report_data = self.message_bus.popTopic("test_report")
+        test_report_model = TestReportModel(test_report_data[0], test_report_data[1], test_report_data[2],
+                                            test_report_data[3])
+        test_report_view = TestReportView('test_report', test_report_model)
+        test_report_view.update()
 
 # ReportController = ReportController()
 # ReportController.create_learning_plot()
