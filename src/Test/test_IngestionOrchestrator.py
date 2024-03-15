@@ -94,7 +94,7 @@ class TestPreparationSystemOrchestrator:
             for i in range(sufficient_records): # simulate client-side systems
                 url = "record"
                 record = [ LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord][i](**{"uuid":uuid, "location_longitude":random(), "location_latitude":random(), "target_ip":str(random()), "dest_ip":str(random()), "timestamp":[random() for i in range(10)], "amount":[random() for i in range(10)]})
-                r = requests.post(f"http://127.0.0.1:5000/{url}", json=record.to_json())
+                r = requests.post(f"http://127.0.0.1:5000/{url}", json=record.__dict__) # this is intended to be unstructured (like for a client)
                 assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
         #for i in range(num_of_runs):
             result = message_bus.popTopic("segregation_system")

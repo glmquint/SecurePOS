@@ -37,4 +37,5 @@ class PreparedSessionCreator:
 
     @log
     def extractFeatures(self):
+        # TODO: process ip as integer for mlpclassification, like -> int(ipaddress.ip_address(schifo.ip)
         pass

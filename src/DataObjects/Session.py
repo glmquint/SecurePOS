@@ -16,7 +16,7 @@ class RawSession(Session):
         #return str([record.__repr__() for record in self.records])
         if not self.records or len(self.records) == 0:
             return {"records": []}
-        return {"records": [record.to_json() for record in self.records]}
+        return {"records": [Record.to_json(record) for record in self.records]}
 
 class PreparedSession(Session):
     features: [Feature]
