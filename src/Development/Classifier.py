@@ -1,3 +1,5 @@
+import os
+
 import joblib
 from io import BytesIO
 from sklearn.neural_network import MLPClassifier
@@ -26,6 +28,11 @@ class Classifier:
         # joblib.dump(self.model, self.bytes_container)
         # self.bytes_container.seek(0)
         joblib.dump(self.model, f'{path}/{self.name}.sav')
+
+    def remove_model(self, path: str):
+        filename = f'{path}/{self.name}.sav'
+        if os.path.exists(filename):
+            os.remove(filename)
 
     def get_loss_curve(self):
         return self.model.loss_curve_

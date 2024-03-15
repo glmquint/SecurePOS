@@ -61,13 +61,12 @@ class ValidationOrchestrator:
                     self.status.save_status()
                 elif response == 0:  # no valid classifier, repeat the process
                     self.status.status = "set_avg_hyperparams"
-                    self.trainining_process.grid_space.remove_classifiers()
+                    self.trainining_process.classifier.remove_model('classifiers')
                     self.trainining_process.remove_precedent_response('Validation/validation_result')
                     self.trainining_process.remove_precedent_response('Training/learning_result')
                     self.trainining_process.remove_precedent_response('Training/number_of_iterations')
                     self.status.save_status()
                 elif response == 1:
-                    self.trainining_process.grid_space.save_classifiers('classifiers')
                     self.status.status = "generate_test_report"
                     break
             else:
