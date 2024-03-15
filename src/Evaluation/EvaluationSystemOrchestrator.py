@@ -37,20 +37,19 @@ class EvaluationSystemOrchestrator:
     def main(self):
         self.config.load()
         self.receiver.receive()
-        while True:
-            self.config.load()
-            print("=====================================")
-            #if self.config.state == 0:
+        #while True:
+        #self.config.load()
+        print("=====================================")
+        if self.config.state == 0:
             self.run()
-            #self.config.write_state(1)
+            self.config.write_state(1)
             if self.config.simulate_human_task:
                 self.evaluation.getresult(True)
-                #self.config.write_state(0)
-                #self.config.state == 1
-            else:
-                self.evaluation.getresult()
-                #self.config.write_state(0)
-                #return
+                self.config.write_state(0)
+        else:
+            self.evaluation.getresult()
+            self.config.write_state(0)
+        return
 
 
 if __name__ == "__main__":

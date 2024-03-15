@@ -23,11 +23,14 @@ class EvaluationSystemConfig:
         with open(self.path_config, "w") as jsonFile:
             json.dump(data, jsonFile)
 
+        self.state == 1
+
 
     def load(self):
         validator = JSONValidator(self.path_config_validator)
         f = open(self.path_config)
         data = json.load(f)
+        f.close()
         validator.validate_data(data)
 
         self.sufficient_label_number = data["sufficient_label_number"]

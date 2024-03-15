@@ -1,1 +1,1 @@
-{"sufficient_label_number": 50, "simulate_human_task": "True", "state": 0, "tollerated_error": 5, "tollerated_consecutive_error": 3}
+{"sufficient_label_number": 50, "simulate_human_task": "False", "state": 0, "tollerated_error": 5, "tollerated_consecutive_error": 3}
