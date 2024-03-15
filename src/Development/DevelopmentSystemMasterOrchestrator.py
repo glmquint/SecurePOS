@@ -34,7 +34,7 @@ class DevelopmentSystemMasterOrchestrator:
                                                        self.development_system_configurations)
         self.validation_orchestrator = ValidationOrchestrator(self.status, self.report_controller, self.message_bus,
                                                               self.development_system_configurations)
-        self.test_orchestrator = TestingOrchestrator(self.status, self.report_controller, self.message_bus)
+        self.test_orchestrator = TestingOrchestrator(self.status, self.report_controller, self.message_bus, self.development_system_configurations)
         self.learning_set_receiver = LearningSetReceiver(self.message_bus, self.development_system_configurations.endpoint_url)
         self.development_system_sender = DevelopmentSystemSender(
             self.development_system_configurations.messaging_system_receiver,
