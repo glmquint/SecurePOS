@@ -7,10 +7,10 @@ class TestReportView:
     model: TestReportModel = None
 
     def __init__(self, filename: str, test_report_model: TestReportModel):
-        self.path_to_save = f'src/Development/{filename}.csv'
+        self.path_to_save = f'Testing/{filename}.csv'
         self.model = test_report_model
 
     def update(self):
-        df = pd.DataFrame(self.model.to_dict())
+        df = pd.DataFrame(self.model.to_dict(),index=[0])
         df.to_csv(self.path_to_save, index=False)
         print(f'Test report saved to {self.path_to_save}')
