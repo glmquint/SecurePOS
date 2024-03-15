@@ -18,16 +18,6 @@ class Scoreboard:
         self.train_error = []
         self.validation_error = []
 
-    def save_classifiers(self, path: str):
-        for i in range(len(self.mse)):
-            self.classifiers[i].save_model(path)
-
-    def remove_classifiers(self):
-        for i in range(len(self.mse)):
-            filename = f'classifiers/{self.classifiers[i].name}.sav'
-            if os.path.exists(filename):
-                os.remove(filename)
-
     def insert_classifier(self, classifier: Classifier, mse: float, train_error: float, validation_error: float):
         index = bisect.bisect(self.mse, mse)
         if len(self.mse) < self.limit:
