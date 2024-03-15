@@ -10,7 +10,8 @@ class DevelopmentSystemConfigurations:
     hyperparameters: HyperParameterLimit = None
     validator: JSONValidator = None
     loss_threshold: float = None
-    overfitting_tolerance = float = None
+    overfitting_tolerance: float = None
+    generalization_tolerance: float = None
     port: int = None
     endpoint_url: str = None
     classifiers_limit: int = None
@@ -31,6 +32,7 @@ class DevelopmentSystemConfigurations:
         self.endpoint_url = data['endpoint_url']
         self.classifiers_limit = data['classifiers_limit']
         self.overfitting_tolerance = data['overfitting_tolerance']
+        self.generalization_tolerance = data['generalization_tolerance']
 
     def load_config(self, path: str, should_validate: bool = False):
         with open(path, 'r') as json_file:

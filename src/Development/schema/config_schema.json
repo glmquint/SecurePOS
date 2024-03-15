@@ -78,6 +78,9 @@
     "overfitting_tolerance": {
       "type": "number"
     },
+    "generalization_tolerance": {
+      "type": "number"
+    },
     "port": {
       "type": "integer"
     },
