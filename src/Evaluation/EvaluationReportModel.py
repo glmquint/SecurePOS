@@ -18,6 +18,7 @@ class EvaluationReportModel:
         self.labels = self.retrieve()
 
 
+
     def retrieve(self):
         labels = self.scontroller_label.retrieve(self.sufficient_label_number)
         slabels = self.scontroller_security.retrieve(self.sufficient_label_number)
