@@ -24,7 +24,7 @@ class EvaluationReportController:
 
         if not human_simulate:
             validator = JSONValidator("./../DataObjects/Schema/action.json")
-            action_json = open("./../data/action.json")
+            action_json = open("data/action.json")
             action = json.load(action_json)
             validator.validate_data(action)
             self.result = action["action"]

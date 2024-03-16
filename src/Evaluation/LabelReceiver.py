@@ -13,9 +13,9 @@ class LabelReceiver:
     def __init__(self):
         self.server = Server()
         self.mbus = MessageBus(["label", "sec_label"])
-        self.scontroller_label = StorageController(DBConfig("evaluation", "labels", ("label",)),
+        self.scontroller_label = StorageController(DBConfig("evaluation", "labels"),
             type(AttackRiskLabel(None)))
-        self.scontroller_security = StorageController(DBConfig("evaluation", "security_labels", ("label",)),
+        self.scontroller_security = StorageController(DBConfig("evaluation", "security_labels"),
             type(AttackRiskLabel(None)))
         return
 

@@ -1,6 +1,11 @@
 from datetime import datetime
+from random import randint
+
 from PIL import Image, ImageDraw, ImageFont
 
+from src.DataObjects.AttackRiskLabel import AttackRiskLabel
+from src.Evaluation.EvaluationReportModel import EvaluationReportModel
+from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 
 
 class EvaluationReportViewer:
@@ -102,7 +107,7 @@ class EvaluationReportViewer:
         imgDraw.line([(self.firstcorner,self.secondcorner),(self.firstcorner,self.height)],fill=(self.black),width=self.widthline)
         imgDraw.line([(self.firstcorner,self.secondcorner),(self.width,self.secondcorner)],fill=(self.black),width=self.widthline)
 
-        img.save('../data/result.png')
+        img.save('data/result.png')
         pass
 
 
@@ -111,9 +116,10 @@ class EvaluationReportViewer:
 #a = [""]*50
 #b = [""]*50
 #for x in range(0,50):
-#    a[x] = "ciao"+str(randint(1,2))
+#   a[x] = AttackRiskLabel("ciao"+str(randint(1,2)))
 #for x in range(0,50):
-#    b[x] = "ciao"+str(randint(1,2))
-#tick = ["A"]*50
+#   b[x] = AttackRiskLabel("ciao"+str(randint(1,2)))
+#eva.labels=[a,b]
+#tick = ["X"]*50
 #e.print(eva,tick)
 

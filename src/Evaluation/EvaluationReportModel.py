@@ -10,9 +10,9 @@ class EvaluationReportModel:
         self.ConsecutiveErrorTollerated = config.tollerated_consecutive_error
         self.ConsecutiveError = 0
         self.tick_array = []
-        self.scontroller_label = StorageController(DBConfig("evaluation", "labels", "label", ),
+        self.scontroller_label = StorageController(DBConfig("evaluation", "labels"),
                                                    type(AttackRiskLabel(None)))
-        self.scontroller_security = StorageController(DBConfig("evaluation", "security_labels", "label"),
+        self.scontroller_security = StorageController(DBConfig("evaluation", "security_labels"),
                                                       type(AttackRiskLabel(None)))
         self.sufficient_label_number = config.sufficient_label_number
         self.labels = self.retrieve()
@@ -20,14 +20,14 @@ class EvaluationReportModel:
 
 
     def retrieve(self):
-        labels = self.scontroller_label.retrieve(self.sufficient_label_number)
-        slabels = self.scontroller_security.retrieve(self.sufficient_label_number)
+        labels = self.scontroller_label.retrieveAll()
+        slabels = self.scontroller_security.retrieveAll()
         return [labels, slabels]
 
 
     def removelabels(self):
-        self.scontroller_security.remove(self.sufficient_label_number)
-        self.scontroller_label.remove(self.sufficient_label_number)
+        self.scontroller_security.removeAll()
+        self.scontroller_label.removeAll()
 
     def generatereport(self):
         self.labels = self.retrieve()

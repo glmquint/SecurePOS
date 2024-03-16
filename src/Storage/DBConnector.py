@@ -11,14 +11,14 @@ class DBConnector:
         self.tableName = dbConfig.table_name
 
         try:
-            self.connection = sqlite3.connect(f'../../db/{self.name}.db')
+            self.connection = sqlite3.connect(f'../../db/{self.name}.db',check_same_thread=False)
         except sqlite3.Error as e:
             print(e)
 
     def insert(self, row: list):
         cursor = self.connection.cursor()
         cursor.execute(f"PRAGMA table_info({self.tableName})")
-        column_names = [column[1] for column in cursor.fetchall()][0:]
+        column_names = [column[1] for column in cursor.fetchall()][1:]
         insert_query = 'INSERT INTO ' + self.tableName + '(' + ' ,'.join(column_names) + ') VALUES (' + ', '.join(
             '?' * len(column_names)) + ')'
         cursor.executemany(
