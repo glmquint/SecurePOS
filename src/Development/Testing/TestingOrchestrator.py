@@ -28,7 +28,9 @@ class TestingOrchestrator:
                 ret_val = 0
                 data = json.load(json_file)
                 JSONValidator("schema/result_schema.json").validate_data(data)
-                if data['result'] in ["ok", "OK", "Ok"]:
+                if data['result'] in [""]:
+                    ret_val = -1
+                elif data['result'] in ["ok", "OK", "Ok"]:
                     ret_val = 1
         except FileNotFoundError as e:  # create file so that AI expert can fill it
             with open('Testing/test_result.json', 'w') as json_file:
@@ -46,6 +48,11 @@ class TestingOrchestrator:
                 response = self.check_test_result()
                 if response == 0:
                     self.status.status = "send_config"
+                    # TODO: maybe remove classifier if not needed
+                    self.training_process.remove_precedent_response('Validation/validation_result')
+                    self.training_process.remove_precedent_response('Training/learning_result')
+                    self.training_process.remove_precedent_response('Training/number_of_iterations')
+                    self.training_process.remove_precedent_response('Testing/test_result')
                 elif response == 1:
                     self.status.status = "send_classifier"
                 self.status.save_status()
