@@ -38,3 +38,4 @@ class DevelopmentSystemConfigurations:
         with open(path, 'r') as json_file:
             data = json.load(json_file)
             self.update_config(data, should_validate)
+            print(f'[{self.__class__.__name__}]: configurations loaded successfully')
