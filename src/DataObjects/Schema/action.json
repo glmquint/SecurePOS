@@ -1,0 +1,15 @@
+{
+    "type": "object",
+    "properties": {
+        "action": {
+            "type": "string",
+            "enum": [
+                "confirm",
+                "Confirm",
+                "reject",
+                "Reject"
+            ]
+        }
+    },
+    "required": ["action"]
+}
