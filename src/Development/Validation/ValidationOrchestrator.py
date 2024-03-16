@@ -1,4 +1,3 @@
-import itertools
 import json
 
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations

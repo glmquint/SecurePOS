@@ -1,6 +1,4 @@
-import os
-
-from src.Development import Classifier
+from src.DataObjects.Classifier import Classifier
 import bisect
 
 

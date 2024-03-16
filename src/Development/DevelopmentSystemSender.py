@@ -1,6 +1,5 @@
 from src.JsonIO.FileSender import FileSender
 from src.JsonIO.JSONSender import JSONSender
-from src.Development.Classifier import Classifier
 
 
 class DevelopmentSystemSender:
@@ -14,6 +13,6 @@ class DevelopmentSystemSender:
     def send_to_messaging(self, Config):
         self.messaging_sender.send(Config.toJSON())
 
-    def send_to_production(self):
+    def send_to_production(self):  # TODO: update with the actual logic
         with open('Training/classifier.sav', 'rb') as file:
             self.production_sender.send(file)

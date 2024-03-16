@@ -1,6 +1,6 @@
 import json
 
-from src.Development.LearningSet import LearningSet
+from src.DataObjects.LearningSet import LearningSet
 from src.JsonIO.JsonValidator import JSONValidator
 
 
