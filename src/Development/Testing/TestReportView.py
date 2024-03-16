@@ -13,4 +13,3 @@ class TestReportView:
     def update(self):
         df = pd.DataFrame(self.model.to_dict(),index=[0])
         df.to_csv(self.path_to_save, index=False)
-        print(f'Test report saved to {self.path_to_save}')
