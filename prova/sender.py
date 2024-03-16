@@ -3,7 +3,7 @@ from random import random
 import numpy as np
 import requests
 
-from src.Segregation.PreparedSession import PreparedSession
+from src.DataObjects.PreparedSession import PreparedSession
 
 
 def recive():  # FIXME just for debug

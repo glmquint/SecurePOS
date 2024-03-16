@@ -1,5 +1,5 @@
 import pandas as pd
-from src.Segregation.LearningSet import LearningSet
+from src.DataObjects.LearningSet import LearningSet
 import math
 
 

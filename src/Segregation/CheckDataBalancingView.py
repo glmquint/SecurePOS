@@ -1,9 +1,7 @@
 import json
-import math
 from random import random
 import matplotlib.pyplot as plt
 import numpy as np
-from PreparedSession import *
 
 
 class CheckDataBalanceView:
@@ -15,6 +13,7 @@ class CheckDataBalanceView:
 
     def plotCheckDataBalance(self):
 
+        # retrive data from the model
         PreparedSessionList = self.__checkDataBalanceModel.getPreparedSessionList()
 
         labels = ['Low', 'Medium', 'High']

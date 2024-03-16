@@ -14,13 +14,13 @@ class SegregationPlotController:
         self.__checkInputCoverageView = CheckInputCoverageView(self.__checkInputCoverageModel)
 
     def plotDataBalance(self):
-        # retrive data from the model
+        # retrieve data from the model
         self.__checkDataBalancingModel.retrivePreparedSession()
         # pass data to the view to plot
         self.__checkDataBalancingView.plotCheckDataBalance()
 
     def plotCheckInputCoverage(self):
-        # retrive data from the model
+        # retrieve data from the model
         self.__checkInputCoverageModel.retrievePreparedSession()
         # pass data to the view to plot
         self.__checkInputCoverageView.plotCheckInputCoverageView()

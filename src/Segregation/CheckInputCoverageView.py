@@ -3,7 +3,6 @@ import random
 import plotly.graph_objects as go
 import pandas as pd
 from random import random
-from PreparedSession import *
 
 
 class CheckInputCoverageView:
@@ -31,10 +30,8 @@ class CheckInputCoverageView:
         # Create a pandas DataFrame with the generated data and labels
         dataset = pd.DataFrame(data, columns=labels)
 
-        # numeric_columns = dataset.columns[1:-1]
         numeric_columns = dataset.columns[0::]
         numeric_values_dataset = dataset[numeric_columns].values
-        # print(numeric_values_dataset)
 
         pandas_dataset = pd.DataFrame(data=numeric_values_dataset, columns=labels)
 

@@ -1,7 +1,7 @@
 from threading import Thread
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
-from src.Segregation.PreparedSession import PreparedSession
+from src.DataObjects.PreparedSession import PreparedSession
 
 
 class PreparedSessionReceiver:

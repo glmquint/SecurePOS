@@ -5,7 +5,7 @@ from src.Segregation.SegregationSystemReceiver import PreparedSessionReceiver
 from src.Segregation.SegregationSystemConfig import SegregationSystemConfig
 from src.Segregation.SegregationSystemSender import SegregationSystemSender
 from src.Storage.StorageController import StorageController
-from src.Segregation.PreparedSession import PreparedSession
+from src.DataObjects.PreparedSession import PreparedSession
 from src.Storage.dbConfig import DBConfig
 
 
@@ -35,14 +35,16 @@ def run():
         print("Server started")  # the serviceFlag is false if the simplified stop and go interaction is not active
 
         if serviceFlag is False:
+            # the value that can be assigned to the following two variable is ( checking | ok | not balanced )
             evaluationCheckDataBalance = segregationPlotController.getCheckDataBalance()
             evaluationCheckInputCoverage = segregationPlotController.getCheckInputCoverage()
-            if evaluationCheckInputCoverage == "not performed":
-                # if the coverage is not satisfied the process has to start from the start
+            if evaluationCheckInputCoverage == "no coverage":
+                # if the coverage is not satisfied the process has to start from the beginning
                 segregationPlotController.setEvaluationCheckDataBalance("checking")
                 segregationPlotController.setEvaluationCheckInputCoverage("checking")
                 evaluationCheckDataBalance = "checking"
                 evaluationCheckInputCoverage = "checking"
+
 
         if serviceFlag is True or evaluationCheckDataBalance != "ok":
             # loop until I receive enough prepared session
@@ -79,7 +81,7 @@ def run():
             else:
                 evaluationCheckinputCoverage = segregationPlotController.getSimulatedCheckInputCoverage()
                 # "input not covered"
-                if evaluationCheckinputCoverage == "not performed":
+                if evaluationCheckinputCoverage == "no":
                     continue
 
         if serviceFlag is True or (evaluationCheckDataBalance == "ok" and evaluationCheckInputCoverage == "ok"):
@@ -98,14 +100,16 @@ def run():
             # TODO if the sending returned error i have to reperform the sending
 
             sender = SegregationSystemSender(messageBus)
-            # sender.sendToDevelopment()
+            sender.sendToDevelopment()
 
-            # storageController.removeAll()  # remove the sessions
+            storageController.removeAll()  # remove the sessions
 
             # reset the evaluation in report files
             segregationPlotController.setEvaluationCheckDataBalance("checking")
             segregationPlotController.setEvaluationCheckInputCoverage("checking")
 
+
+            #FIXME just for debug
             x = input('Do you want to continue: [Yes|No]')
             if "No" in x:
                 break
