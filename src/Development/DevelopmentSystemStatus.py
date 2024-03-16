@@ -44,16 +44,11 @@ class DevelopmentSystemStatus:
 
     def to_dict(self):
         return dict(status=self.status, should_validate=self.should_validate,
-                    average_hyperparameters=self.average_hyperparameters, number_of_iterations=self.number_of_iterations ,learning_set=self.learning_set.toJson(), best_classifier_name=self.best_classifier_name, best_validation_error=self.best_validation_error)
+                    average_hyperparameters=self.average_hyperparameters,
+                    number_of_iterations=self.number_of_iterations, learning_set=self.learning_set.toJson(),
+                    best_classifier_name=self.best_classifier_name, best_validation_error=self.best_validation_error)
 
     def save_status(self):
         with open(self.status_path, 'w') as json_file:
             json.dump(self.to_dict(), json_file)
             exit(0)
-
-# dev_status = DevSystemStatus()
-# print(dev_status.__dict__)
-# dev_status.save_status("2", True)
-# dev_status2 = DevSystemStatus()
-# dev_status2.load_status()
-# print(dev_status2.__dict__)
