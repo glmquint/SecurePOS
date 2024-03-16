@@ -2,6 +2,7 @@ import json
 from src.JsonIO.JsonValidator import JSONValidator
 
 
+
 class EvaluationSystemConfig:
 
     def __init__(self):
@@ -9,7 +10,7 @@ class EvaluationSystemConfig:
         self.simulate_human_task = False
         self.state = 0
         self.path_config_validator = "../DataObjects/Schema/config.json"
-        self.path_config = "../config/config.json"
+        self.path_config = "config/config.json"
         self.tollerated_error = 0
         self.tollerated_consecutive_error = 0
         self.load()

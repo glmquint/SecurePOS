@@ -6,6 +6,7 @@ from src.JsonIO.JSONSender import JSONSender
 from src.JsonIO.Server import Server
 
 
+
 sender2 = JSONSender("../DataObjects/Schema/AttackRiskLabelSchema.json", "http://127.0.0.1:5000/security_expert_endpoint")
 sender = JSONSender("../DataObjects/Schema/AttackRiskLabelSchema.json", "http://127.0.0.1:5000/label_endpoint")
 for x in range(0,50):

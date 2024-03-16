@@ -6,6 +6,7 @@ from src.Evaluation.EvaluationReportViewer import EvaluationReportViewer
 from src.JsonIO.JsonValidator import JSONValidator
 
 
+
 class EvaluationReportController:
 
     def __init__(self,config):
