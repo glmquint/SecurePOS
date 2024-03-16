@@ -17,10 +17,11 @@ class MessageBus:
         return
 
     def popTopic(self, topic):
+        if topic not in self.messageQueues.keys():
+            raise ValueError("Topic not found")
         return self.messageQueues[topic].get()
 
     def addTopic(self, topic):
         # check
         if topic not in self.messageQueues.keys():
             self.messageQueues[topic] = queue.Queue()
-

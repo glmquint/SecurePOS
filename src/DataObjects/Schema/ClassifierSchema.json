@@ -1,0 +1,199 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "properties": {
+    "meta": {
+      "type": "string"
+    },
+    "coefs_": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "loss_": {
+      "type": "number"
+    },
+    "intercepts_": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        }
+      }
+    },
+    "n_iter_": {
+      "type": "number"
+    },
+    "n_layers_": {
+      "type": "number"
+    },
+    "n_outputs_": {
+      "type": "number"
+    },
+    "out_activation_": {
+      "type": "string"
+    },
+    "_label_binarizer": {
+      "type": "object",
+      "properties": {
+        "neg_label": {
+          "type": "number"
+        },
+        "pos_label": {
+          "type": "number"
+        },
+        "sparse_output": {
+          "type": "boolean"
+        },
+        "y_type_": {
+          "type": "string"
+        },
+        "sparse_input_": {
+          "type": "boolean"
+        },
+        "classes_": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "neg_label",
+        "pos_label",
+        "sparse_output",
+        "y_type_",
+        "sparse_input_",
+        "classes_"
+      ]
+    },
+    "params": {
+      "type": "object",
+      "properties": {
+        "activation": {
+          "type": "string"
+        },
+        "alpha": {
+          "type": "number"
+        },
+        "batch_size": {
+          "type": "string"
+        },
+        "beta_1": {
+          "type": "number"
+        },
+        "beta_2": {
+          "type": "number"
+        },
+        "early_stopping": {
+          "type": "boolean"
+        },
+        "epsilon": {
+          "type": "number"
+        },
+        "hidden_layer_sizes": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "learning_rate": {
+          "type": "string"
+        },
+        "learning_rate_init": {
+          "type": "number"
+        },
+        "max_fun": {
+          "type": "number"
+        },
+        "max_iter": {
+          "type": "number"
+        },
+        "momentum": {
+          "type": "number"
+        },
+        "n_iter_no_change": {
+          "type": "number"
+        },
+        "nesterovs_momentum": {
+          "type": "boolean"
+        },
+        "power_t": {
+          "type": "number"
+        },
+        "random_state": {},
+        "shuffle": {
+          "type": "boolean"
+        },
+        "solver": {
+          "type": "string"
+        },
+        "tol": {
+          "type": "number"
+        },
+        "validation_fraction": {
+          "type": "number"
+        },
+        "verbose": {
+          "type": "boolean"
+        },
+        "warm_start": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "activation",
+        "alpha",
+        "batch_size",
+        "beta_1",
+        "beta_2",
+        "early_stopping",
+        "epsilon",
+        "hidden_layer_sizes",
+        "learning_rate",
+        "learning_rate_init",
+        "max_fun",
+        "max_iter",
+        "momentum",
+        "n_iter_no_change",
+        "nesterovs_momentum",
+        "power_t",
+        "random_state",
+        "shuffle",
+        "solver",
+        "tol",
+        "validation_fraction",
+        "verbose",
+        "warm_start"
+      ]
+    },
+    "classes_": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "meta",
+    "coefs_",
+    "loss_",
+    "intercepts_",
+    "n_iter_",
+    "n_layers_",
+    "n_outputs_",
+    "out_activation_",
+    "_label_binarizer",
+    "params",
+    "classes_"
+  ]
+}

@@ -10,16 +10,9 @@ class AttackRiskLabel:
         self.attackRiskLabel = attackRiskLabel
         return self.attackRiskLabel
 
-    #define a json schema validator for the class
-    def json_schema(self):
-        schema = {
-            "type": "object",
-            "properties": {
-                "attackRiskLabel": {
-                    "type": "string",
-                    "enum": ["low", "medium", "high"]
-                }
-            },
-            "required": ["attackRiskLabel"]
+    def to_json(self):
+        return {
+            "attackRiskLabel": self.attackRiskLabel,
         }
-        return schema
+    def __str__(self):
+        return f"AttackRiskLabel: {self.attackRiskLabel}"
