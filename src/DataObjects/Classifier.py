@@ -1,2 +1,27 @@
+import json
+
+import joblib
+from sklearn.neural_network import MLPClassifier
+import sklearn_json as skljson
+
 class Classifier:
-    pass
+    model: MLPClassifier = None
+    number_of_neurons: int = None
+    number_of_layers: int = None
+    number_of_iterations: int = None
+
+    def __init__(self, number_of_neurons: int, number_of_layers: int, number_of_iterations: int):
+        self.number_of_neurons = number_of_neurons
+        self.number_of_layers = number_of_layers
+        self.number_of_iterations = number_of_iterations
+        self.model = MLPClassifier(hidden_layer_sizes=tuple(self.number_of_neurons for _ in range(self.number_of_layers)),
+                                   max_iter=number_of_iterations)
+
+    def save_model(self, path: str):
+        joblib.dump(self.model, path)
+
+    def get_loss_curve(self):
+        return self.model.loss_curve_
+
+    def dump_model(self):
+        skljson.to_json(self.model, 'Training/model.json')
