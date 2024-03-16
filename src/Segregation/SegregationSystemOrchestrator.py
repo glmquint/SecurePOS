@@ -19,7 +19,7 @@ def run():
     # declare message bus
     messageBus = MessageBus(["preparedSession", "leaningSet"])
 
-    # istantiate database
+    # instantiate database
     dbConfig = DBConfig("PreparedSessionsDataStore", "PreparedSessions")
     storageController = StorageController(dbConfig, PreparedSession, messageBus)
     segregationPlotController = SegregationPlotController(storageController,
