@@ -1,0 +1,12 @@
+{
+  "sufficientSessionNumber" : 100,
+  "segregationSystemPort" : 5000,
+  "developmentSystemIp" : "192.168.134.177",
+  "developmentSystemPort" : 5001,
+  "developmentSystemEndpoint": "learning_set",
+  "toleranceDataBalancing" : 10,
+  "serviceFlag": false,
+  "percentageTrainingSplit" : 0.7,
+  "percentageTestSplit" : 0.15,
+  "percentageValidationSplit" : 0.15
+}

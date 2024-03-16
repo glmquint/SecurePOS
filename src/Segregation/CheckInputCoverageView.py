@@ -1,15 +1,18 @@
+import json
 import random
 import plotly.graph_objects as go
-# from plotly import graph_objs as go
 import pandas as pd
-import numpy as np
 from random import random
-from PreparedSession import *
 
 
 class CheckInputCoverageView:
 
-    def plotCheckinputCoverageView(self, PreparedSessionList):
+    def __init__(self, model):
+        self.__checkInputCoverageModel = model
+
+    def plotCheckInputCoverageView(self):
+
+        PreparedSessionList = self.__checkInputCoverageModel.getPreparedSessionList()
 
         labels = ['MeanAbsoluteDifferencingTransactionTimestamps',
                   'MeanAbsoluteDifferencingTransactionAmount',
@@ -20,23 +23,21 @@ class CheckInputCoverageView:
 
         data = []
         for i in PreparedSessionList:
-            row = [i.MeanAbsoluteDifferencingTransactionTimestamps, i.MeanAbsoluteDifferencingTransactionAmount,
-                   i.MedianLongitude, i.MedianLatitude, i.MedianTargetIP, i.MedianDestIP]
+            row = [i.getMeanAbsoluteDifferencingTransactionTimestamps(), i.getMeanAbsoluteDifferencingTransactionAmount(),
+                   i.getMedianLongitude(), i.getMedianLatitude(), i.getMedianTargetIP(), i.getMedianDestIP()]
             data.append(row)
 
         # Create a pandas DataFrame with the generated data and labels
         dataset = pd.DataFrame(data, columns=labels)
 
-        # numeric_columns = dataset.columns[1:-1]
         numeric_columns = dataset.columns[0::]
         numeric_values_dataset = dataset[numeric_columns].values
-        # print(numeric_values_dataset)
 
         pandas_dataset = pd.DataFrame(data=numeric_values_dataset, columns=labels)
 
         fig = go.Figure()
 
-        for i in range(3):
+        for i in range(len(data)):
             fig.add_trace(
                 go.Scatterpolar(
                     r=pandas_dataset.loc[i].values.tolist(),
@@ -57,21 +58,20 @@ class CheckInputCoverageView:
             title="Coverage Report",
         )
 
-        fig.write_image("radar_plot.png")
+        fig.write_image("Data/Plot/PlotCheckInputCoverage.png")
+
+    def getSimulatedCheckInputCoverage(self):
+        value = random()
+        if value < 0.1:
+            return "no"
+        else:
+            return "ok"
+
+    def getCheckInputCoverage(self):
+        with open('Data/checkInputCoverageReport.json', 'r') as checkInputCoverageFile:
+            jsonData = json.load(checkInputCoverageFile)
+            evaluationCheckInputCoverage = jsonData.get("evaluation")
+            checkInputCoverageFile.close()
+            return evaluationCheckInputCoverage
 
 
-def test():
-    c = CheckInputCoverageView()
-    p1 = []
-    for i in range(0, 20):
-        p1.append(PreparedSession(random(), random(), random(), random(), random(), random(), "High"))
-
-    p2 = []
-    for i in range(0, 15):
-        p2.append(PreparedSession(random(), random(), random(), random(), random(), random(), "Medium"))
-
-    p3 = []
-    for i in range(0, 18):
-        p3.append(PreparedSession(random(), random(), random(), random(), random(), random(), "Low"))
-
-    c.plotCheckinputCoverageView(p1 + p2 + p3)

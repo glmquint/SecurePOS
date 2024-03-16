@@ -17,25 +17,10 @@ class MessageBus:
         return
 
     def popTopic(self, topic):
-        q = self.messageQueues.get(topic)
-        # if the queue is empty return "empty"
-        if q.qsize() == 0:
-            return "empty"
-        else:
-            val = q.get()
-            return val
+        return self.messageQueues[topic].get()
 
     def addTopic(self, topic):
         # check
         if topic not in self.messageQueues.keys():
             self.messageQueues[topic] = queue.Queue()
 
-
-# same testing
-msg = MessageBus(["b", "c"])
-msg.addTopic("a")
-msg.pushTopic("a", 2)
-msg.pushTopic("a", 3)
-print(msg.popTopic("a"))
-print(msg.popTopic("a"))
-print(msg.popTopic("a"))

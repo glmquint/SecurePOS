@@ -1,33 +1,54 @@
-from PreparedSession import *
+import pandas as pd
+from src.DataObjects.LearningSet import LearningSet
+import math
 
 
 class LearningSetGenerator:
-    trainPercentage = 0
-    testPercentage = 0
-    validationPercentage = 0
 
-    def __init__(self, trainPercentage, testPercentage, validationPercentage):
-        self.trainPercentage = trainPercentage
-        self.testPercentage = testPercentage
-        self.validationPercentage = validationPercentage
+    def __init__(self, trainPercentage, testPercentage, validationPercentage, storageController, messageBus):
+        self.__trainPercentage = trainPercentage
+        self.__testPercentage = testPercentage
+        self.__validationPercentage = validationPercentage
+        self.__storageController = storageController
+        self.__messageBus = messageBus
 
-    def generateLearningSet(self, PreparedSessionList):
-        # to be implemented
-        return ["ciao"]
+    def generateLearningSet(self):
+        preparedSessionArray = self.__storageController.retrieveAll()
+        cardinalityPreparedSession = self.__storageController.countAll()
 
+        testSetCardinality = math.ceil(cardinalityPreparedSession * self.__testPercentage / 100)
+        valSetCardinality = math.ceil(cardinalityPreparedSession * self.__validationPercentage / 100)
+        trainingSetCardinality = cardinalityPreparedSession - testSetCardinality - valSetCardinality
 
-def test():
-    l = LearningSetGenerator(70, 15, 15)
-    p1 = []
-    for i in range(0, 20):
-        p1.append(PreparedSession(0, 0, 0, 0, 0, 0, "High"))
+        trainingSet = preparedSessionArray[:trainingSetCardinality]
+        validationSet = preparedSessionArray[trainingSetCardinality:trainingSetCardinality + testSetCardinality]
+        testSet = preparedSessionArray[trainingSetCardinality + testSetCardinality:]
 
-    p2 = []
-    for i in range(0, 15):
-        p2.append(PreparedSession(0, 0, 0, 0, 0, 0, "Medium"))
+        trainingSetArray = validationSetArray = testSetArray = []
+        trainingSetLabel = validationSetLabel = testSetLabel = []
+        for i in trainingSet:
+            trainingSetArray.append(i.returnArray())
+            trainingSetLabel.append((i.getLabel()))
 
-    p3 = []
-    for i in range(0, 18):
-        p3.append(PreparedSession(0, 0, 0, 0, 0, 0, "Low"))
+        for i in validationSet:
+            validationSetArray.append(i.returnArray())
+            validationSetLabel.append((i.getLabel()))
 
-    l.generateLearningSet(p1 + p2 + p3)
+        for i in testSet:
+            testSetArray.append(i.returnArray())
+            testSetLabel.append((i.getLabel()))
+
+        trainingSetArray = pd.DataFrame(trainingSetArray).drop([0, 7], axis=1)
+        validationSetArray = pd.DataFrame(validationSetArray).drop([0, 7], axis=1)
+        testSetArray = pd.DataFrame(testSetArray).drop([0, 7], axis=1)
+
+        dic = dict()
+        dic['trainingSet'] = trainingSetArray
+        dic['validationSet'] = validationSetArray
+        dic['testSet'] = testSetArray
+        dic['trainingSetLabel'] = trainingSetLabel
+        dic['validationSetLabel'] = validationSetLabel
+        dic['testSetLabel'] = testSetLabel
+
+        learningSet = LearningSet(dic, False)
+        self.__messageBus.pushTopic("leaningSet", learningSet)

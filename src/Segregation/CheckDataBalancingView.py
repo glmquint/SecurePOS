@@ -1,27 +1,32 @@
+import json
+from random import random
 import matplotlib.pyplot as plt
 import numpy as np
-import PreparedSession
 
 
 class CheckDataBalanceView:
-    toleraceParameter = 0
+    __toleranceParameter = 0
 
-    def __init__(self, toleraceParameter):
-        self.toleraceParameter = toleraceParameter
+    def __init__(self, toleraceParameter, model):
+        self.__toleranceParameter = toleraceParameter
+        self.__checkDataBalanceModel = model
 
-    def plotCheckDataBalance(self, PreparedSessionList):
+    def plotCheckDataBalance(self):
+
+        # retrive data from the model
+        PreparedSessionList = self.__checkDataBalanceModel.getPreparedSessionList()
 
         labels = ['Low', 'Medium', 'High']
 
         values = [0, 0, 0]
 
         for i in PreparedSessionList:
-            match i.label:
-                case "Low":
+            match i.getLabel():
+                case "low":
                     values[0] += 1
-                case "Medium":
+                case "medium":
                     values[1] += 1
-                case "High":
+                case "high":
                     values[2] += 1
                 case _:
                     continue
@@ -33,12 +38,18 @@ class CheckDataBalanceView:
         bar_positions1 = np.arange(len(labels))
         bar_positions2 = [pos + bar_width for pos in bar_positions1]
 
-        yer1 = [0.5, 0.4, 0.5]
-        average = (values[0] + values[1] + values[2]) / 3
+        maximim = max(values)
+        minimum = min(values)
 
-        plt.bar(bar_positions2, values, width=bar_width, yerr=average * self.toleraceParameter / 100)
+        percentage_diff = (abs(maximim - minimum) / (maximim + minimum) / 2) * 100
 
-        plt.axhline(y=average, linewidth=1, color='k')
+        string = 'Tolerance interal = ' + str(self.__toleranceParameter) + " | Difference detected = " + str(
+            round(percentage_diff, 2))
+
+        plt.bar(bar_positions2, values, width=bar_width)
+
+        plt.axhline(y=maximim, linewidth=1, color='k')
+        plt.axhline(y=minimum, linewidth=1, color='k')
 
         # Add title and labels
         plt.title('Data Balance')
@@ -48,21 +59,21 @@ class CheckDataBalanceView:
         # Set x-axis tick positions and labels
         plt.xticks([pos + bar_width for pos in bar_positions1], labels)
 
-        plt.show()
+        plt.text(0.5, 1.10, string,
+                 horizontalalignment='center', transform=plt.gca().transAxes)
 
+        plt.savefig('Data/Plot/PlotCheckDataBalancePlot.png')
 
-def test():
-    c = CheckDataBalanceView(5)
-    p1 = []
-    for i in range(0, 20):
-        p1.append(PreparedSession(0, 0, 0, 0, 0, 0, "High"))
+    def getSimulatedCheckDataBalance(self):
+        value = random()
+        if value < 0.1:
+            return "no"
+        else:
+            return "ok"
 
-    p2 = []
-    for i in range(0, 15):
-        p2.append(PreparedSession(0, 0, 0, 0, 0, 0, "Medium"))
-
-    p3 = []
-    for i in range(0, 18):
-        p3.append(PreparedSession(0, 0, 0, 0, 0, 0, "Low"))
-
-    c.plotCheckDataBalance(p1 + p2 + p3)
+    def getCheckDataBalance(self):
+        with open('Data/checkDataBalanceReport.json', 'r') as checkDataBalanceFile:
+            jsonData = json.load(checkDataBalanceFile)
+            evaluationCheckDataBalance = jsonData.get("evaluation")
+            checkDataBalanceFile.close()
+            return evaluationCheckDataBalance
