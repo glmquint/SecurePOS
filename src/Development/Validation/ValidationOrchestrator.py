@@ -33,7 +33,9 @@ class ValidationOrchestrator:
                 ret_val = 0
                 data = json.load(json_file)
                 JSONValidator("schema/result_schema.json").validate_data(data)
-                if data['result'] in ["ok", "OK", "Ok"]:
+                if data['result'] in [""]:
+                    ret_val = -1  # AI expert has not filled the file
+                elif data['result'] in ["ok", "OK", "Ok", "oK"]:
                     ret_val = 1
         except FileNotFoundError as e:  # create file so that AI expert can fill it
             with open('Validation/validation_result.json', 'w') as json_file:
@@ -61,7 +63,7 @@ class ValidationOrchestrator:
                     self.status.save_status()
                 elif response == 0:  # no valid classifier, repeat the process
                     self.status.status = "set_avg_hyperparams"
-                    self.trainining_process.classifier.remove_model('classifiers')
+                    self.trainining_process.remove_classifiers('classifiers')
                     self.trainining_process.remove_precedent_response('Validation/validation_result')
                     self.trainining_process.remove_precedent_response('Training/learning_result')
                     self.trainining_process.remove_precedent_response('Training/number_of_iterations')
