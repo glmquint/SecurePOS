@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "topics": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "messaging_system_receiver": {
+      "type": "string"
+    },
+    "production_system_receiver": {
+      "type": "string"
+    },
+    "hyperparameters": {
+      "type": "object",
+      "properties": {
+        "number_of_layers": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "integer"
+            },
+            "max": {
+              "type": "integer"
+            },
+            "step": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "min",
+            "max",
+            "step"
+          ]
+        },
+        "number_of_neurons": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "integer"
+            },
+            "max": {
+              "type": "integer"
+            },
+            "step": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "min",
+            "max",
+            "step"
+          ]
+        }
+      },
+      "required": [
+        "number_of_layers",
+        "number_of_neurons"
+      ]
+    },
+    "loss_threshold": {
+      "type": "number"
+    },
+    "overfitting_tolerance": {
+      "type": "number"
+    },
+    "generalization_tolerance": {
+      "type": "number"
+    },
+    "port": {
+      "type": "integer"
+    },
+    "endpoint_url": {
+      "type": "string"
+    },
+    "classifiers_limit": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "topics",
+    "messaging_system_receiver",
+    "production_system_receiver",
+    "hyperparameters",
+    "loss_threshold",
+    "overfitting_tolerance",
+    "port",
+    "endpoint_url",
+    "classifiers_limit"
+  ]
+}
