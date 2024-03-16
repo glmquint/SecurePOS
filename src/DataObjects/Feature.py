@@ -5,7 +5,6 @@ class Feature:
     def to_json(self):
         return self.__dict__
 
-
 class MeanAbsDiffTransaction(Feature):
     time_diff: int
     pass

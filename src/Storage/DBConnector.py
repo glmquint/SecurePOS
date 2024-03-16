@@ -2,10 +2,10 @@ import sqlite3
 
 
 class DBConnector:
-    name                           = None
-    connection: sqlite3.Connection = None
-    tableName                      = None
-    columns                        = None
+    name       : str                = None
+    connection : sqlite3.Connection = None
+    tableName  : str                = None
+    columns    : [str]              = None
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name', '')
