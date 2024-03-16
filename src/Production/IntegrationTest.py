@@ -50,34 +50,30 @@ class IntegrationTest(TestCase):
     def test_system_bus_send(self):
         systemBus = MessageBus(["PreparedSession", "Classifier"])
         self.server_setup(systemBus)
-        preparedSession = PreparedSession(10.5, 25.5,
-                                          (-73.9857, 40.7484), "192.168.1.1",
-                                          "203.0.113.5")
+        preparedSession = PreparedSession(["12345", 10, 20, 30, 40, "192.168.0.1", "192.168.0.2", "medium"])
         classifierTest = ClassifierTest("test")
 
         req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession.to_json())  # correct key
         assert req.status_code == 200
         print(systemBus.popTopic("PreparedSession"))
-        req = requests.post("http://127.0.0.1:5000/Classifier", json=classifierTest.to_json())  # correct key
-        assert req.status_code == 200
+        with open('AverageClassifier.sav', 'rb') as f:
+            req = requests.post("http://127.0.0.1:5000/Classifier", files={"uploaded": f})
+            assert req.status_code == 200, f'Expected 200, got {req}'
         print(systemBus.popTopic("Classifier"))
 
     def test_main(self):
         self.main_setup()
         self.main_receiver()
-        preparedSession = PreparedSession(10.5, 25.5,
-                                          (-73.9857, 40.7484), "192.168.1.1",
-                                          "203.0.113.5")
-        preparedSession1 = PreparedSession("alpha", 95.5,
-                                          (-73.9857, 40.7484), "192.168.1.1",
-                                          "192.168.1.1")
+        preparedSession = PreparedSession(["12345", 10, 20, 30, 40, "192.168.0.1", "192.168.0.2", "medium"])
+        preparedSession1 = PreparedSession(["12345", "10", 20, 30, 40, 192.16, "192.168.0.2", "medium"])
         attackRiskLabel = AttackRiskLabel("medium")
-        reparedSession3 = PreparedSession()
+        reparedSession3 = PreparedSession([None, None, None, None, None, None, None, None])
         classifierTest = ClassifierTest("test")
         req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession.to_json())
         assert req.status_code == 200   # correct key
-        req = requests.post("http://127.0.0.1:5000/Classifier", json=classifierTest.to_json())
-        assert req.status_code == 200   # correct key
+        with open('AverageClassifier.sav', 'rb') as f:
+            req = requests.post("http://127.0.0.1:5000/Classifier", files={"uploaded": f})
+            assert req.status_code == 200, f'Expected 200, got {req}'
         sleep(0.1)
         req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession1.to_json())
         assert req.status_code == 400   # wrong type
@@ -95,12 +91,10 @@ class IntegrationTest(TestCase):
     def test_production_switch(self):
         self.main_setup()
         self.main_receiver()
-        preparedSession = PreparedSession(10.5, 25.5,
-                                          (-73.9857, 40.7484), "192.168.1.1",
-                                          "203.0.113.5")
-        classifierTest = ClassifierTest("test")
-        req = requests.post("http://127.0.0.1:5000/Classifier", json=classifierTest.to_json())  # correct key
-        assert req.status_code == 200
+        preparedSession = PreparedSession(["12345", 10, 20, 30, 40, "192.168.0.1", "192.168.0.2", "medium"])
+        with open('AverageClassifier.sav', 'rb') as f:
+            req = requests.post("http://127.0.0.1:5000/Classifier", files={"uploaded": f})
+            assert req.status_code == 200, f'Expected 200, got {req}'
         for i in range(0, 5):
             req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession.to_json())  # correct key
             assert req.status_code == 200
@@ -108,11 +102,9 @@ class IntegrationTest(TestCase):
         sleep(10)
 
     def test_real_classfier(self):
-        #self.main_setup()
+        self.main_setup()
         self.main_receiver()
-        preparedSession = PreparedSession(10.5, 25.5,
-                                         (-73.9857, 40.7484), "192.168.1.1",
-                                         "203.0.113.5")
+        preparedSession = PreparedSession(["12345", 10, 20, 30, 40, "192.168.0.1", "192.168.0.2", "medium"])
         with open('AverageClassifier.sav', 'rb') as f:
             req = requests.post("http://127.0.0.1:5000/Classifier", files={"uploaded": f})
             assert req.status_code == 200, f'Expected 200, got {req}'
@@ -134,16 +126,12 @@ class IntegrationTest(TestCase):
             # Transform the input features as necessary
             import ipaddress
             prepared_session_features = [
-                prepared_session.mean_absolute_diff_timestamps,
-                prepared_session.mean_absolute_diff_amount,
-                prepared_session.median_longitude_latitude[0],
-                prepared_session.median_longitude_latitude[1],
-                #le.transform([prepared_session.median_target_ip]),
-                #le.transform([prepared_session.median_dest_ip])
-                int(ipaddress.ip_address(prepared_session.median_target_ip)),
-                int(ipaddress.ip_address(prepared_session.median_dest_ip))
-
-                # Add more numeric features here if necessary
+                prepared_session.getMeanAbsoluteDifferencingTransactionAmount(),
+                prepared_session.getMeanAbsoluteDifferencingTransactionTimestamps(),
+                prepared_session.getMedianLatitude(),
+                prepared_session.getMedianLongitude(),
+                int(ipaddress.ip_address(prepared_session.getMedianTargetIP())),
+                int(ipaddress.ip_address(prepared_session.getMedianDestIP()))
             ]
             # Predict the Attack Risk Label
             attack_risk_label = mlp_classifier.predict([prepared_session_features])[0]
@@ -152,11 +140,7 @@ class IntegrationTest(TestCase):
 
         # Example usage:
         # Create a Prepared Session object
-        prepared_session = PreparedSession(mean_absolute_diff_timestamps=10,
-                                           mean_absolute_diff_amount=0.5,
-                                           median_longitude_latitude=(40.7128, -74.0060),
-                                           median_target_ip="192.168.203.48",
-                                           median_dest_ip="8.8.8.8")
+        prepared_session = PreparedSession(["12345", 10, 20, 30, 40, "192.168.0.1", "192.168.0.2", "medium"])
 
         # Predict the Attack Risk Label
         predicted_label = predict_attack_risk(prepared_session)

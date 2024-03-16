@@ -19,22 +19,20 @@ class FakeAttackRiskClassifier:
             print(f"Fake classifier classifier {self.attackRiskClassifier}")
             # assert self.attackRiskClassifier is not None
         self.preparedSession = self.systemBus.popTopic("PreparedSession")
-        print(f"Fake classifier prepared session {self.preparedSession}")
+        #print(f"Prepared session {self.preparedSession}")
+        #print(f"Fake classifier prepared session {self.preparedSession.to_json()}")
         # used for debug purpose
         # assert self.preparedSession is not None
         # fake return
         prepared_session_features = [
-            self.preparedSession.mean_absolute_diff_timestamps,
-            self.preparedSession.mean_absolute_diff_amount,
-            self.preparedSession.median_longitude_latitude[0],
-            self.preparedSession.median_longitude_latitude[1],
-            # le.transform([prepared_session.median_target_ip]),
-            # le.transform([prepared_session.median_dest_ip])
-            int(ipaddress.ip_address(self.preparedSession.median_target_ip)),
-            int(ipaddress.ip_address(self.preparedSession.median_dest_ip))
-
-            # Add more numeric features here if necessary
+            self.preparedSession.MeanAbsoluteDifferencingTransactionTimestamps,
+            self.preparedSession.MeanAbsoluteDifferencingTransactionAmount,
+            self.preparedSession.MedianLongitude,
+            self.preparedSession.MedianLatitude,
+            int(ipaddress.ip_address(self.preparedSession.MedianTargetIP)),
+            int(ipaddress.ip_address(self.preparedSession.MedianDestIP))
         ]
+        print(f"Prepared session features: {prepared_session_features}")
         attack_risk_label = self.attackRiskClassifier.predict([prepared_session_features])[0]
         print(f"Attack risk label: {attack_risk_label}")
         return attack_risk_label

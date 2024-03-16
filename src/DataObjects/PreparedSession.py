@@ -1,3 +1,6 @@
+import json
+
+
 class PreparedSession:
 
     def __init__(self, params):
@@ -41,3 +44,15 @@ class PreparedSession:
 
     def getLabel(self):
         return self.__Label
+
+    def to_json(self):
+        return {
+            "UUID": self.__UUID,
+            "MeanAbsoluteDifferencingTransactionTimestamps": self.__MeanAbsoluteDifferencingTransactionTimestamps,
+            "MeanAbsoluteDifferencingTransactionAmount": self.__MeanAbsoluteDifferencingTransactionAmount,
+            "MedianLongitude": self.__MedianLongitude,
+            "MedianLatitude": self.__MedianLatitude,
+            "MedianTargetIP": self.__MedianTargetIP,
+            "MedianDestIP": self.__MedianDestIP,
+            "Label": self.__Label
+        }

@@ -14,7 +14,7 @@ class Server:
         self.api = Api(self.app)
         self.timeout = timeout
 
-    def run(self, debug=False, port=5002):
+    def run(self, debug=False, port=5000):
         self.app.run(debug=debug, port=port, host='0.0.0.0')
 
     def add_resource(self, resource, url, **kwargs):

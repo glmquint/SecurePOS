@@ -17,9 +17,11 @@ class ProductionSystemReceiver:
                                  recv_callback=self.classifier_callback)
 
     def session_callback(self, json_data):
-        preparedSession = PreparedSession(**json_data)
+        print(json_data)
+        prepared_session = PreparedSession(json_data)
+        print("PreparedSession created")
         # push the preparedSession into the Messegebus
-        self.systemBus.pushTopic("PreparedSession", preparedSession)
+        self.systemBus.pushTopic("PreparedSession", prepared_session)
         print("Received PreparedSession")
         return 200
 

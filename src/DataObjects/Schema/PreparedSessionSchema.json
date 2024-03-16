@@ -1,28 +1,15 @@
 {
-    "type": "object",
-    "properties": {
-        "MeanAbsoluteDifferencingTransactionTimestamps": {
-            "type": "number"
-        },
-      "MeanAbsoluteDifferencingTransactionAmount": {
-            "type": "number"
-        },
-      "MedianLongitude": {
-            "type": "number"
-        },
-      "MedianLatitude": {
-            "type": "number"
-        },
-      "MedianTargetIP": {
-            "type": "number"
-        },
-      "MedianDestIP": {
-            "type": "number"
-        },
-      "Label": {
-         "type": "string",
-         "enum": ["low", "medium", "high"]
-      }
-    },
-    "required": ["MeanAbsoluteDifferencingTransactionTimestamps", "MeanAbsoluteDifferencingTransactionAmount","MedianLongitude", "MedianLatitude", "MedianTargetIP", "MedianDestIP", "Label"]
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "UUID": {"type": "string"},
+    "MeanAbsoluteDifferencingTransactionTimestamps": {"type": "number"},
+    "MeanAbsoluteDifferencingTransactionAmount": {"type": "number"},
+    "MedianLongitude": {"type": "number"},
+    "MedianLatitude": {"type": "number"},
+    "MedianTargetIP": {"type": "string"},
+    "MedianDestIP": {"type": "string"},
+    "Label": {"type": "string"}
+  },
+  "required": ["UUID", "MeanAbsoluteDifferencingTransactionTimestamps", "MeanAbsoluteDifferencingTransactionAmount", "MedianLongitude", "MedianLatitude", "MedianTargetIP", "MedianDestIP", "Label"]
 }
