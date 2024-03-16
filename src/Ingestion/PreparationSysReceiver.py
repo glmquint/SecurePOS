@@ -40,7 +40,7 @@ class PreparationSysReceiver:
 
     @log
     def receiveRawSession(self, json_data):
-        parsed_json_data = {k: lambda x: Record(**v) for k, v in json_data['records'].items()}
+        parsed_json_data = {'records': [Record.from_row(**record) for record in json_data['records']]}
         raw_session = RawSession(**parsed_json_data)
         self.message_bus.pushTopic(self.raw_session_topic, raw_session)
 
