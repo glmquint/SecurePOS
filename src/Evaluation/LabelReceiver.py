@@ -1,5 +1,6 @@
 from threading import Thread
 
+
 from src.DataObjects.AttackRiskLabel import AttackRiskLabel
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server

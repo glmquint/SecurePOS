@@ -2,6 +2,7 @@ from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 
 
+
 class EvaluationReportViewer:
     def __init__(self):
         self.width = 724
