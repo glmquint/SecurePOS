@@ -28,20 +28,18 @@ class Classifier:
         self.model = joblib.load(f'{path}.sav')
         self.name = path.split('/')[-1]
         self.number_of_iterations = self.model.n_iter_
-        self.number_of_layers = self.model.n_layers_
-        self.number_of_neurons = len(self.model.coefs_[1]) # trick to get the number of neurons from a model
-
+        self.number_of_layers = self.model.n_layers_ - 2  # because of input and output layers
+        self.number_of_neurons = len(self.model.coefs_[1])  # trick to get the number of neurons from a model
+        print(f'[{self.__class__.__name__}]: model loaded successfully from file {path}')
 
     def save_model(self, path: str):
         # self.bytes_container = BytesIO()
         # joblib.dump(self.model, self.bytes_container)
         # self.bytes_container.seek(0)
         joblib.dump(self.model, f'{path}/{self.name}.sav')
-
-    def remove_model(self, path: str):
-        filename = f'{path}/{self.name}.sav'
-        if os.path.exists(filename):
-            os.remove(filename)
+        print(
+            f'[{self.__class__.__name__}]: model has {self.number_of_layers} layers and {self.number_of_neurons} neurons')
+        print(f'[{self.__class__.__name__}]: model saved successfully to file {path}/{self.name}.sav')
 
     def get_loss_curve(self):
         return self.model.loss_curve_
