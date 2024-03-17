@@ -89,6 +89,9 @@
     },
     "classifiers_limit": {
       "type": "integer"
+    },
+    "stop&go": {
+      "type": "boolean"
     }
   },
   "required": [
@@ -98,8 +101,10 @@
     "hyperparameters",
     "loss_threshold",
     "overfitting_tolerance",
+    "generalization_tolerance",
     "port",
     "endpoint_url",
-    "classifiers_limit"
+    "classifiers_limit",
+    "stop&go"
   ]
 }
