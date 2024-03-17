@@ -38,9 +38,9 @@ class LearningSetGenerator:
             testSetArray.append(i.returnArray())
             testSetLabel.append((i.getLabel()))
 
-        trainingSetArray = pd.DataFrame(trainingSetArray).drop([0, 7], axis=1)
-        validationSetArray = pd.DataFrame(validationSetArray).drop([0, 7], axis=1)
-        testSetArray = pd.DataFrame(testSetArray).drop([0, 7], axis=1)
+        trainingSetArray = pd.DataFrame(trainingSetArray).drop([6], axis=1)
+        validationSetArray = pd.DataFrame(validationSetArray).drop([6], axis=1)
+        testSetArray = pd.DataFrame(testSetArray).drop([6], axis=1)
 
         dic = dict()
         dic['trainingSet'] = trainingSetArray

@@ -21,13 +21,17 @@ def run():
 
     # instantiate database
     dbConfig = DBConfig("PreparedSessionsDataStore", "PreparedSessions")
-    storageController = StorageController(dbConfig, PreparedSession, messageBus)
+    storageController = StorageController(dbConfig, PreparedSession)
     segregationPlotController = SegregationPlotController(storageController,
                                                           configParameter.getToleranceDataBalancing())
     # instantiate and run receiver
     preparedSessionReceiver = PreparedSessionReceiver(messageBus, segregationSystemPort)
     # the server starts to run
+    #storageController.createTable()
     preparedSessionReceiver.run()
+
+    #storageController.removeAll()
+
     while True:
 
         evaluationCheckDataBalance = ""
@@ -45,14 +49,12 @@ def run():
                 evaluationCheckDataBalance = "checking"
                 evaluationCheckInputCoverage = "checking"
 
-
         if serviceFlag is True or evaluationCheckDataBalance != "ok":
             # loop until I receive enough prepared session
-
             print("Receiving data...")
             while (storageController.countAll()) < limitPreparedSession:
                 # the storage controller will retrive the data from the messageBus and will store into the db
-                storageController.save()
+                storageController.save(messageBus.popTopic("preparedSession"))
 
             print("Data correctly stored")
 
@@ -97,8 +99,7 @@ def run():
             learningSetGenerator.generateLearningSet()
             print("Learning set generated")
 
-            # TODO if the sending returned error i have to reperform the sending
-
+            quit()
             sender = SegregationSystemSender(messageBus)
             sender.sendToDevelopment()
 
@@ -108,8 +109,7 @@ def run():
             segregationPlotController.setEvaluationCheckDataBalance("checking")
             segregationPlotController.setEvaluationCheckInputCoverage("checking")
 
-
-            #FIXME just for debug
+            # FIXME just for debug
             x = input('Do you want to continue: [Yes|No]')
             if "No" in x:
                 break

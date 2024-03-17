@@ -1,6 +1,9 @@
 import json
-from src.Storage.DBConnector import DBConnector
 
+import pandas as pd
+
+from src.Storage.DBConnector import DBConnector
+from src.DataObjects.PreparedSession import *
 
 class StorageController:
     DBConnector = None
@@ -35,5 +38,9 @@ class StorageController:
 
     def countAll(self):
         return self.DBConnector.count()[0][0]
+
+    def createTable(self):
+        return self.DBConnector.createTable()
+
 
 
