@@ -52,6 +52,7 @@ def run():
         if serviceFlag is True or evaluationCheckDataBalance != "ok":
             # loop until I receive enough prepared session
             print("Receiving data...")
+            storageController.removeAll()
             while (storageController.countAll()) < limitPreparedSession:
                 # the storage controller will retrive the data from the messageBus and will store into the db
                 storageController.save(messageBus.popTopic("preparedSession"))

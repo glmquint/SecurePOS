@@ -41,7 +41,8 @@ ps = PreparedSession(
     mean_abs_diff_transaction_amount={'amount': 3},
     median_longitude_latitude={'geo_position': (4, 5)},
     median_target_ip={'median_ip': '6'},
-    median_dest_ip={'median_dest_ip': '7'})
+    median_dest_ip={'median_dest_ip': '7'}
+)
 print(ps)
 
 

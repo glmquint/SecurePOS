@@ -5,6 +5,8 @@ import pandas as pd
 from src.Storage.DBConnector import DBConnector
 from src.DataObjects.PreparedSession import *
 
+
+
 class StorageController:
     DBConnector = None
     type = None
@@ -39,8 +41,22 @@ class StorageController:
     def countAll(self):
         return self.DBConnector.count()[0][0]
 
-    def createTable(self):
+    def createTable(self): # FIXME for debug
         return self.DBConnector.createTable()
 
 
+
+def preparedSessionTest():
+    from src.Storage.dbConfig import DBConfig
+    dbConfig = DBConfig("PreparedSessionsDataStoreProva", "PreparedSessionsProva")
+    storageController = StorageController(dbConfig, PreparedSession)
+    storageController.createTable()
+
+    ps = PreparedSession(
+        mean_abs_diff_transaction={'time_diff': 2},
+        mean_abs_diff_transaction_amount={'amount': 3},
+        median_longitude_latitude={'geo_position': (4, 5)},
+        median_target_ip={'median_ip': '6'},
+        median_dest_ip={'median_dest_ip': '7'}
+    )
 

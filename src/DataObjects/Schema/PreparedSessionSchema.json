@@ -1,28 +1,28 @@
 {
     "type": "object",
     "properties": {
-        "MeanAbsoluteDifferencingTransactionTimestamps": {
+        "mean_absolute_differencing_transaction_timestamps": {
             "type": "number"
         },
-      "MeanAbsoluteDifferencingTransactionAmount": {
+      "mean_absolute_differencing_transaction_amount": {
             "type": "number"
         },
-      "MedianLongitude": {
+      "median_longitude": {
             "type": "number"
         },
-      "MedianLatitude": {
+      "median_latitude": {
             "type": "number"
         },
-      "MedianTargetIP": {
+      "median_target_ip": {
             "type": "number"
         },
-      "MedianDestIP": {
+      "median_dest_ip": {
             "type": "number"
         },
-      "Label": {
+      "label": {
          "type": "string",
-         "enum": ["low", "medium", "high"]
+         "enum": ["normal", "moderate", "high"]
       }
     },
-    "required": ["MeanAbsoluteDifferencingTransactionTimestamps", "MeanAbsoluteDifferencingTransactionAmount","MedianLongitude", "MedianLatitude", "MedianTargetIP", "MedianDestIP", "Label"]
+    "required": ["mean_absolute_differencing_transaction_timestamps", "mean_absolute_differencing_transaction_amount","median_longitude", "median_latitude", "median_target_ip", "median_dest_ip", "label"]
 }
