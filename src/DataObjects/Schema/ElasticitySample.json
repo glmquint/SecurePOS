@@ -1,0 +1,110 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "number_of_inputs": {
+      "type": "integer"
+    },
+    "timestamps": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "object",
+          "properties": {
+            "year": {
+              "type": "integer"
+            },
+            "month": {
+              "type": "integer"
+            },
+            "day": {
+              "type": "integer"
+            },
+            "hour": {
+              "type": "integer"
+            },
+            "minute": {
+              "type": "integer"
+            },
+            "seconds": {
+              "type": "integer"
+            },
+            "microseconds": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "year",
+            "month",
+            "day",
+            "hour",
+            "minute",
+            "seconds",
+            "microseconds"
+          ]
+        },
+        "end": {
+          "type": "integer"
+        },
+        "month": {
+          "type": "integer"
+        },
+        "day": {
+          "type": "integer"
+        },
+        "hour": {
+          "type": "integer"
+        },
+        "minute": {
+          "type": "integer"
+        },
+        "seconds": {
+          "type": "integer"
+        },
+        "microseconds": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start",
+        "end",
+        "month",
+        "day",
+        "hour",
+        "minute",
+        "seconds",
+        "microseconds"
+      ]
+    }
+  },
+  "required": [
+    "number_of_inputs",
+    "timestamps"
+  ]
+}
+
+{
+  "number_of_inputs": 5,
+ "timestamps": {
+   "start":{
+     "year":2024,
+     "month": 3,
+     "day": 18,
+     "hour": 14,
+     "minute": 18,
+     "seconds": 45,
+     "microseconds": 809895
+   },
+     "end": 2024,
+     "month": 3,
+     "day": 18,
+     "hour": 14,
+     "minute": 17,
+     "seconds": 45,
+     "microseconds": 809895
+
+ 		}
+	}
+{
+  "start":
+}

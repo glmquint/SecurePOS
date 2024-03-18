@@ -23,7 +23,7 @@ from src.DataObjects.LocalizationSys import LocalizationSys
 
 class TestServiceReceiver(TestCase):
 
-    def self_server_setup(self, endpoint_name="/test_endpoint"):
+    def self_server_setup(self, endpoint_name="/MessaginSystem"):
         server = Server()
         test_callback = lambda json_data: print(f"Hello from test_callback. Received {json_data}")
         server.add_resource(JSONEndpoint, endpoint_name, recv_callback=test_callback,
