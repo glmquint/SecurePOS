@@ -1,34 +1,31 @@
 from threading import Thread
-
-from src.DataObjects.Content import Content
-from src.DataObjects.Label import Label
-from src.DataObjects.LocalizationSys import LocalizationSys
-from src.DataObjects.NetworkMonitor import NetworkMonitor
-from src.DataObjects.TransactionCloud import TransactionCloud
 from src.JsonIO.JSONSender import JSONSender
 from src.Service.ClassMapper import ClassMapper
 from src.Service.ClientSideReceiver import ClientSideReceiver
+from src.Service.MessagingReceiver import MessagingReceiver
 from src.Service.RawInputLoader import RawInputLoader
-from src.Service.ServiceReceiver import ServiceReceiver
-import pandas as pd
 import random
-import json
 
 class ServiceSystemOrchestator:
     def __init__(self):
         self.clientSideReceiver = ClientSideReceiver()
+        self.MessagingReceiver = MessagingReceiver()
 
     def start(self):
-        thread_client_side = Thread(target=self.MessagingReceiver.run)
-        #thread_client_side = Thread(target=self.MessagingReceiver.run,kwargs={'port':5001})
+        thread_client_side = Thread(target=self.clientSideReceiver.run)
         thread_client_side.daemon = True  # this will allow the main thread to exit even if the server is still running
         thread_client_side.start()
+        thread_messaging = Thread(target=self.MessagingReceiver.run)
+        thread_messaging.daemon = True  # this will allow the main thread to exit even if the server is still running
+        thread_messaging.start()
 
         path_to_files = ["../../data/labels.csv", "../../data/localizationSys.csv",
                          "../../data/networkMonitor.csv", "../../data/transactionCloud.csv"]
 
         raw_input_loader = RawInputLoader(path_to_files)
         pandasFiles, csvFiles = raw_input_loader.load()
+        while True:
+            continue
         while True:
             if len(pandasFiles) == 0:
                 # All the record of all file has been sent

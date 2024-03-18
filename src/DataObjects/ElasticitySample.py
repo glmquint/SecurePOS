@@ -1,10 +1,9 @@
 import json
 from datetime import datetime
-from time import sleep
 
 
 class ElasticitySample:
-    def __init__(self, system, event,timestamp):
+    def __init__(self, system, event, timestamp):
         self.system = system
         self.event = event
         self.timestamps = timestamp

@@ -1,4 +1,3 @@
-# This class use the Server from JsonIO to add two resource one for session and one for classifier
 from src.DataObjects.Message import Message
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server

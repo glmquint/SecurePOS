@@ -5,8 +5,9 @@ from src.JsonIO.Server import Server
 
 
 class ClientSideReceiver:
-    def __init__(self):
+    def __init__(self, port=5000):
         self.server = Server()
+        self.port = port
         self.server.add_resource(JSONEndpoint, "/ClientSideSystem",
                                  recv_callback=self.client_callback,
                                  json_schema_path="../DataObjects/Schema/MessageSchema.json")
@@ -19,5 +20,4 @@ class ClientSideReceiver:
 
 
     def run(self):
-        self.server.run()
-
+        self.server.run(port=self.port)
