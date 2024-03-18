@@ -5,7 +5,6 @@ from uuid import uuid1
 
 import requests
 
-from src.DataObjects.AttackRiskLabel import AttackRiskLabel
 from src.DataObjects.Record import Label, Record, TransactionCloudRecord, NetworkMonitorRecord, LocalizationSysRecord
 from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import PreparedSession, RawSession

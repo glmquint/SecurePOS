@@ -24,3 +24,7 @@ class MedianTargetIP(Feature):
 class MedianDestIP(Feature):
     median_dest_ip:str
     pass
+
+class AttackRiskLabel(Feature):
+    attack_risk_label: str
+    pass

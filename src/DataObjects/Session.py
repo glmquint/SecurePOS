@@ -2,7 +2,7 @@ import json
 from dataclasses import dataclass
 
 from src.DataObjects.Feature import MeanAbsDiffTransaction, MeanAbsDiffTransactionAmount, MedianLongitudeLatitude, \
-    MedianTargetIP, MedianDestIP, Feature
+    MedianTargetIP, MedianDestIP, Feature, AttackRiskLabel
 from src.DataObjects.Record import Record
 
 
@@ -28,6 +28,7 @@ class PreparedSession(Session):
         self.features.append(MedianLongitudeLatitude(**kwargs.get("median_longitude_latitude", {})))
         self.features.append(MedianTargetIP(**kwargs.get("median_target_ip", {})))
         self.features.append(MedianDestIP(**kwargs.get("median_dest_ip", {})))
+        self.features.append(AttackRiskLabel(**kwargs.get("attack_risk_label", {})))
 
     def to_json(self):
         if not self.features or len(self.features) == 0:

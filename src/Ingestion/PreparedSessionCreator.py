@@ -2,7 +2,7 @@ import ipaddress
 import statistics
 from timeit import timeit
 
-from src.DataObjects.Record import TransactionCloudRecord, LocalizationSysRecord, NetworkMonitorRecord
+from src.DataObjects.Record import TransactionCloudRecord, LocalizationSysRecord, NetworkMonitorRecord, Label
 from src.DataObjects.Session import RawSession, PreparedSession
 from src.Ingestion.PhaseTracker import PhaseTracker
 from src.JsonIO.JSONSender import JSONSender
@@ -61,10 +61,13 @@ class PreparedSessionCreator:
         dest_ips = [int(ipaddress.ip_address(record.dest_ip)) for record in self.raw_session.records if type(record) is NetworkMonitorRecord]
         median_target_ip = statistics.median(target_ips)
         median_dest_ip = statistics.median(dest_ips)
+        labels = [record.label for record in self.raw_session.records if type(record) is Label]
+        attack_risk_label = labels[-1] if len(labels) > 0 else None
         self.prepared_session = PreparedSession(mean_abs_diff_transaction={'time_diff': mean_abs_diff_transaction},
                                                mean_abs_diff_transaction_amount={'amount': mean_abs_diff_transaction_amount},
                                                median_longitude_latitude={'geo_position': median_longitude_latitude},
                                                median_target_ip={'median_ip': median_target_ip},
-                                               median_dest_ip={'median_dest_ip': median_dest_ip})
+                                               median_dest_ip={'median_dest_ip': median_dest_ip},
+                                               attack_risk_label={'attack_risk_label': attack_risk_label})
 
 
