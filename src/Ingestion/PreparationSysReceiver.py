@@ -1,6 +1,6 @@
 from threading import Thread
 
-from src.DataObjects.Record import LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord, Record
+from src.DataObjects.Record import LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord, Record, Label
 from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import RawSession
 from src.JsonIO.JSONEndpoint import JSONEndpoint
@@ -33,8 +33,10 @@ class PreparationSysReceiver:
             record = NetworkMonitorRecord(**json_data)
         elif 'timestamp' in json_data or 'amount' in json_data:
             record = TransactionCloudRecord(**json_data)
+        elif "label" in json_data:
+            record = Label(**json_data)
         else:
-            record = Record(**json_data)
+            raise Exception("unkown record type")
         if not self.storage_controller.save(record):
             raise Exception(f"Failed to save {record}")
 

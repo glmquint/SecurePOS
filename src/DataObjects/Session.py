@@ -19,18 +19,20 @@ class RawSession(Session):
         return {"records": [Record.to_json(record) for record in self.records]}
 
 class PreparedSession(Session):
-    features: [Feature]
 
     def __init__(self, **kwargs):
-        self.features = []
-        self.features.append(MeanAbsDiffTransaction(**kwargs.get("mean_abs_diff_transaction", {})))
-        self.features.append(MeanAbsDiffTransactionAmount(**kwargs.get("mean_abs_diff_transaction_amount", {})))
-        self.features.append(MedianLongitudeLatitude(**kwargs.get("median_longitude_latitude", {})))
-        self.features.append(MedianTargetIP(**kwargs.get("median_target_ip", {})))
-        self.features.append(MedianDestIP(**kwargs.get("median_dest_ip", {})))
-        self.features.append(AttackRiskLabel(**kwargs.get("attack_risk_label", {})))
+        self.mean_abs_diff_transaction         : int    = kwargs.get("mean_abs_diff_transaction", None)
+        self.mean_abs_diff_transaction_amount  : int    = kwargs.get("mean_abs_diff_transaction_amount", None)
+        self.median_longitude                  : float  = kwargs.get("median_longitude", None)
+        self.median_latitude                   : float  = kwargs.get("median_latitude", None)
+        self.median_target_ip                  : int    = kwargs.get("median_target_ip", None)
+        self.median_dest_ip                    : int    = kwargs.get("median_dest_ip", None)
+        self.label                             : str    = kwargs.get("attack_risk_label", None)
 
     def to_json(self):
-        if not self.features or len(self.features) == 0:
-            return {"features": []}
-        return {"features": [feature.to_json() for feature in self.features]}
+        return {'mean_abs_diff_transaction': self.mean_abs_diff_transaction,
+                'mean_abs_diff_transaction_amount': self.mean_abs_diff_transaction_amount,
+                'median_longitude_latitude': (self.median_longitude, self.median_latitude),
+                'median_target_ip': self.median_target_ip,
+                'median_dest_ip': self.median_dest_ip,
+                'label': self.label}

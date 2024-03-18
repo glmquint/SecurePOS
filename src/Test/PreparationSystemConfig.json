@@ -24,7 +24,7 @@
     ]
   },
   "raw_session_creator" : {
-    "number_of_systems" : 3,
+    "number_of_systems" : 4,
     "raw_session_receiver" : {
       "url" : "http://localhost:5000/raw_session"
     },
@@ -34,7 +34,7 @@
   },
   "prepared_session_creator" : {
     "segregation_system_receiver" : {
-      "url" : "http://localhost:4000/segregation_system"
+      "url" : "http://192.168.147.174:5002/segregationSystem"
     },
     "production_system_receiver" : {
       "url" : "http://localhost:4000/production_system"

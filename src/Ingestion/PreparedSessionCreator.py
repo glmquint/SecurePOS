@@ -43,7 +43,7 @@ class PreparedSessionCreator:
     def detectAndCorrectAbsoluteOutliers(self):
         for record in self.raw_session.records:
             for key, value in record.getOutliers().items():
-                # set the outlier the the nearest upper/lower bound
+                # set the outlier the nearest upper/lower bound
                 record.clamp(key, value)
 
     @log
@@ -56,18 +56,19 @@ class PreparedSessionCreator:
              self.raw_session.records if type(record) is TransactionCloudRecord])
         longitudes = [record.location_longitude for record in self.raw_session.records if type(record) is LocalizationSysRecord]
         latitudes = [record.location_latitude for record in self.raw_session.records if type(record) is LocalizationSysRecord]
-        median_longitude_latitude = (statistics.median(longitudes), statistics.median(latitudes))
+        median_longitude, median_latitude = statistics.median(longitudes), statistics.median(latitudes)
         target_ips = [int(ipaddress.ip_address(record.target_ip)) for record in self.raw_session.records if type(record) is NetworkMonitorRecord]
         dest_ips = [int(ipaddress.ip_address(record.dest_ip)) for record in self.raw_session.records if type(record) is NetworkMonitorRecord]
         median_target_ip = statistics.median(target_ips)
         median_dest_ip = statistics.median(dest_ips)
         labels = [record.label for record in self.raw_session.records if type(record) is Label]
-        attack_risk_label = labels[-1] if len(labels) > 0 else None
-        self.prepared_session = PreparedSession(mean_abs_diff_transaction={'time_diff': mean_abs_diff_transaction},
-                                               mean_abs_diff_transaction_amount={'amount': mean_abs_diff_transaction_amount},
-                                               median_longitude_latitude={'geo_position': median_longitude_latitude},
-                                               median_target_ip={'median_ip': median_target_ip},
-                                               median_dest_ip={'median_dest_ip': median_dest_ip},
-                                               attack_risk_label={'attack_risk_label': attack_risk_label})
+        label = labels[-1] if len(labels) > 0 else None
+        self.prepared_session = PreparedSession(mean_abs_diff_transaction=mean_abs_diff_transaction,
+                                               mean_abs_diff_transaction_amount= mean_abs_diff_transaction_amount,
+                                               median_longitude=median_longitude,
+                                               median_latitude=median_latitude,
+                                               median_target_ip=median_target_ip,
+                                               median_dest_ip=median_dest_ip,
+                                               attack_risk_label=label)
 
 

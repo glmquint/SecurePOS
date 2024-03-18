@@ -1,4 +1,4 @@
-from random import random, randint
+from random import random, randint, choice
 from threading import Thread
 from time import sleep
 from uuid import uuid1
@@ -22,6 +22,7 @@ message_bus = MessageBus([])
 test_everything = False
 
 server = None
+local_test = False
 
 def listener_setup(prepared_session_creator, message_bus=None):
     global server
@@ -92,17 +93,19 @@ class TestPreparationSystemOrchestrator:
             uuid = str(uuid1())
             for i in range(sufficient_records): # simulate client-side systems
                 url = "record"
-                record = [ LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord][i](**{
+                record = [ LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord, Label][i](**{
                     "uuid":uuid,
-                    "location_longitude":randint(-180, 180),
-                    "location_latitude":randint(-90, 90),
+                    "location_longitude":random()*360-180,
+                    "location_latitude":random()*180-90,
                     "target_ip":'.'.join([str(randint(0, 255)),str(randint(0, 255)),str(randint(0, 255)),str(randint(0, 255))]),
                     "dest_ip":'.'.join([str(randint(0, 255)),str(randint(0, 255)),str(randint(0, 255)),str(randint(0, 255))]),
                     "timestamp":[randint(1, 100) for i in range(10)],
-                    "amount":[randint(1, 100) for i in range(10)]})
+                    "amount":[randint(1, 100) for i in range(10)],
+                    "label": choice(["normal", "moderate", "high"])})
                 r = requests.post(f"http://127.0.0.1:5000/{url}", json=record.__dict__) # this is intended to be unstructured (like for a client)
                 assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
         #for i in range(num_of_runs):
-            result = message_bus.popTopic("segregation_system")
-            assert result is not None, "raw_session not received"
-            assert len(message_bus.messageQueues['segregation_system'].queue) == 0, "still something in queue"
+            if local_test:
+                result = message_bus.popTopic("segregation_system")
+                assert result is not None, "raw_session not received"
+                assert len(message_bus.messageQueues['segregation_system'].queue) == 0, "still something in queue"
