@@ -41,3 +41,18 @@ class DevelopmentSystemConfigurations:
             data = json.load(json_file)
             self.update_config(data, should_validate)
             print(f'[{self.__class__.__name__}]: configurations loaded successfully')
+
+    def to_dict(self):
+        return {
+            "topics": self.topics,
+            "production_system_receiver": self.production_system_receiver,
+            "messaging_system_receiver": self.messaging_system_receiver,
+            "hyperparameters": self.hyperparameters.__dict__,
+            "loss_threshold": self.loss_threshold,
+            "overfitting_tolerance": self.overfitting_tolerance,
+            "generalization_tolerance": self.generalization_tolerance,
+            "port": self.port,
+            "endpoint_url": self.endpoint_url,
+            "classifiers_limit": self.classifiers_limit,
+            "stop&go": self.stop_and_go
+        }
