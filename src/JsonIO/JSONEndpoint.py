@@ -17,6 +17,6 @@ class JSONEndpoint(Resource):
             self.recv_callback(json_data)
             return "OK", 200
         except Exception as e:
-            print(e)
+            print(e, __name__)
             return "Bad Request", 400
 
