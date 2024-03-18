@@ -1,6 +1,6 @@
 import json
 
-from src.Development.LearningSet import LearningSet
+from src.DataObjects.LearningSet import LearningSet
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
 from src.JsonIO.JSONEndpoint import JSONEndpoint
@@ -21,7 +21,7 @@ class LearningSetReceiver:
     def receive_learning_set(self, json_data):
         self.learning_set = LearningSet(json_data,True)
         self.message_bus_ref.pushTopic("LearningSet", self.learning_set)
-        print("Learning set received and pushed to message bus")
+        print(f'[{self.__class__.__name__}]: Learning set received and pushed to message bust')
         return 200
 
     def run(self, port: int):

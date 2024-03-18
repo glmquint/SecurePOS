@@ -19,6 +19,7 @@
   "generalization_tolerance" : 0.1,
   "port": 5001,
   "endpoint_url" : "/learning_set",
-  "classifiers_limit" : 5
+  "classifiers_limit" : 5,
+  "stop&go" : true
 
 }

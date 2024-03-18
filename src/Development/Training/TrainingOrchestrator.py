@@ -1,4 +1,5 @@
 import json
+import random
 
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
@@ -56,7 +57,10 @@ class TrainingOrchestrator:
                 self.train_process.set_average_hyperparameters()
                 self.status.status = "set_number_of_iterations"
             elif self.status.status == "set_number_of_iterations":
-                number_of_iterations = self.train_process.get_number_of_iterations()
+                if self.configurations.stop_and_go:
+                    number_of_iterations = self.train_process.get_number_of_iterations()
+                else:  # stop & go is simulated
+                    number_of_iterations = random.randint(10, 50)
                 if number_of_iterations > 0:
                     self.status.number_of_iterations = number_of_iterations
                     self.status.status = "train"
@@ -67,11 +71,13 @@ class TrainingOrchestrator:
             elif self.status.status == "train":
                 self.train_process.train()
                 if not self.status.should_validate:
-                    print("Creating learning plot")
                     self.report_controller.create_learning_plot()
                     self.status.status = "check_learning_plot"
             elif self.status.status == "check_learning_plot":
-                response = self.get_ai_export_response()
+                if self.configurations.stop_and_go:
+                    response = self.get_ai_export_response()
+                else:
+                    response = random.randint(0, 1)
                 if response < 0:
                     self.status.save_status()
                 elif response == 0:
@@ -79,7 +85,10 @@ class TrainingOrchestrator:
                     self.train_process.remove_classifiers('classifiers')
                     self.train_process.remove_precedent_response('Training/learning_result')
                     self.train_process.remove_precedent_response('Training/number_of_iterations')
-                    self.status.save_status()
+                    if self.configurations.stop_and_go:
+                        self.status.save_status()
+                    else:
+                        break
                 elif response == 1:
                     self.status.status = "set_hyperparams"
                 break

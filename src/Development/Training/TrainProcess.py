@@ -5,10 +5,10 @@ import os
 
 import pandas as pd
 from sklearn.metrics import mean_squared_error, accuracy_score
-from src.Development.Classifier import Classifier
+from src.DataObjects.Classifier import Classifier
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
-from src.Development.LearningSet import LearningSet
+from src.DataObjects.LearningSet import LearningSet
 from src.Development.Training.Scoreboard import Scoreboard
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
 from src.JsonIO.JsonValidator import JSONValidator
