@@ -34,9 +34,7 @@ class DevelopmentSystemMasterOrchestrator:
                                                               self.development_system_configurations)
         self.test_orchestrator = TestingOrchestrator(self.status, self.report_controller, self.message_bus, self.development_system_configurations)
         self.learning_set_receiver = LearningSetReceiver(self.message_bus, self.development_system_configurations.endpoint_url)
-        self.development_system_sender = DevelopmentSystemSender(
-            self.development_system_configurations.messaging_system_receiver,
-            self.development_system_configurations.production_system_receiver)
+        self.development_system_sender = DevelopmentSystemSender(self.development_system_configurations,self.status)
 
     def start(self):
         while True:
@@ -55,7 +53,7 @@ class DevelopmentSystemMasterOrchestrator:
             elif self.status.status in ["generate_test_report", "check_test_report"]:
                 self.test_orchestrator.start()
             elif self.status.status == "send_config":
-                self.development_system_sender.send_to_messaging(self.development_system_configurations)
+                self.development_system_sender.send_to_messaging()
             elif self.status.status == "send_classifier":
                 self.development_system_sender.send_to_production()
             else:
