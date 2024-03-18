@@ -1,5 +1,5 @@
-import itertools
 import json
+import random
 
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
@@ -57,7 +57,10 @@ class ValidationOrchestrator:
                 self.report_controller.create_validation_report()
                 self.status.status = "check_validation_report"
             elif self.status.status == "check_validation_report":
-                response = self.check_validation_result()
+                if self.configurations.stop_and_go:
+                    response = self.check_validation_result()
+                else:
+                    response = random.randint(0, 1)
                 if response < 0:
                     self.status.status = "check_validation_report"
                     self.status.save_status()
@@ -67,7 +70,10 @@ class ValidationOrchestrator:
                     self.trainining_process.remove_precedent_response('Validation/validation_result')
                     self.trainining_process.remove_precedent_response('Training/learning_result')
                     self.trainining_process.remove_precedent_response('Training/number_of_iterations')
-                    self.status.save_status()
+                    if self.configurations.stop_and_go:
+                        self.status.save_status()
+                    else:
+                        break
                 elif response == 1:
                     self.status.status = "generate_test_report"
                     break

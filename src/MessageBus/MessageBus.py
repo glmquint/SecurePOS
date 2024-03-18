@@ -25,3 +25,14 @@ class MessageBus:
         # check
         if topic not in self.messageQueues.keys():
             self.messageQueues[topic] = queue.Queue()
+
+
+# same testing
+if __name__ == "__main__":
+    msg = MessageBus(["b", "c"])
+    msg.addTopic("a")
+    msg.pushTopic("a", 2)
+    msg.pushTopic("a", 3)
+    print(msg.popTopic("a"))
+    print(msg.popTopic("a"))
+    print(msg.popTopic("a")) # would block

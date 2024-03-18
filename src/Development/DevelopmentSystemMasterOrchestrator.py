@@ -11,7 +11,6 @@ from threading import Thread
 
 
 class DevelopmentSystemMasterOrchestrator:
-    simulate_humane_task: bool
     train_orchestrator: TrainingOrchestrator = None
     validation_orchestrator: ValidationOrchestrator = None
     test_orchestrator: TestingOrchestrator = None
@@ -25,7 +24,6 @@ class DevelopmentSystemMasterOrchestrator:
     def __init__(self, simulate_humane_task: bool):
         self.status = DevelopmentSystemStatus("development_system_status.json", "schema/status_schema.json")
         self.status.load_status()
-        self.simulate_humane_task = simulate_humane_task
         self.development_system_configurations = DevelopmentSystemConfigurations('schema/config_schema.json')
         self.development_system_configurations.load_config('config/config.json', True)
         self.message_bus = MessageBus(self.development_system_configurations.topics)
@@ -36,9 +34,7 @@ class DevelopmentSystemMasterOrchestrator:
                                                               self.development_system_configurations)
         self.test_orchestrator = TestingOrchestrator(self.status, self.report_controller, self.message_bus, self.development_system_configurations)
         self.learning_set_receiver = LearningSetReceiver(self.message_bus, self.development_system_configurations.endpoint_url)
-        self.development_system_sender = DevelopmentSystemSender(
-            self.development_system_configurations.messaging_system_receiver,
-            self.development_system_configurations.production_system_receiver)
+        self.development_system_sender = DevelopmentSystemSender(self.development_system_configurations,self.status)
 
     def start(self):
         while True:
@@ -57,7 +53,7 @@ class DevelopmentSystemMasterOrchestrator:
             elif self.status.status in ["generate_test_report", "check_test_report"]:
                 self.test_orchestrator.start()
             elif self.status.status == "send_config":
-                self.development_system_sender.send_to_messaging(self.test_orchestrator.config)
+                self.development_system_sender.send_to_messaging()
             elif self.status.status == "send_classifier":
                 self.development_system_sender.send_to_production()
             else:

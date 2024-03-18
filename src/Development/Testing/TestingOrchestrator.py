@@ -1,4 +1,5 @@
 import json
+import random
 
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
@@ -14,7 +15,8 @@ class TestingOrchestrator:
     message_bus: MessageBus = None
     configurations: DevelopmentSystemConfigurations = None
 
-    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus, configurations: DevelopmentSystemConfigurations):
+    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus,
+                 configurations: DevelopmentSystemConfigurations):
         self.report_controller = report_controller
         self.message_bus = message_bus
         self.status = status
@@ -45,8 +47,13 @@ class TestingOrchestrator:
                 self.report_controller.create_test_report()
                 self.status.status = "check_test_report"
             elif self.status.status == "check_test_report":
-                response = self.check_test_result()
-                if response == 0:
+                if self.configurations.stop_and_go:
+                    response = self.check_test_result()
+                else:
+                    response = random.randint(0, 1)
+                if response < 0:
+                    self.status.save_status()
+                elif response == 0:
                     self.status.status = "send_config"
                     # TODO: maybe remove classifier if not needed
                     self.training_process.remove_precedent_response('Validation/validation_result')
@@ -55,7 +62,6 @@ class TestingOrchestrator:
                     self.training_process.remove_precedent_response('Testing/test_result')
                 elif response == 1:
                     self.status.status = "send_classifier"
-                self.status.save_status()
-                break  # response -1 is handled, close the application
+                break
             else:
                 raise Exception("Invalid status")
