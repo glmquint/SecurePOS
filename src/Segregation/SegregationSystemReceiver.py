@@ -21,5 +21,6 @@ class PreparedSessionReceiver:
         pass
 
     def callabackPreparedSession(self, json_data):
+        #TODO inserire nel db direttamente da qui
         self.__messageBus.pushTopic("preparedSession", PreparedSession(json_data))
         pass

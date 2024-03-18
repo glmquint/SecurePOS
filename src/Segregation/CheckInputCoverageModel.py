@@ -22,6 +22,10 @@ class CheckInputCoverageModel:
 
         df_max_scaled = dataframe_data.copy()
         for column in df_max_scaled.columns:
+            if column == 2:
+                df_max_scaled[column] += 180
+            if column == 3:
+                df_max_scaled[column] += 90
             df_max_scaled[column] = df_max_scaled[column] / df_max_scaled[column].abs().max()
 
         # print dataframe data
