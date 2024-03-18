@@ -26,6 +26,10 @@ class Record:
             return NetworkMonitorRecord(**json_data)
         if objtype == str(TransactionCloudRecord):
             return TransactionCloudRecord(**json_data)
+        if objtype == str(Label):
+            return Label(**json_data)
+        else:
+            raise Exception("Cannot deserialize: unknown objtype")
         return Record(**json_data)
 
     def getMissingSamples(self):
@@ -108,7 +112,7 @@ class Label(Record):
         data = {"label":self.label}
         return data
     def getOutliers(self):
-        return [k for k, v in self.__dict__.items() if v not in ['normal', 'moderate', 'high']]
+        return {k:v for k, v in self.__dict__.items() if v not in ['normal', 'moderate', 'high']}
     def clamp(self, key, value):
         if key != 'label':
             return

@@ -14,7 +14,7 @@ class Server:
         self.api = Api(self.app)
         self.timeout = timeout
 
-    def run(self, debug=False, port=5000):
+    def run(self, debug=False, port=5002):
         self.app.run(debug=debug, use_reloader=False, port=port) # don't use reloader in threaded environment
 
     def add_resource(self, resource, url, **kwargs):

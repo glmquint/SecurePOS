@@ -17,9 +17,10 @@ from src.MessageBus.MessageBus import MessageBus
 DATAOBJ_PATH = "../DataObjects/Schema"
 
 TEST_PORT = 4000
+SELF_PORT = 5002
 
 message_bus = MessageBus([])
-test_everything = False
+test_everything = True
 
 server = None
 local_test = False
@@ -38,7 +39,7 @@ def listener_setup(prepared_session_creator, message_bus=None):
                 if message_bus:
                     message_bus.pushTopic(url, json_data)
             return callback
-        schema = {'segregation_system':'PreparedSessionSchema', 'production_system':'PreparedSessionSchema', 'label': 'RecordSchema'}.get(url, None)
+        schema = {'segregationSystem':'PreparedSessionSchema', 'production_system':'PreparedSessionSchema', 'label': 'RecordSchema'}.get(url, None)
         server.add_resource(JSONEndpoint, f"/{url}", recv_callback=builder(url), json_schema_path=f"../DataObjects/Schema/{schema}.json")
     Thread(target=server.run, daemon=True, kwargs={'debug':True, 'port':TEST_PORT}).start()
 
@@ -69,7 +70,7 @@ class TestPreparationSystemOrchestrator:
             'raw_session_receiver'].items():  # should be only raw session receiver
             url = url.split('/')[-1]
             rs = RawSession()
-            r = requests.post(f"http://127.0.0.1:5000/{url}", json=rs.to_json())
+            r = requests.post(f"http://127.0.0.1:{SELF_PORT}/{url}", json=rs.to_json())
             assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
 
     def test_run(self):
@@ -102,10 +103,14 @@ class TestPreparationSystemOrchestrator:
                     "timestamp":[randint(1, 100) for i in range(10)],
                     "amount":[randint(1, 100) for i in range(10)],
                     "label": choice(["normal", "moderate", "high"])})
-                r = requests.post(f"http://127.0.0.1:5000/{url}", json=record.__dict__) # this is intended to be unstructured (like for a client)
+                r = requests.post(f"http://127.0.0.1:{SELF_PORT}/{url}", json=record.__dict__) # this is intended to be unstructured (like for a client)
                 assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
         #for i in range(num_of_runs):
             if local_test:
                 result = message_bus.popTopic("segregation_system")
                 assert result is not None, "raw_session not received"
                 assert len(message_bus.messageQueues['segregation_system'].queue) == 0, "still something in queue"
+
+if __name__ == '__main__':
+    TestPreparationSystemOrchestrator().test_run()
+    pass
