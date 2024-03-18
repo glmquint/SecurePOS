@@ -19,7 +19,8 @@ class ServiceSystemOrchestator:
         self.clientSideReceiver = ClientSideReceiver()
 
     def start(self):
-        thread_client_side = Thread(target=self.clientSideReceiver.run)
+        thread_client_side = Thread(target=self.MessagingReceiver.run)
+        #thread_client_side = Thread(target=self.MessagingReceiver.run,kwargs={'port':5001})
         thread_client_side.daemon = True  # this will allow the main thread to exit even if the server is still running
         thread_client_side.start()
 

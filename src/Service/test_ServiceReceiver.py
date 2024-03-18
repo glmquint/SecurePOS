@@ -1,6 +1,5 @@
 from threading import Thread
 from unittest import TestCase
-import pandas as pd
 import json
 import random
 

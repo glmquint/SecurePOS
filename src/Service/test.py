@@ -1,13 +1,9 @@
-
-
 import time
 from asyncio import wait
 from random import randint
 
 from src.JsonIO.JSONSender import JSONSender
 from src.JsonIO.Server import Server
-
-
 
 sender = JSONSender("../DataObjects/Schema/ElasticitySample.json", "http://127.0.0.1:5001/MessaginSystem")
 sender.send('')
