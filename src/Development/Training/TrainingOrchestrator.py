@@ -71,7 +71,6 @@ class TrainingOrchestrator:
             elif self.status.status == "train":
                 self.train_process.train()
                 if not self.status.should_validate:
-                    print("Creating learning plot")
                     self.report_controller.create_learning_plot()
                     self.status.status = "check_learning_plot"
             elif self.status.status == "check_learning_plot":
