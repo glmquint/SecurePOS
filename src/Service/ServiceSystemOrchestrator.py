@@ -18,25 +18,6 @@ class ServiceSystemOrchestator:
     def __init__(self):
         self.clientSideReceiver = ClientSideReceiver()
 
-    def foo(dic):
-        dict1 = dict()
-        # reformat the dictionary
-        timestamp = []
-        amount = []
-        for i in dic:
-            if "ts" in i:
-                timestamp.append(dic[i])
-            elif "am" in i:
-                amount.append(dic[i])
-            else:
-                dict1[i] = dic[i]
-
-            if len(timestamp) != 0:
-                dict1["ts"] = timestamp
-            if len(amount) != 0:
-                dict1["am"] = amount
-        return dict1
-    
     def start(self):
         thread_client_side = Thread(target=self.clientSideReceiver.run)
         thread_client_side.daemon = True  # this will allow the main thread to exit even if the server is still running
@@ -64,8 +45,23 @@ class ServiceSystemOrchestator:
                 continue
             randomInt = random.randint(1, len(df)) - 1
             # refactor the data
-            dic = (df.iloc[[randomInt][0]].to_dict())
-            transaction_dictionary = self.foo(dic)
+            refactor_dic = (df.iloc[[randomInt][0]].to_dict())
+            dict1 = dict()
+            # reformat the dictionary
+            timestamp = []
+            amount = []
+            for i in refactor_dic:
+                if "ts" in i:
+                    timestamp.append(refactor_dic[i])
+                elif "am" in i:
+                    amount.append(refactor_dic[i])
+                else:
+                    dict1[i] = refactor_dic[i]
+
+                if len(timestamp) != 0:
+                    dict1["ts"] = timestamp
+                if len(amount) != 0:
+                    dict1["am"] = amount
             # drop the current sample extracted
             pandasFiles[index] = df.drop(randomInt).reset_index(drop=True)
             mapped_class = None
