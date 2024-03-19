@@ -34,10 +34,13 @@
   },
   "prepared_session_creator" : {
     "segregation_system_receiver" : {
-      "url" : "http://192.168.147.174:5002/segregationSystem"
+      "url" : "http://localhost:5002/segregationSystem"
     },
     "production_system_receiver" : {
       "url" : "http://localhost:4000/production_system"
+    },
+    "monitoring_receiver" : {
+      "url" : "http://localhost:4000/monitoring"
     }
   }
 }

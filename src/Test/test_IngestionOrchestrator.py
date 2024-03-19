@@ -23,7 +23,7 @@ message_bus = MessageBus([])
 test_everything = True
 
 server = None
-local_test = False
+local_test = True
 
 def listener_setup(prepared_session_creator, message_bus=None):
     global server
@@ -39,7 +39,7 @@ def listener_setup(prepared_session_creator, message_bus=None):
                 if message_bus:
                     message_bus.pushTopic(url, json_data)
             return callback
-        schema = {'segregationSystem':'PreparedSessionSchema', 'production_system':'PreparedSessionSchema', 'label': 'RecordSchema'}.get(url, None)
+        schema = {'segregationSystem':'PreparedSessionSchema', 'production_system':'PreparedSessionSchema', 'label': 'RecordSchema', 'monitoring': 'RecordSchema'}.get(url, None)
         server.add_resource(JSONEndpoint, f"/{url}", recv_callback=builder(url), json_schema_path=f"../DataObjects/Schema/{schema}.json")
     Thread(target=server.run, daemon=True, kwargs={'debug':True, 'port':TEST_PORT}).start()
 

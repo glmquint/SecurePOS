@@ -7,7 +7,7 @@ from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
 from src.Storage.StorageController import StorageController
-from src.util import log
+from src.util import log, monitorPerformance
 
 DATAOBJ_PATH = "../DataObjects/Schema"
 
@@ -21,7 +21,7 @@ class PreparationSysReceiver:
         for endpoint in config['endpoints']:
             self.server.add_resource(JSONEndpoint, endpoint['endpoint'], recv_callback=self.__getattribute__(endpoint['callback']), json_schema_path=f"{DATAOBJ_PATH}/{endpoint['schema']}")
 
-    @log
+    @monitorPerformance(should_sample_after=False)
     def receiveRecord(self, json_data):
         if not isinstance(json_data, dict):
             raise Exception(f"Expected dict, got {type(json_data)}")
