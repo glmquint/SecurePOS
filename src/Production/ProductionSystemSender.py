@@ -6,5 +6,5 @@ class ProductionSystemSender:
         self.attackRiskLabel = attackRiskLabel
 
     def send(self, url):
-        sender = JSONSender("../DataObjects/Schema/AttackRiskLabelSchema.json", url)
+        sender = JSONSender("../DataObjects/Schema/Label.json", url)
         sender.send(self.attackRiskLabel.to_json())

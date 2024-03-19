@@ -2,6 +2,7 @@ from threading import Thread
 
 
 from src.DataObjects.AttackRiskLabel import AttackRiskLabel
+from src.DataObjects.Record import Label
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
@@ -14,27 +15,29 @@ class LabelReceiver:
         self.server = Server()
         self.mbus = MessageBus(["label", "sec_label"])
         self.scontroller_label = StorageController(DBConfig("evaluation", "labels"),
-            type(AttackRiskLabel(None)))
+            type(Label()))
         self.scontroller_security = StorageController(DBConfig("evaluation", "security_labels"),
-            type(AttackRiskLabel(None)))
+            type(Label()))
         return
 
     def receive(self):
         self.server.add_resource(JSONEndpoint, "/label_endpoint", recv_callback=self.callback_f,
-                                 json_schema_path="../DataObjects/Schema/AttackRiskLabelSchema.json")
+                                 json_schema_path="../DataObjects/Schema/Label.json")
         self.server.add_resource(JSONEndpoint, "/security_expert_endpoint", recv_callback=self.callback_s,
-                                 json_schema_path="../DataObjects/Schema/AttackRiskLabelSchema.json")
+                                 json_schema_path="../DataObjects/Schema/Label.json")
         thread = Thread(target=self.server.run)
         thread.daemon = True
         thread.start()
 
     def callback_s(self, json_data):
         #print(f"Received from security {json_data}")
-        self.scontroller_security.save(AttackRiskLabel(json_data["attackRiskLabel"]))
+        #???
+        self.scontroller_security.save(Label(label="high"))
         self.mbus.pushTopic("sec_label", json_data)
 
     def callback_f(self, json_data):
         #print(f"Received {json_data}")
-        self.scontroller_label.save(AttackRiskLabel(json_data["attackRiskLabel"]))
+        #???
+        self.scontroller_label.save(Label(label="high"))
         self.mbus.pushTopic("label", json_data)
 

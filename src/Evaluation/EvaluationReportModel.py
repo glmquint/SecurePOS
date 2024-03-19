@@ -1,4 +1,5 @@
 from src.DataObjects.AttackRiskLabel import AttackRiskLabel
+from src.DataObjects.Record import Label
 from src.Storage.StorageController import StorageController
 from src.Storage.dbConfig import DBConfig
 
@@ -11,9 +12,9 @@ class EvaluationReportModel:
         self.ConsecutiveError = 0
         self.tick_array = []
         self.scontroller_label = StorageController(DBConfig("evaluation", "labels"),
-                                                   type(AttackRiskLabel(None)))
+                                                   type(Label()))
         self.scontroller_security = StorageController(DBConfig("evaluation", "security_labels"),
-                                                      type(AttackRiskLabel(None)))
+                                                      type(Label()))
         self.sufficient_label_number = config.sufficient_label_number
         self.labels = self.retrieve()
 
