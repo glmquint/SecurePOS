@@ -12,7 +12,7 @@ class SegregationSystemSender:
         developmentSystemIp = configParameter.getDevelopmentSystemIp()
         developmentSystemPort = configParameter.getDevelopmentSystemPort()
         developmentSystemEndpoint = configParameter.getDevelopmentSystemEndpoint()
-        self.__DevelopmentSender = JSONSender("../DataObjects/Schema/LearningSetSchema.json",
+        self.__DevelopmentSender = JSONSender("../DataObjects/Schema/learning_set_schema.json",
                                               "http://" + developmentSystemIp + ":" + str(
                                                   developmentSystemPort) + "/" + str(developmentSystemEndpoint))
 
@@ -20,4 +20,5 @@ class SegregationSystemSender:
 
     def sendToDevelopment(self):
         learning_set = self.__learningSetGenerator.leaning_set
-        self.__DevelopmentSender.send(learning_set.toJson())
+        print(learning_set.to_json())
+        self.__DevelopmentSender.send(learning_set)

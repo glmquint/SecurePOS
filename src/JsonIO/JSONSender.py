@@ -13,7 +13,7 @@ class JSONSender:
     @log
     def send(self, obj):
         try:
-            self.validator.validate_data(obj)
+            self.validator.validate_data(obj.to_json())
             requests.post(self.url, json=obj.to_json())
         except Exception as e:
             print(e, f"({__file__})")

@@ -110,8 +110,8 @@ def run():
             sender = SegregationSystemSender(learningSetGenerator)
 
             sender.sendToDevelopment()
-
-            storageController.remove_all()  # remove the sessions
+            c=1
+            #storageController.remove_all()  # remove the sessions
 
             # reset the evaluation in report files
             segregationPlotController.setEvaluationCheckDataBalance("checking")
