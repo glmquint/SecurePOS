@@ -5,7 +5,7 @@ class CheckDataBalancingModel:
         self.__preparedSessionList = None
 
     def retrivePreparedSession(self):
-        self.__preparedSessionList = self.__storageController.retrieveAll()
+        self.__preparedSessionList = self.__storageController.retrieve_all(False)
 
     def getPreparedSessionList(self):
         return self.__preparedSessionList

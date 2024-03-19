@@ -3,8 +3,10 @@ import json
 
 class SegregationSystemConfig:
     def __init__(self):
+
         with open('Configurations/segregationConfiguration.json', 'r') as file:
             jsonParameter = json.load(file)
+
         self.__sufficientSessionNumber = jsonParameter.get("sufficientSessionNumber")
         self.__segregationSystemPort = jsonParameter.get("segregationSystemPort")
         self.__developmentSystemIp = jsonParameter.get("developmentSystemIp")

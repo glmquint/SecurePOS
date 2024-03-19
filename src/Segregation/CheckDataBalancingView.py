@@ -16,15 +16,15 @@ class CheckDataBalanceView:
         # retrive data from the model
         PreparedSessionList = self.__checkDataBalanceModel.getPreparedSessionList()
 
-        labels = ['Low', 'Medium', 'High']
+        labels = ["normal", "moderate", "high"]
 
         values = [0, 0, 0]
 
         for i in PreparedSessionList:
             match i.getLabel():
-                case "low":
+                case "normal":
                     values[0] += 1
-                case "medium":
+                case "moderate":
                     values[1] += 1
                 case "high":
                     values[2] += 1

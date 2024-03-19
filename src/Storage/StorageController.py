@@ -1,7 +1,7 @@
 from threading import Event
 
 from src.Storage.DBConnector import DBConnector
-from src.util import log
+from src.DataObjects.PreparedSession import PreparedSession
 
 
 class StorageController:
@@ -10,7 +10,7 @@ class StorageController:
 
     def __init__(self, dbConfig, type):
         self.type = type
-        self.DBConnector = DBConnector(name = dbConfig['name'], table_name = dbConfig['table_name'])
+        self.DBConnector = DBConnector(name=dbConfig['name'], table_name=dbConfig['table_name'])
         self.count_updated = Event()
         self.count_updated.set()
 
@@ -40,12 +40,14 @@ class StorageController:
             return False
         return True
 
-    def retrieve_all(self) -> [type]:
-        self.wait_count_updated()
+    def retrieve_all(self, blocking=True) -> [type]:
+        if blocking:
+            self.wait_count_updated()
         return [self.type.from_row(x) for x in self.DBConnector.retrieve()]
 
-    def count(self) -> int:
-        self.wait_count_updated()
+    def count(self, blocking=True) -> int:
+        if blocking:
+            self.wait_count_updated()
         return self.DBConnector.count()
 
     def remove_by_column(self, column, value) -> bool:
@@ -61,12 +63,6 @@ class StorageController:
         cursor = self.DBConnector.connection.cursor()
         cursor.execute(param)
         return cursor.fetchall()
-    def retrieveAll(self):
-        data_elem = self.DBConnector.retrieve()
-        return [self.type(elem) for elem in data_elem]
-
-    def countAll(self):
-        return self.DBConnector.count()[0][0]
 
     def retrieve_by_column(self, param, value):
         try:
@@ -74,4 +70,3 @@ class StorageController:
         except Exception as e:
             print(e)
         return []
-

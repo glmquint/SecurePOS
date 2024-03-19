@@ -52,3 +52,4 @@ class SegregationPlotController:
                 f.close()
         except Exception as e:
             print(e)
+

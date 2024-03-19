@@ -5,16 +5,17 @@ import math
 
 class LearningSetGenerator:
 
-    def __init__(self, trainPercentage, testPercentage, validationPercentage, storageController, messageBus):
+    def __init__(self, trainPercentage, testPercentage, validationPercentage, storageController):
         self.__trainPercentage = trainPercentage
         self.__testPercentage = testPercentage
         self.__validationPercentage = validationPercentage
         self.__storageController = storageController
-        self.__messageBus = messageBus
+        self.leaning_set = None
+
 
     def generateLearningSet(self):
-        preparedSessionArray = self.__storageController.retrieveAll()
-        cardinalityPreparedSession = self.__storageController.countAll()
+        preparedSessionArray = self.__storageController.retrieve_all(False)
+        cardinalityPreparedSession = self.__storageController.count(False)
 
         testSetCardinality = math.ceil(cardinalityPreparedSession * self.__testPercentage / 100)
         valSetCardinality = math.ceil(cardinalityPreparedSession * self.__validationPercentage / 100)
@@ -26,6 +27,7 @@ class LearningSetGenerator:
 
         trainingSetArray = validationSetArray = testSetArray = []
         trainingSetLabel = validationSetLabel = testSetLabel = []
+
         for i in trainingSet:
             trainingSetArray.append(i.returnArray())
             trainingSetLabel.append((i.getLabel()))
@@ -38,9 +40,9 @@ class LearningSetGenerator:
             testSetArray.append(i.returnArray())
             testSetLabel.append((i.getLabel()))
 
-        trainingSetArray = pd.DataFrame(trainingSetArray).drop([0, 7], axis=1)
-        validationSetArray = pd.DataFrame(validationSetArray).drop([0, 7], axis=1)
-        testSetArray = pd.DataFrame(testSetArray).drop([0, 7], axis=1)
+        trainingSetArray = pd.DataFrame(trainingSetArray).drop([6], axis=1)
+        validationSetArray = pd.DataFrame(validationSetArray).drop([6], axis=1)
+        testSetArray = pd.DataFrame(testSetArray).drop([6], axis=1)
 
         dic = dict()
         dic['trainingSet'] = trainingSetArray
@@ -51,4 +53,4 @@ class LearningSetGenerator:
         dic['testSetLabel'] = testSetLabel
 
         learningSet = LearningSet(dic, False)
-        self.__messageBus.pushTopic("leaningSet", learningSet)
+        self.leaning_set = learningSet
