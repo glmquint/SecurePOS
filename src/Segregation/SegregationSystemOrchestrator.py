@@ -9,6 +9,10 @@ from src.DataObjects.PreparedSession import PreparedSession
 from src.Storage.dbConfig import DBConfig
 
 
+# def createTable(self):  # FIXME for debug
+#    return self.DBConnector.createTable()
+
+
 def run():
     # get config parameter
     configParameter = SegregationSystemConfig()
@@ -17,20 +21,21 @@ def run():
     segregationSystemPort = configParameter.getSegregationSystemPort()
 
     # declare message bus
-    messageBus = MessageBus(["preparedSession", "leaningSet"])
+    messageBus = MessageBus(["leaningSet"])
 
     # instantiate database
-    dbConfig = DBConfig("PreparedSessionsDataStore", "PreparedSessions")
-    storageController = StorageController(dbConfig, PreparedSession)
+    # dbConfig = DBConfig("PreparedSessionsDataStore", "PreparedSessions")
+    storageController = StorageController({'name': 'PreparedSessionsDataStore', 'table_name': 'PreparedSessions'},
+                                          PreparedSession)
     segregationPlotController = SegregationPlotController(storageController,
                                                           configParameter.getToleranceDataBalancing())
     # instantiate and run receiver
-    preparedSessionReceiver = PreparedSessionReceiver(messageBus, segregationSystemPort)
+    preparedSessionReceiver = PreparedSessionReceiver(messageBus, storageController)
     # the server starts to run
-    #storageController.createTable()
+    # storageController.createTable()
     preparedSessionReceiver.run()
 
-    #storageController.removeAll()
+    # storageController.removeAll()
 
     while True:
 
@@ -52,10 +57,11 @@ def run():
         if serviceFlag is True or evaluationCheckDataBalance != "ok":
             # loop until I receive enough prepared session
             print("Receiving data...")
-            storageController.removeAll()
-            while (storageController.countAll()) < limitPreparedSession:
+            # storageController.remove_all()
+
+            while storageController.count() < limitPreparedSession:
+                pass
                 # the storage controller will retrive the data from the messageBus and will store into the db
-                storageController.save(messageBus.popTopic("preparedSession"))
 
             print("Data correctly stored")
 
@@ -96,15 +102,16 @@ def run():
             learningSetGenerator = LearningSetGenerator(configParameter.getPercentageTrainingSplit(),
                                                         configParameter.getPercentageTestSplit(),
                                                         configParameter.getPercentageValidationSplit(),
-                                                        storageController, messageBus)
+                                                        storageController)
             learningSetGenerator.generateLearningSet()
             print("Learning set generated")
 
-            quit()
-            sender = SegregationSystemSender(messageBus)
+
+            sender = SegregationSystemSender(learningSetGenerator)
+
             sender.sendToDevelopment()
 
-            storageController.removeAll()  # remove the sessions
+            storageController.remove_all()  # remove the sessions
 
             # reset the evaluation in report files
             segregationPlotController.setEvaluationCheckDataBalance("checking")

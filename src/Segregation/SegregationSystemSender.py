@@ -6,7 +6,7 @@ class SegregationSystemSender:
     __DevelopmentSender = None
     __messageBus = None
 
-    def __init__(self, messageBus):
+    def __init__(self, learningSetGenerator):
         configParameter = SegregationSystemConfig()
 
         developmentSystemIp = configParameter.getDevelopmentSystemIp()
@@ -16,8 +16,8 @@ class SegregationSystemSender:
                                               "http://" + developmentSystemIp + ":" + str(
                                                   developmentSystemPort) + "/" + str(developmentSystemEndpoint))
 
-        self.__messageBus = messageBus
+        self.__learningSetGenerator = learningSetGenerator
 
     def sendToDevelopment(self):
-        learningSet = self.__messageBus.popTopic("leaningSet")
-        self.__DevelopmentSender.send(learningSet.toJson())
+        learning_set = self.__learningSetGenerator.leaning_set
+        self.__DevelopmentSender.send(learning_set.toJson())

@@ -8,7 +8,7 @@ class CheckInputCoverageModel:
         self.__preparedSessionList = None
 
     def retrievePreparedSession(self):
-        self.__preparedSessionList = self.dataNormalized(self.__storageController.retrieveAll())
+        self.__preparedSessionList = self.dataNormalized(self.__storageController.retrieve_all(False))
 
     def getPreparedSessionList(self):
         return self.__preparedSessionList

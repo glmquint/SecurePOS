@@ -5,10 +5,9 @@ from src.DataObjects.PreparedSession import PreparedSession
 
 
 class PreparedSessionReceiver:
-    def __init__(self, messageBus,port):
+    def __init__(self, messageBus,storage_controller):
         self.__server = Server()
-        self.__messageBus = messageBus
-        self.__port = port
+        self.__storage_controller = storage_controller
         pass
 
     def run(self):
@@ -21,6 +20,5 @@ class PreparedSessionReceiver:
         pass
 
     def callabackPreparedSession(self, json_data):
-        #TODO inserire nel db direttamente da qui
-        self.__messageBus.pushTopic("preparedSession", PreparedSession(json_data))
+        self.__storage_controller.save(PreparedSession(json_data))
         pass

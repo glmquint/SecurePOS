@@ -30,3 +30,4 @@ def recive():  # FIXME just for debug
 for i in range(50):
     r = requests.post('http://127.0.0.1:5002/segregationSystem', json=recive().__dict__)
     print(r.json())
+
