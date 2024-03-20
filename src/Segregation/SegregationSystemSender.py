@@ -3,22 +3,23 @@ from src.Segregation.SegregationSystemConfig import SegregationSystemConfig
 
 
 class SegregationSystemSender:
-    __DevelopmentSender = None
+    __development_sender = None
     __messageBus = None
 
     def __init__(self, learningSetGenerator):
-        configParameter = SegregationSystemConfig()
+        config_parameter = SegregationSystemConfig()
 
-        developmentSystemIp = configParameter.getDevelopmentSystemIp()
-        developmentSystemPort = configParameter.getDevelopmentSystemPort()
-        developmentSystemEndpoint = configParameter.getDevelopmentSystemEndpoint()
-        self.__DevelopmentSender = JSONSender("../DataObjects/Schema/learning_set_schema.json",
-                                              "http://" + developmentSystemIp + ":" + str(
-                                                  developmentSystemPort) + "/" + str(developmentSystemEndpoint))
+        self.__development_system_ip = config_parameter.get_development_system_ip()
+        self.__development_system_port = config_parameter.get_development_system_port()
+        self.__development_system_endpoint = config_parameter.get_development_system_endpoint()
+        self.__development_sender = JSONSender("../DataObjects/Schema/learning_set_schema.json",
+                                               "http://" + self.__development_system_ip + ":" + str(
+                                                   self.__development_system_port) + "/" + str(
+                                                   self.__development_system_endpoint))
 
-        self.__learningSetGenerator = learningSetGenerator
+        self.__learning_set_generator = learningSetGenerator
 
     def send_to_development(self):
-        learning_set = self.__learningSetGenerator.leaning_set
+        learning_set = self.__learning_set_generator.leaning_set
         print(learning_set.to_json())
-        self.__DevelopmentSender.send(learning_set)
+        self.__development_sender.send(learning_set)

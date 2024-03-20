@@ -1,13 +1,14 @@
 class CheckDataBalancingModel:
 
     def __init__(self, storageController):
-        self.__storageController = storageController
-        self.__preparedSessionList = None
+        self.__storage_controller = storageController
+        self.__prepared_session_list = None
 
-    def retrivePreparedSession(self):
-        self.__preparedSessionList = self.__storageController.retrieve_all(False)
+    def retrive_prepared_session(self):
+        self.__prepared_session_list = self.__storage_controller.retrieve_all(False)
 
-    def getPreparedSessionList(self):
-        return self.__preparedSessionList
+    def get_prepared_session_list(self):
+        return self.__prepared_session_list
+
 
 
