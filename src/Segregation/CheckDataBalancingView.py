@@ -5,16 +5,16 @@ import numpy as np
 
 
 class CheckDataBalanceView:
-    __toleranceParameter = 0
+    __tolerance_parameter = 0
 
     def __init__(self, toleraceParameter, model):
-        self.__toleranceParameter = toleraceParameter
-        self.__checkDataBalanceModel = model
+        self.__tolerance_parameter = toleraceParameter
+        self.__check_data_balance_model = model
 
-    def plotCheckDataBalance(self):
+    def plot_check_data_balance(self):
 
         # retrive data from the model
-        PreparedSessionList = self.__checkDataBalanceModel.getPreparedSessionList()
+        PreparedSessionList = self.__check_data_balance_model.get_prepared_session_list()
 
         labels = ["normal", "moderate", "high"]
 
@@ -43,7 +43,7 @@ class CheckDataBalanceView:
 
         percentage_diff = (abs(maximim - minimum) / (maximim + minimum) / 2) * 100
 
-        string = 'Tolerance interal = ' + str(self.__toleranceParameter) + " | Difference detected = " + str(
+        string = 'Tolerance interal = ' + str(self.__tolerance_parameter) + " | Difference detected = " + str(
             round(percentage_diff, 2))
 
         plt.bar(bar_positions2, values, width=bar_width)
@@ -64,14 +64,16 @@ class CheckDataBalanceView:
 
         plt.savefig('Data/Plot/PlotCheckDataBalancePlot.png')
 
-    def getSimulatedCheckDataBalance(self):
+    @staticmethod
+    def get_simulated_check_data_balance():
         value = random()
         if value < 0.1:
             return "no"
         else:
             return "ok"
 
-    def getCheckDataBalance(self):
+    @staticmethod
+    def get_check_data_balance():
         with open('Data/checkDataBalanceReport.json', 'r') as checkDataBalanceFile:
             jsonData = json.load(checkDataBalanceFile)
             evaluationCheckDataBalance = jsonData.get("evaluation")

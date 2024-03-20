@@ -10,9 +10,9 @@ class CheckInputCoverageView:
     def __init__(self, model):
         self.__checkInputCoverageModel = model
 
-    def plotCheckInputCoverageView(self):
+    def plot_check_input_coverage_view(self):
 
-        PreparedSessionList = self.__checkInputCoverageModel.getPreparedSessionList()
+        PreparedSessionList = self.__checkInputCoverageModel.get_prepared_session_list()
 
         labels = ['MeanAbsoluteDifferencingTransactionTimestamps',
                   'MeanAbsoluteDifferencingTransactionAmount',
@@ -60,14 +60,16 @@ class CheckInputCoverageView:
 
         fig.write_image("Data/Plot/PlotCheckInputCoverage.png")
 
-    def getSimulatedCheckInputCoverage(self):
+    @staticmethod
+    def get_simulated_check_input_coverage():
         value = random()
         if value < 0.1:
             return "no"
         else:
             return "ok"
 
-    def getCheckInputCoverage(self):
+    @staticmethod
+    def get_check_input_coverage():
         with open('Data/checkInputCoverageReport.json', 'r') as checkInputCoverageFile:
             jsonData = json.load(checkInputCoverageFile)
             evaluationCheckInputCoverage = jsonData.get("evaluation")

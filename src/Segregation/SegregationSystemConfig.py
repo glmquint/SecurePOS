@@ -7,44 +7,44 @@ class SegregationSystemConfig:
         with open('Configurations/segregationConfiguration.json', 'r') as file:
             jsonParameter = json.load(file)
 
-        self.__sufficientSessionNumber = jsonParameter.get("sufficientSessionNumber")
-        self.__segregationSystemPort = jsonParameter.get("segregationSystemPort")
+        self.__sufficient_session_number = jsonParameter.get("sufficientSessionNumber")
+        self.__segregation_system_port = jsonParameter.get("segregationSystemPort")
         self.__developmentSystemIp = jsonParameter.get("developmentSystemIp")
-        self.__developmentSystemPort = jsonParameter.get("developmentSystemPort")
-        self.__developmentSystemEndpoint = jsonParameter.get("developmentSystemEndpoint")
-        self.__toleranceDataBalancing = jsonParameter.get("toleranceDataBalancing")
-        self.__serviceFlag = jsonParameter.get("serviceFlag")
-        self.__percentageTrainingSplit = jsonParameter.get("percentageTrainingSplit")
-        self.__percentageTestSplit = jsonParameter.get("percentageTestSplit")
-        self.__percentageValidationSplit = jsonParameter.get("percentageValidationSplit")
+        self.__development_system_port = jsonParameter.get("developmentSystemPort")
+        self.__development_system_endpoint = jsonParameter.get("developmentSystemEndpoint")
+        self.__tolerance_data_balancing = jsonParameter.get("toleranceDataBalancing")
+        self.__service_flag = jsonParameter.get("serviceFlag")
+        self.__percentage_training_split = jsonParameter.get("percentageTrainingSplit")
+        self.__percentage_test_split = jsonParameter.get("percentageTestSplit")
+        self.__percentage_validation_split = jsonParameter.get("percentageValidationSplit")
 
-    def getSufficientSessionNumber(self):
-        return self.__sufficientSessionNumber
+    def get_sufficient_session_number(self):
+        return self.__sufficient_session_number
 
-    def getSegregationSystemPort(self):
-        return self.__segregationSystemPort
+    def get_segregation_system_port(self):
+        return self.__segregation_system_port
 
-    def getDevelopmentSystemIp(self):
+    def get_development_system_ip(self):
         return self.__developmentSystemIp
 
-    def getDevelopmentSystemPort(self):
-        return self.__developmentSystemPort
+    def get_development_system_port(self):
+        return self.__development_system_port
 
-    def getToleranceDataBalancing(self):
-        return self.__toleranceDataBalancing
+    def get_tolerance_data_balancing(self):
+        return self.__tolerance_data_balancing
 
-    def getServiceFlag(self):
-        return self.__serviceFlag
+    def get_service_flag(self):
+        return self.__service_flag
 
-    def getPercentageTrainingSplit(self):
-        return self.__percentageTrainingSplit
+    def get_percentage_training_split(self):
+        return self.__percentage_training_split
 
-    def getPercentageTestSplit(self):
-        return self.__percentageTestSplit
+    def get_percentage_test_split(self):
+        return self.__percentage_test_split
 
-    def getPercentageValidationSplit(self):
-        return self.__percentageValidationSplit
+    def get_percentage_validation_split(self):
+        return self.__percentage_validation_split
 
-    def getDevelopmentSystemEndpoint(self):
-        return self.__developmentSystemEndpoint
+    def get_development_system_endpoint(self):
+        return self.__development_system_endpoint
 
