@@ -37,7 +37,7 @@ class SegregationPlotController:
     def getCheckInputCoverage(self):
         return self.__checkInputCoverageView.getCheckInputCoverage()
 
-    def setEvaluationCheckDataBalance(self, state):
+    def set_evaluation_check_data_balance(self, state):
         try:
             with open('Data/checkDataBalanceReport.json', 'w') as f:
                 json.dump({"evaluation": state}, f)
@@ -45,7 +45,7 @@ class SegregationPlotController:
         except Exception as e:
             print(e)
 
-    def setEvaluationCheckInputCoverage(self, state):
+    def set_evaluation_check_input_coverage(self, state):
         try:
             with open('Data/checkInputCoverageReport.json', 'w') as f:
                 json.dump({"evaluation": state}, f)

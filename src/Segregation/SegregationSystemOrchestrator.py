@@ -49,8 +49,8 @@ def run():
             evaluationCheckInputCoverage = segregationPlotController.getCheckInputCoverage()
             if evaluationCheckInputCoverage == "no coverage":
                 # if the coverage is not satisfied the process has to start from the beginning
-                segregationPlotController.setEvaluationCheckDataBalance("checking")
-                segregationPlotController.setEvaluationCheckInputCoverage("checking")
+                segregationPlotController.set_evaluation_check_data_balance("checking")
+                segregationPlotController.set_evaluation_check_input_coverage("checking")
                 evaluationCheckDataBalance = "checking"
                 evaluationCheckInputCoverage = "checking"
 
@@ -109,13 +109,13 @@ def run():
 
             sender = SegregationSystemSender(learningSetGenerator)
 
-            sender.sendToDevelopment()
+            sender.send_to_development()
             c=1
             #storageController.remove_all()  # remove the sessions
 
             # reset the evaluation in report files
-            segregationPlotController.setEvaluationCheckDataBalance("checking")
-            segregationPlotController.setEvaluationCheckInputCoverage("checking")
+            segregationPlotController.set_evaluation_check_data_balance("checking")
+            segregationPlotController.set_evaluation_check_input_coverage("checking")
 
             # FIXME just for debug
             x = input('Do you want to continue: [Yes|No]')
