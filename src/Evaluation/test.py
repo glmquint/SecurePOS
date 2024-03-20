@@ -31,12 +31,15 @@ for x in range(50):
         st2 = "normal"
     uid=str(uuid.uuid4())
     sender.send(Label(label=st,uuid = uid))
+    if randint(0,1000) < 10:
+        print(uid)
+        uid = str(uuid.uuid4())
+        print(uid)
     sender2.send(Label(label=st2,uuid = uid))
     #sender2.send({"label": st2})
     #sender.send({"label": st})
 #sender.send(Label(label="bau",uuid="ci"))
 #sender2.send(Label(label="bau",uuid="cip"))
-time.sleep(1)
 exit()
 sender2.send({"attackRiskLabel": "moderate"})
 sender.send({"attackRiskLabel": "normal"})
