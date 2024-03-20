@@ -56,3 +56,6 @@ class DevelopmentSystemConfigurations:
             "classifiers_limit": self.classifiers_limit,
             "stop&go": self.stop_and_go
         }
+
+    def to_json(self):
+        return json.dumps(self.to_dict())
