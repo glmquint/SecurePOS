@@ -1,9 +1,168 @@
 {
-    "type": "object",
-    "properties": {
-        "test" : {
-            "type": "string"
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "db": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "table_name": {
+          "type": "string"
         }
+      },
+      "required": [
+        "name",
+        "table_name"
+      ]
     },
-    "required": ["test"]
+    "phase_tracker": {
+      "type": "object",
+      "properties": {
+        "evaluation_phase_duration": {
+          "type": "integer"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "production_phase_duration": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "evaluation_phase_duration",
+        "phase",
+        "production_phase_duration"
+      ]
+    },
+    "preparation_sys_receiver": {
+      "type": "object",
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "callback": {
+                  "type": "string"
+                },
+                "endpoint": {
+                  "type": "string"
+                },
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "callback",
+                "endpoint",
+                "schema"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "callback": {
+                  "type": "string"
+                },
+                "endpoint": {
+                  "type": "string"
+                },
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "callback",
+                "endpoint",
+                "schema"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "endpoints"
+      ]
+    },
+    "prepared_session_creator": {
+      "type": "object",
+      "properties": {
+        "production_system_receiver": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        },
+        "segregation_system_receiver": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        }
+      },
+      "required": [
+        "production_system_receiver",
+        "segregation_system_receiver"
+      ]
+    },
+    "raw_session_creator": {
+      "type": "object",
+      "properties": {
+        "label_receiver": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        },
+        "number_of_systems": {
+          "type": "integer"
+        },
+        "raw_session_receiver": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        }
+      },
+      "required": [
+        "label_receiver",
+        "number_of_systems",
+        "raw_session_receiver"
+      ]
+    },
+    "raw_session_topic": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "db",
+    "phase_tracker",
+    "preparation_sys_receiver",
+    "prepared_session_creator",
+    "raw_session_creator",
+    "raw_session_topic"
+  ]
 }

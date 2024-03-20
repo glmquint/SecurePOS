@@ -48,21 +48,21 @@ class PreparedSessionCreator:
 
     @log
     def extractFeatures(self):
-        mean_abs_diff_transaction = statistics.mean(
+        mean_abs_diff_transaction                                   = statistics.mean(
             [statistics.mean([abs(x - y) for x, y in zip(record.timestamp, record.timestamp[1:])]) for record in
              self.raw_session.records if type(record) is TransactionCloudRecord])
-        mean_abs_diff_transaction_amount = statistics.mean(
+        mean_abs_diff_transaction_amount                                    = statistics.mean(
             [statistics.mean([abs(x - y) for x, y in zip(record.amount, record.amount[1:])]) for record in
              self.raw_session.records if type(record) is TransactionCloudRecord])
-        longitudes = [record.location_longitude for record in self.raw_session.records if type(record) is LocalizationSysRecord]
-        latitudes = [record.location_latitude for record in self.raw_session.records if type(record) is LocalizationSysRecord]
-        median_longitude, median_latitude = statistics.median(longitudes), statistics.median(latitudes)
-        target_ips = [int(ipaddress.ip_address(record.target_ip)) for record in self.raw_session.records if type(record) is NetworkMonitorRecord]
-        dest_ips = [int(ipaddress.ip_address(record.dest_ip)) for record in self.raw_session.records if type(record) is NetworkMonitorRecord]
-        median_target_ip = statistics.median(target_ips)
-        median_dest_ip = statistics.median(dest_ips)
-        labels = [record.label for record in self.raw_session.records if type(record) is Label]
-        label = labels[-1] if len(labels) > 0 else None
+        longitudes                                  = [record.location_longitude for record in self.raw_session.records if type(record) is LocalizationSysRecord]
+        latitudes                                   = [record.location_latitude for record in self.raw_session.records if type(record) is LocalizationSysRecord]
+        median_longitude, median_latitude                                   = statistics.median(longitudes), statistics.median(latitudes)
+        target_ips                                  = [int(ipaddress.ip_address(record.target_ip)) for record in self.raw_session.records if type(record) is NetworkMonitorRecord]
+        dest_ips                                    = [int(ipaddress.ip_address(record.dest_ip)) for record in self.raw_session.records if type(record) is NetworkMonitorRecord]
+        median_target_ip                                    = statistics.median(target_ips)
+        median_dest_ip                                  = statistics.median(dest_ips)
+        labels                                  = [record.label for record in self.raw_session.records if type(record) is Label]
+        label                                   = labels[-1] if len(labels) > 0 else None
         self.prepared_session = PreparedSession(mean_abs_diff_transaction=mean_abs_diff_transaction,
                                                mean_abs_diff_transaction_amount= mean_abs_diff_transaction_amount,
                                                median_longitude=median_longitude,

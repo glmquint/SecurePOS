@@ -54,9 +54,16 @@ class TestPreparationSystemOrchestrator:
         for endpoint, val in c.items():
             url = val['url'].split('/')[-1]
             print(f"Sending to {url}")
-            objtype = {'segregation_system': PreparedSession, 'production_system': PreparedSession,
+            objtype = {'segregationSystem': PreparedSession, 'production_system': PreparedSession,
                        'label': Label}.get(url, None)
-            objsent = objtype().to_json()
+            objsent = objtype(
+                mean_abs_diff_transaction = 123,
+                mean_abs_diff_transaction_amount = 123,
+                median_longitude =  123,
+                median_latitude =  123,
+                median_target_ip =  123,
+                median_dest_ip =  123,
+                label =  "High").to_json()
             r = requests.post(f"http://127.0.0.1:{TEST_PORT}/{url}", json=objsent)
             assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
             assert message_bus.popTopic(url) == objsent, "raw_session not received"

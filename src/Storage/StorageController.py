@@ -40,12 +40,14 @@ class StorageController:
             return False
         return True
 
-    def retrieve_all(self) -> [type]:
-        self.wait_count_updated()
+    def retrieve_all(self, blocking=True) -> [type]:
+        if blocking:
+            self.wait_count_updated()
         return [self.type.from_row(x) for x in self.DBConnector.retrieve()]
 
-    def count(self) -> int:
-        self.wait_count_updated()
+    def count(self, blocking=True) -> int:
+        if blocking:
+            self.wait_count_updated()
         return self.DBConnector.count()
 
     def remove_by_column(self, column, value) -> bool:
@@ -74,4 +76,3 @@ class StorageController:
         except Exception as e:
             print(e)
         return []
-
