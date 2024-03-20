@@ -12,8 +12,7 @@ class LearningSetGenerator:
         self.__storageController = storageController
         self.leaning_set = None
 
-
-    def generateLearningSet(self):
+    def generate_learning_set(self):
         preparedSessionArray = self.__storageController.retrieve_all(False)
         cardinalityPreparedSession = self.__storageController.count(False)
 

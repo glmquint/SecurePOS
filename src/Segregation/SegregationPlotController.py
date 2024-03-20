@@ -7,37 +7,38 @@ from CheckDataBalancingView import *
 class SegregationPlotController:
 
     def __init__(self, storageController, checkDataBalanceTolerance):
-        self.__storageController = storageController
-        self.__checkDataBalancingModel = CheckDataBalancingModel(storageController)
-        self.__checkDataBalancingView = CheckDataBalanceView(checkDataBalanceTolerance,self.__checkDataBalancingModel)
-        self.__checkInputCoverageModel = CheckInputCoverageModel(storageController)
-        self.__checkInputCoverageView = CheckInputCoverageView(self.__checkInputCoverageModel)
+        self.__storage_controller = storageController
+        self.__check_data_balancing_model = CheckDataBalancingModel(storageController)
+        self.__check_data_balancing_view = CheckDataBalanceView(checkDataBalanceTolerance, self.__check_data_balancing_model)
+        self.__check_input_coverage_model = CheckInputCoverageModel(storageController)
+        self.__check_input_coverage_view = CheckInputCoverageView(self.__check_input_coverage_model)
 
-    def plotDataBalance(self):
+    def plot_data_balance(self):
         # retrieve data from the model
-        self.__checkDataBalancingModel.retrivePreparedSession()
+        self.__check_data_balancing_model.retrive_prepared_session()
         # pass data to the view to plot
-        self.__checkDataBalancingView.plotCheckDataBalance()
+        self.__check_data_balancing_view.plot_check_data_balance()
 
-    def plotCheckInputCoverage(self):
+    def plot_check_input_coverage(self):
         # retrieve data from the model
-        self.__checkInputCoverageModel.retrievePreparedSession()
+        self.__check_input_coverage_model.retrieve_prepared_session()
         # pass data to the view to plot
-        self.__checkInputCoverageView.plotCheckInputCoverageView()
+        self.__check_input_coverage_view.plot_check_input_coverage_view()
 
-    def getSimulatedCheckDataBalance(self):
-        return self.__checkDataBalancingView.getSimulatedCheckDataBalance()
+    def get_simulated_check_data_balance(self):
+        return self.__check_data_balancing_view.get_simulated_check_data_balance()
 
-    def getCheckDataBalance(self):
-        return self.__checkDataBalancingView.getCheckDataBalance()
+    def get_check_data_balance(self):
+        return self.__check_data_balancing_view.get_check_data_balance()
 
-    def getSimulatedCheckInputCoverage(self):
-        return self.__checkInputCoverageView.getSimulatedCheckInputCoverage()
+    def get_simulated_check_input_coverage(self):
+        return self.__check_input_coverage_view.get_simulated_check_input_coverage()
 
-    def getCheckInputCoverage(self):
-        return self.__checkInputCoverageView.getCheckInputCoverage()
+    def get_check_input_coverage(self):
+        return self.__check_input_coverage_view.get_check_input_coverage()
 
-    def setEvaluationCheckDataBalance(self, state):
+    @staticmethod
+    def set_evaluation_check_data_balance(state):
         try:
             with open('Data/checkDataBalanceReport.json', 'w') as f:
                 json.dump({"evaluation": state}, f)
@@ -45,7 +46,8 @@ class SegregationPlotController:
         except Exception as e:
             print(e)
 
-    def setEvaluationCheckInputCoverage(self, state):
+    @staticmethod
+    def set_evaluation_check_input_coverage(state):
         try:
             with open('Data/checkInputCoverageReport.json', 'w') as f:
                 json.dump({"evaluation": state}, f)

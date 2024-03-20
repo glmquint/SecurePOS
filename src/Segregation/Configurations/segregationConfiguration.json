@@ -1,8 +1,8 @@
 {
   "sufficientSessionNumber" : 50,
   "segregationSystemPort" : 5000,
-  "developmentSystemIp" : "192.168.134.177",
-  "developmentSystemPort" : 5001,
+  "developmentSystemIp" : "192.168.151.137",
+  "developmentSystemPort" : 5002,
   "developmentSystemEndpoint": "learning_set",
   "toleranceDataBalancing" : 10,
   "serviceFlag": true,
