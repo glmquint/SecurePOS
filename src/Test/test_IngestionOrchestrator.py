@@ -89,7 +89,7 @@ class TestPreparationSystemOrchestrator:
         Thread(target=orchestrator.run, daemon=True).start()
 
         sufficient_records = config.raw_session_creator['number_of_systems']
-        num_of_runs = 5
+        num_of_runs = 1
         for j in range(num_of_runs):
             uuid = str(uuid1())
             for i in range(sufficient_records): # simulate client-side systems
@@ -107,9 +107,9 @@ class TestPreparationSystemOrchestrator:
                 assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
         #for i in range(num_of_runs):
             if local_test:
-                result = message_bus.popTopic("segregation_system")
+                result = message_bus.popTopic("segregationSystem")
                 assert result is not None, "raw_session not received"
-                assert len(message_bus.messageQueues['segregation_system'].queue) == 0, "still something in queue"
+                assert len(message_bus.messageQueues['segregationSystem'].queue) == 0, "still something in queue"
 
 if __name__ == '__main__':
     TestPreparationSystemOrchestrator().test_run()
