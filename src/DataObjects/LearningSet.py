@@ -30,7 +30,7 @@ class LearningSet:
         self.validationSetLabel = dic['validationSetLabel']
         self.testSetLabel = dic['testSetLabel']
 
-    def toJson(self):
+    def to_json(self):
         data = {
             'trainingSet': self.trainingSet.to_dict(orient="split"),
             'validationSet': self.validationSet.to_dict(orient="split"),
