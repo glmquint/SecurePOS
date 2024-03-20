@@ -92,16 +92,16 @@ class EvaluationReportViewer:
         report_forth_row = 550
 
         imgDraw.text((report_x,report_first_row),"Errors: ",font=font,fill=(0,0,0))
-        imgDraw.text((report_y,report_first_row),str(modelcontroller.TotalError),font=font,fill=(0,0,0))
+        imgDraw.text((report_y,report_first_row),str(modelcontroller.TotalError),font=font,fill=self.red)
 
         imgDraw.text((report_x,report_second_row),"Max Toll. Error: ",font=font,fill=(0,0,0))
-        imgDraw.text((report_y,report_second_row),str(modelcontroller.TotalErrorTollerated),font=font,fill=(0,0,0))
+        imgDraw.text((report_y,report_second_row),str(modelcontroller.TotalErrorTollerated),font=font,fill=self.black)
 
         imgDraw.text((report_x, report_forth_row), "Consecutive Toll.: ", font=font, fill=(0, 0, 0))
-        imgDraw.text((report_y, report_forth_row), str(modelcontroller.ConsecutiveErrorTollerated), font=font, fill=(0, 0, 0))
+        imgDraw.text((report_y, report_forth_row), str(modelcontroller.ConsecutiveErrorTollerated), font=font, fill=self.black)
 
         imgDraw.text((report_x, report_third_row), "Max Consec. Error: ", font=font, fill=(0, 0, 0))
-        imgDraw.text((report_y, report_third_row), str(modelcontroller.ConsecutiveError), font=font, fill=(0, 0, 0))
+        imgDraw.text((report_y, report_third_row), str(modelcontroller.ConsecutiveError), font=font, fill=self.red)
 
         self.widthline = 4
         self.firstcorner = 560
@@ -119,11 +119,16 @@ class EvaluationReportViewer:
 #b = [""]*50
 #for x in range(0,50):
    #a[x] = AttackRiskLabel("ciao"+str(randint(1,2)))
-   #uid= str(uuid.uuid4())
-   #a[x] = Label(label="moderate",uuid=uid)
+#   uid= str(uuid.uuid4())
+#   a[x] = Label(label="moderate",uuid=uid)
 #for x in range(0,50):
-   #b[x] = Label(label="high",uuid=a[x].uuid)
+#   b[x] = Label(label="high",uuid=a[x].uuid)
+#b[49].uuid = 0
 #eva.labels=[a,b]
+#x = {x.uuid for x in a}
+#y = {x.uuid for x in b}
+#print(x.difference(y))
+#exit()
 ##
 #print([value.uuid for value in [x for x in a] if value.label not in [y.label for y in [x for x in b]]])
 

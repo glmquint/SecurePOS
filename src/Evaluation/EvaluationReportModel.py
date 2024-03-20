@@ -33,11 +33,18 @@ class EvaluationReportModel:
         self.scontroller_label.remove_all()
 
     def check_valid_labels(self):
-        a = self.labels[0]
-        b = self.labels[1]
-        intersection = [value.uuid for value in [x for x in a] if value.label not in [y.label for y in [x for x in b]]]
-        if not intersection:
+        x = {x.uuid for x in self.labels[0]}
+        y = {x.uuid for x in self.labels[1]}
+        #print(x.difference(y))
+        #print([(x.label,x.uuid) for x in a])
+        #print([(x.label,x.uuid) for x in b])
+        #difference = [value.uuid for value in [x for x in a] if value.uuid not in [y.uuid for y in [x for x in b]]]
+        #print(difference)
+        difference = ([uid for uid in x.difference(y)],[uid for uid in y.difference(x)])
+        if len(difference[0]) != 0 or len(difference[1]) != 0:
+            print(difference)
             print("Labels and Security Labels are not matching.Aborting.")
+            self.removelabels()
             exit()
         return
     def generatereport(self):
@@ -51,7 +58,7 @@ class EvaluationReportModel:
         consecutive = False
         maxconsecutive = 0
         for x in range(0, len(labels)):
-            if labels[x].label[1] != security_labels[x].label[1]:
+            if labels[x].label != security_labels[x].label:
                 totalerror = totalerror + 1
                 self.tick_array.append("X")
                 if not consecutive:
