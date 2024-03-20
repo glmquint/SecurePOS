@@ -63,6 +63,7 @@ class TrainingOrchestrator:
                     number_of_iterations = random.randint(10, 50)
                 if number_of_iterations > 0:
                     self.status.number_of_iterations = number_of_iterations
+                    self.train_process.number_of_iterations = number_of_iterations
                     self.status.status = "train"
                 else:
                     print("Please insert a number >0 for the number of iterations")
