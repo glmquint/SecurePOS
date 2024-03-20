@@ -1,5 +1,7 @@
 import sqlite3
 
+from src.util import log
+
 
 class DBConnector:
     name       : str                = None
@@ -15,6 +17,7 @@ class DBConnector:
             self.connection = sqlite3.connect(f'../../db/{self.name}.db', check_same_thread=False)
             cursor = self.connection.cursor()
             cursor.execute(f"PRAGMA table_info({self.tableName})")
+
             self.columns = [column[1] for column in cursor.fetchall()][1:]  # [1:] to remove the id column
         except sqlite3.Error as e:
             print(e)

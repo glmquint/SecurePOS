@@ -5,6 +5,7 @@ from src.Evaluation.EvaluationReportController import EvaluationReportController
 from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 from src.Evaluation.EvaluationSystemSender import EvaluationSystemSender
 from src.Evaluation.LabelReceiver import LabelReceiver
+from src.util import log
 
 
 class EvaluationSystemOrchestrator:

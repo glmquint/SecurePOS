@@ -1,28 +1,30 @@
+import uuid
 from datetime import datetime
 from random import randint
 
 from PIL import Image, ImageDraw, ImageFont
 
 from src.DataObjects.AttackRiskLabel import AttackRiskLabel
+from src.DataObjects.Record import Label
 from src.Evaluation.EvaluationReportModel import EvaluationReportModel
 from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 
 
 class EvaluationReportViewer:
     def __init__(self):
-        self.width = 724
+        self.width = 842
         self.height = 612
-        self.second_column_offset = 240
-        self.third_column_offset = 480
+        self.second_column_offset = 275
+        self.third_column_offset = 555
         self.format_date = "%Y-%m-%d %H:%M:%S"
         self.title = "Evaluation report, " + str(datetime.now().strftime(self.format_date))
         self.row_id_x_offset = 5
-        self.first_label_x_offset = 40
-        self.second_label_x_offset = 120
-        self.x0_rect = 200
+        self.first_label_x_offset = 45
+        self.second_label_x_offset = 145
+        self.x0_rect = 250
         self.x1_rect_offset = 20
         self.row_offset = 19
-        self.tick_x_offset = 203
+        self.tick_x_offset = 253
         self.black = (0,0,0)
         self.green = (34,139,34)
         self.red = (255,0,0)
@@ -46,8 +48,8 @@ class EvaluationReportViewer:
             #first row
             if x <= self.row_offset:
                 imgDraw.text((self.row_id_x_offset, self.y_offset(x)), str(x) + ")", font=font, fill=self.black)
-                imgDraw.text((self.first_label_x_offset, self.y_offset(x)), str(labels[x-1].attackRiskLabel[1]), font=font, fill=self.black)
-                imgDraw.text((self.second_label_x_offset, self.y_offset(x)), security_labels[x-1].attackRiskLabel[1], font=font, fill=self.black)
+                imgDraw.text((self.first_label_x_offset, self.y_offset(x)), str(labels[x-1].label), font=font, fill=self.black)
+                imgDraw.text((self.second_label_x_offset, self.y_offset(x)), security_labels[x-1].label, font=font, fill=self.black)
                 imgDraw.rectangle([(self.x0_rect, self.y_offset(x)), (
                 self.x0_rect + self.x1_rect_offset, self.y_offset(x) + self.x1_rect_offset)], None, "black")
                 if tick_array[x-1] == "V":
@@ -59,8 +61,8 @@ class EvaluationReportViewer:
             elif self.row_offset < x <= self.row_offset *2:
                 y = x - self.row_offset
                 imgDraw.text((self.row_id_x_offset + self.second_column_offset, self.y_offset(y)), str(x) + ")", font=font, fill=(0, 0, 0))
-                imgDraw.text((self.first_label_x_offset + self.second_column_offset, self.y_offset(y)), labels[x-1].attackRiskLabel[1], font=font, fill=(0, 0, 0))
-                imgDraw.text((self.second_label_x_offset + self.second_column_offset, self.y_offset(y)), security_labels[x-1].attackRiskLabel[1], font=font, fill=(0, 0, 0))
+                imgDraw.text((self.first_label_x_offset + self.second_column_offset, self.y_offset(y)), labels[x-1].label, font=font, fill=(0, 0, 0))
+                imgDraw.text((self.second_label_x_offset + self.second_column_offset, self.y_offset(y)), security_labels[x-1].label, font=font, fill=(0, 0, 0))
                 imgDraw.rectangle([(self.x0_rect + self.second_column_offset, self.y_offset(y)), (
                 self.x0_rect + self.x1_rect_offset + self.second_column_offset, self.y_offset(y) + self.x1_rect_offset)], None, "black")
                 if tick_array[x - 1] == "V":
@@ -72,8 +74,8 @@ class EvaluationReportViewer:
             elif x <= 50:
                 y = x - self.row_offset * 2
                 imgDraw.text((self.row_id_x_offset + self.third_column_offset, self.y_offset(y)), str(x) + ")", font=font, fill=self.black)
-                imgDraw.text((self.first_label_x_offset + self.third_column_offset, self.y_offset(y)), labels[x-1].attackRiskLabel[1], font=font, fill=self.black)
-                imgDraw.text([self.second_label_x_offset + self.third_column_offset, self.y_offset(y)], " "+security_labels[x-1].attackRiskLabel[1], font=font, fill=self.black)
+                imgDraw.text((self.first_label_x_offset + self.third_column_offset, self.y_offset(y)), labels[x-1].label, font=font, fill=self.black)
+                imgDraw.text([self.second_label_x_offset + self.third_column_offset, self.y_offset(y)], " "+security_labels[x-1].label, font=font, fill=self.black)
                 imgDraw.rectangle([(self.x0_rect + self.third_column_offset, self.y_offset(y)), (
                 self.x0_rect + self.x1_rect_offset + self.third_column_offset, self.y_offset(y) + self.x1_rect_offset)], None, "black")
                 if tick_array[x - 1] == "V":
@@ -82,12 +84,12 @@ class EvaluationReportViewer:
                     tick_color = self.red
                 imgDraw.text((self.tick_x_offset+self.third_column_offset, self.y_offset(y)), tick_array[x-1],font=font,fill=tick_color)
 
-        report_x = 490
-        report_y = 680
-        report_first_row = 420
-        report_second_row = 460
-        report_third_row = 500
-        report_forth_row = 540
+        report_x = 600
+        report_y = 810
+        report_first_row = 430
+        report_second_row = 470
+        report_third_row = 510
+        report_forth_row = 550
 
         imgDraw.text((report_x,report_first_row),"Errors: ",font=font,fill=(0,0,0))
         imgDraw.text((report_y,report_first_row),str(modelcontroller.TotalError),font=font,fill=(0,0,0))
@@ -102,7 +104,7 @@ class EvaluationReportViewer:
         imgDraw.text((report_y, report_third_row), str(modelcontroller.ConsecutiveError), font=font, fill=(0, 0, 0))
 
         self.widthline = 4
-        self.firstcorner = 480
+        self.firstcorner = 560
         self.secondcorner = 400
         imgDraw.line([(self.firstcorner,self.secondcorner),(self.firstcorner,self.height)],fill=(self.black),width=self.widthline)
         imgDraw.line([(self.firstcorner,self.secondcorner),(self.width,self.secondcorner)],fill=(self.black),width=self.widthline)
@@ -116,10 +118,23 @@ class EvaluationReportViewer:
 #a = [""]*50
 #b = [""]*50
 #for x in range(0,50):
-#   a[x] = AttackRiskLabel("ciao"+str(randint(1,2)))
+   #a[x] = AttackRiskLabel("ciao"+str(randint(1,2)))
+   #uid= str(uuid.uuid4())
+   #a[x] = Label(label="moderate",uuid=uid)
 #for x in range(0,50):
-#   b[x] = AttackRiskLabel("ciao"+str(randint(1,2)))
+   #b[x] = Label(label="high",uuid=a[x].uuid)
 #eva.labels=[a,b]
-#tick = ["X"]*50
+##
+#print([value.uuid for value in [x for x in a] if value.label not in [y.label for y in [x for x in b]]])
+
+
+#print([x.label for x in a])
+#print(list(set([x.label for x in a]) & set([x.label] for x in b)))
+#print(a.keys() & b.keys())
+#eva.labels=list(set(a) & set(b))
+#tick = ["V"]*50
 #e.print(eva,tick)
 
+#def intersection(lst1, lst2):
+    #lst3 = [value for value in lst1 if value in lst2]
+    #return lst3
