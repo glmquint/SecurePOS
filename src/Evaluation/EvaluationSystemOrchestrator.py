@@ -5,6 +5,7 @@ from src.Evaluation.EvaluationReportController import EvaluationReportController
 from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 from src.Evaluation.EvaluationSystemSender import EvaluationSystemSender
 from src.Evaluation.LabelReceiver import LabelReceiver
+from src.util import log
 
 
 class EvaluationSystemOrchestrator:
@@ -28,7 +29,6 @@ class EvaluationSystemOrchestrator:
             self.label_counter = self.label_counter + 1
             self.receiver.mbus.popTopic("sec_label")
             self.security_label_counter = self.security_label_counter + 1
-        #time.sleep(1)
         self.evaluation.update()
         self.label_counter = 0
         self.security_label_counter = 0
@@ -41,15 +41,18 @@ class EvaluationSystemOrchestrator:
         #while True:
         #self.config.load()
         print("=====================================")
-        if self.config.state == 0:
-            self.run()
-            self.config.write_state(1)
-            if self.config.simulate_human_task:
-                self.evaluation.getresult(True)
+        while True:
+            if self.config.state == 0:
+                self.run()
+                self.config.write_state(1)
+                if self.config.simulate_human_task:
+                    self.evaluation.getresult(True)
+                    self.config.write_state(0)
+                else:
+                    return
+            else:
+                self.evaluation.getresult()
                 self.config.write_state(0)
-        else:
-            self.evaluation.getresult()
-            self.config.write_state(0)
         return
 
 

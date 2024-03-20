@@ -17,7 +17,9 @@ class StorageController:
     def save(self, obj):
         if not issubclass(type(obj), self.type):
             raise Exception(f'Invalid type, expected {self.type} got {type(obj)}')
-        row = [obj.to_row()]
+        #row = [obj.to_row()]
+        #todo fix this to be parametric
+        row = [self.type.to_row(obj)]
         try:
             self.DBConnector.insert(row)
             self.count_updated.set()

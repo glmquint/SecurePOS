@@ -28,7 +28,6 @@ class DBConnector:
                 row)
         self.connection.commit()
 
-
     def remove(self):
         cursor = self.connection.cursor()
         cursor.execute('DELETE FROM ' + self.tableName)

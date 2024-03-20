@@ -16,7 +16,7 @@ class TestServer(unittest.TestCase):
     def server_setup(self):
         server = Server()
         test_callback = lambda json_data: print(f"Hello from test_callback. Received {json_data}")
-        server.add_resource(JSONEndpoint, "/test_endpoint", recv_callback=test_callback, json_schema_path="../DataObjects/Schema/AttackRiskLabelSchema.json")
+        server.add_resource(JSONEndpoint, "/test_endpoint", recv_callback=test_callback, json_schema_path="../DataObjects/Schema/Label.json")
 
         Thread(target=server.run, daemon=True).start()
 

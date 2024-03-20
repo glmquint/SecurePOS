@@ -108,6 +108,14 @@ class Label(Record):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.label: str = kwargs.get("label", None)
+
+    @staticmethod
+    def to_row(obj):
+        #todo use get
+        return tuple([obj.label,obj.uuid])
+    @staticmethod
+    def from_row(obj):
+        return Label(uuid=obj["uuid"],label=obj["label"])
     def to_json(self):
         data = {"uuid": self.uuid, "label":self.label}
         return data
