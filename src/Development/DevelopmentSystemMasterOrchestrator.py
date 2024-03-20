@@ -54,8 +54,10 @@ class DevelopmentSystemMasterOrchestrator:
                 self.test_orchestrator.start()
             elif self.status.status == "send_config":
                 self.development_system_sender.send_to_messaging()
+                break
             elif self.status.status == "send_classifier":
                 self.development_system_sender.send_to_production()
+                break
             else:
                 raise Exception("Invalid status")
 
