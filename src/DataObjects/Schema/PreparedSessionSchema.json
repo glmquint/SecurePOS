@@ -1,10 +1,10 @@
 {
     "type": "object",
     "properties": {
-        "mean_absolute_differencing_transaction_timestamps": {
+        "mean_abs_diff_transaction": {
             "type": "number"
         },
-      "mean_absolute_differencing_transaction_amount": {
+      "mean_abs_diff_transaction_amount": {
             "type": "number"
         },
       "median_longitude": {
@@ -20,9 +20,9 @@
             "type": "number"
         },
       "label": {
-         "type": "string",
-         "enum": ["normal", "moderate", "high"]
+         "type": ["string", "null"],
+         "enum": ["normal", "moderate", "high", null]
       }
     },
-    "required": ["mean_absolute_differencing_transaction_timestamps", "mean_absolute_differencing_transaction_amount","median_longitude", "median_latitude", "median_target_ip", "median_dest_ip", "label"]
+    "required": ["mean_abs_diff_transaction", "mean_abs_diff_transaction_amount","median_longitude", "median_latitude", "median_target_ip", "median_dest_ip"]
 }

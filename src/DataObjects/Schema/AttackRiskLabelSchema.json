@@ -2,12 +2,16 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "properties": {
-        "attackRiskLabel": {
+        "uuid": {
+            "type": "string",
+            "format": "uuid"
+        },
+        "label": {
             "type": "string",
             "enum": ["Low", "Medium", "High"]
         }
     },
     "required": [
-        "attackRiskLabel"
+        "uuid","label"
     ]
 }

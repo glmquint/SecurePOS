@@ -30,8 +30,8 @@ class PreparedSession(Session):
         self.label                             : str    = kwargs.get("attack_risk_label", None)
 
     def to_json(self):
-        return {'mean_absolute_differencing_transaction_timestamps': self.mean_abs_diff_transaction,
-                'mean_absolute_differencing_transaction_amount': self.mean_abs_diff_transaction_amount,
+        return {'mean_abs_diff_transaction': self.mean_abs_diff_transaction,
+                'mean_abs_diff_transaction_amount': self.mean_abs_diff_transaction_amount,
                 'median_longitude' : self.median_longitude,
                 'median_latitude' : self.median_latitude,
                 'median_target_ip': self.median_target_ip,

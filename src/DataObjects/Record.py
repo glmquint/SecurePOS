@@ -46,7 +46,7 @@ class LocalizationSysRecord(Record):
         self.location_longitude: float = kwargs.get("location_longitude", None)
 
     def to_json(self):
-        data = {"location_latitude":self.location_latitude,
+        data = {"uuid": self.uuid, "location_latitude":self.location_latitude,
                 "location_longitude":self.location_longitude}
         return data
     def getOutliers(self):
@@ -63,7 +63,7 @@ class NetworkMonitorRecord(Record):
         self.target_ip: str = kwargs.get("target_ip", None)
         self.dest_ip: str = kwargs.get("dest_ip", None)
     def to_json(self):
-        data = {"target_ip":self.target_ip,
+        data = {"uuid": self.uuid, "target_ip":self.target_ip,
                 "dest_ip":self.dest_ip}
         return data
     def getOutliers(self):
@@ -80,7 +80,7 @@ class TransactionCloudRecord(Record):
         self.timestamp: [int] = kwargs.get("timestamp", None)
         self.amount: [int] = kwargs.get("amount", None)
     def to_json(self):
-        data = {"timestamp":self.timestamp,
+        data = {"uuid": self.uuid, "timestamp":self.timestamp,
                 "amount":self.amount}
         return data
     def getOutliers(self):
@@ -109,7 +109,7 @@ class Label(Record):
         super().__init__(**kwargs)
         self.label: str = kwargs.get("label", None)
     def to_json(self):
-        data = {"label":self.label}
+        data = {"uuid": self.uuid, "label":self.label}
         return data
     def getOutliers(self):
         return {k:v for k, v in self.__dict__.items() if v not in ['normal', 'moderate', 'high']}

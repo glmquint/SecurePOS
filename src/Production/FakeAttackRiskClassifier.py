@@ -1,11 +1,15 @@
 import ipaddress
+from uuid import uuid1
 
 import sklearn.neural_network as skl
 
-from src.DataObjects.AttackRiskLabel import AttackRiskLabel
+
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
+
+from src.DataObjects.Record import Label
+
 
 class FakeAttackRiskClassifier:
 
@@ -19,23 +23,19 @@ class FakeAttackRiskClassifier:
             print(f"Fake classifier classifier {self.attackRiskClassifier}")
             # assert self.attackRiskClassifier is not None
         self.preparedSession = self.systemBus.popTopic("PreparedSession")
-        print(f"Fake classifier prepared session {self.preparedSession}")
-        # used for debug purpose
-        # assert self.preparedSession is not None
-        # fake return
+        print(f"Prepared session {self.preparedSession}")
+        print(f"Fake classifier prepared session {self.preparedSession.to_json()}")
         prepared_session_features = [
-            self.preparedSession.mean_absolute_diff_timestamps,
-            self.preparedSession.mean_absolute_diff_amount,
-            self.preparedSession.median_longitude_latitude[0],
-            self.preparedSession.median_longitude_latitude[1],
-            # le.transform([prepared_session.median_target_ip]),
-            # le.transform([prepared_session.median_dest_ip])
-            int(ipaddress.ip_address(self.preparedSession.median_target_ip)),
-            int(ipaddress.ip_address(self.preparedSession.median_dest_ip))
-
-            # Add more numeric features here if necessary
+            self.preparedSession.mean_abs_diff_transaction,
+            self.preparedSession.mean_abs_diff_transaction_amount,
+            self.preparedSession.median_longitude,
+            self.preparedSession.median_latitude,
+            self.preparedSession.median_target_ip,
+            self.preparedSession.median_dest_ip
         ]
+        print(f"Prepared session features: {prepared_session_features}")
         attack_risk_label = self.attackRiskClassifier.predict([prepared_session_features])[0]
         print(f"Attack risk label: {attack_risk_label}")
-        return attack_risk_label
+        # TODO: add uuid to PreparedSession
+        return Label(label=attack_risk_label, uuid= str(uuid1()))
 
