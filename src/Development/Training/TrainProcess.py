@@ -84,7 +84,7 @@ class TrainProcess:
             self.classifier = Classifier(self.current_hyperparameter[0],
                                          self.current_hyperparameter[1], self.status.number_of_iterations,
                                          f'Classifier {current_iteration}')
-        self.classifier.model.fit(self.learning_set.trainingSet, pd.Series(self.learning_set.trainingSetLabel))
+        self.classifier.model.fit(self.status.learning_set.trainingSet, pd.Series(self.status.learning_set.trainingSetLabel))
         if not self.status.should_validate:
             # self.classifier.save_model('classifiers')
             loss_curve = self.classifier.get_loss_curve()
