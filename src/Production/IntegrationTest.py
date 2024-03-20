@@ -1,3 +1,4 @@
+import ipaddress
 from socket import inet_aton
 
 from threading import Thread
@@ -9,9 +10,10 @@ import requests
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 
-from src.DataObjects.AttackRiskLabel import AttackRiskLabel
+
 from src.DataObjects.ClassifierTest import ClassifierTest
-from src.DataObjects.PreparedSession import PreparedSession
+from src.DataObjects.Record import Label
+from src.DataObjects.Session import PreparedSession
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
@@ -50,114 +52,76 @@ class IntegrationTest(TestCase):
     def test_system_bus_send(self):
         systemBus = MessageBus(["PreparedSession", "Classifier"])
         self.server_setup(systemBus)
-        preparedSession = PreparedSession(10.5, 25.5,
-                                          (-73.9857, 40.7484), "192.168.1.1",
-                                          "203.0.113.5")
+        preparedSession = PreparedSession(mean_abs_diff_transaction=10, mean_abs_diff_transaction_amount=20,
+                                          median_longitude=30, median_latitude=40,
+                                          median_target_ip= int(ipaddress.ip_address("127.0.0.1")),
+                                          median_dest_ip= int(ipaddress.ip_address("192.168.255.0")),
+                                          attack_risk_label=None)
+
         classifierTest = ClassifierTest("test")
 
-        req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession.to_json())  # correct key
+        req = requests.post("http://127.0.0.1:5002/PreparedSession", json=preparedSession.to_json())  # correct key
         assert req.status_code == 200
         print(systemBus.popTopic("PreparedSession"))
-        req = requests.post("http://127.0.0.1:5000/Classifier", json=classifierTest.to_json())  # correct key
-        assert req.status_code == 200
+        with open('AverageClassifier.sav', 'rb') as f:
+            req = requests.post("http://127.0.0.1:5002/Classifier", files={"uploaded": f})
+            assert req.status_code == 200, f'Expected 200, got {req}'
         print(systemBus.popTopic("Classifier"))
 
     def test_main(self):
         self.main_setup()
         self.main_receiver()
-        preparedSession = PreparedSession(10.5, 25.5,
-                                          (-73.9857, 40.7484), "192.168.1.1",
-                                          "203.0.113.5")
-        preparedSession1 = PreparedSession("alpha", 95.5,
-                                          (-73.9857, 40.7484), "192.168.1.1",
-                                          "192.168.1.1")
-        attackRiskLabel = AttackRiskLabel("medium")
-        reparedSession3 = PreparedSession()
+        preparedSession = PreparedSession(mean_abs_diff_transaction=10, mean_abs_diff_transaction_amount=20,
+                                          median_longitude=30, median_latitude=40,
+                                          median_target_ip=int(ipaddress.ip_address("127.0.0.1")),
+                                          median_dest_ip=int(ipaddress.ip_address("192.168.255.0")),
+                                          attack_risk_label=None)
+
+        preparedSession1 = PreparedSession(mean_abs_diff_transaction="10", mean_abs_diff_transaction_amount=20,
+                                          median_longitude="30", median_latitude=40,
+                                          median_target_ip=int(ipaddress.ip_address("127.0.0.1")),
+                                          median_dest_ip=int(ipaddress.ip_address("192.168.255.0")),
+                                          attack_risk_label=None)
+
+        attackRiskLabel = Label(label="medium", uuid="12345")
+        preparedSession2 = PreparedSession(mean_abs_diff_transaction=None, mean_abs_diff_transaction_amount=None,
+                                          median_longitude=None, median_latitude=None,
+                                          median_target_ip=0,
+                                          median_dest_ip=0,
+                                          attack_risk_label=None)
         classifierTest = ClassifierTest("test")
-        req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession.to_json())
+        req = requests.post("http://127.0.0.1:5002/PreparedSession", json=preparedSession.to_json())
         assert req.status_code == 200   # correct key
-        req = requests.post("http://127.0.0.1:5000/Classifier", json=classifierTest.to_json())
-        assert req.status_code == 200   # correct key
+        with open('AverageClassifier.sav', 'rb') as f:
+            req = requests.post("http://127.0.0.1:5002/Classifier", files={"uploaded": f})
+            assert req.status_code == 200, f'Expected 200, got {req}'
         sleep(0.1)
-        req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession1.to_json())
+        req = requests.post("http://127.0.0.1:5002/PreparedSession", json=preparedSession1.to_json())
         assert req.status_code == 400   # wrong type
         sleep(0.1)
-        req = requests.post("http://127.0.0.1:5000/PreparedSession", json=attackRiskLabel.to_json())
+        req = requests.post("http://127.0.0.1:5002/PreparedSession", json=attackRiskLabel.to_json())
         assert req.status_code == 400   # wrong data
         sleep(0.1)
-        req = requests.post("http://127.0.0.1:5000/PreparedSession", json=classifierTest.to_json())
+        req = requests.post("http://127.0.0.1:5002/PreparedSession", json=classifierTest.to_json())
         assert req.status_code == 400   # wrong endpoint
         sleep(0.1)
-        req = requests.post("http://127.0.0.1:5000/PreparedSession", json=reparedSession3.to_json())
+        req = requests.post("http://127.0.0.1:5002/PreparedSession", json=preparedSession2.to_json())
         assert req.status_code == 400   # wrong format
         sleep(5)
 
     def test_production_switch(self):
         self.main_setup()
         self.main_receiver()
-        preparedSession = PreparedSession(10.5, 25.5,
-                                          (-73.9857, 40.7484), "192.168.1.1",
-                                          "203.0.113.5")
-        classifierTest = ClassifierTest("test")
-        req = requests.post("http://127.0.0.1:5000/Classifier", json=classifierTest.to_json())  # correct key
-        assert req.status_code == 200
+        preparedSession = PreparedSession(mean_abs_diff_transaction=10, mean_abs_diff_transaction_amount=20,
+                                          median_longitude=30, median_latitude=40,
+                                          median_target_ip=int(ipaddress.ip_address("127.0.0.1")),
+                                          median_dest_ip=int(ipaddress.ip_address("192.168.255.0")),
+                                          attack_risk_label=None)
+        with open('AverageClassifier.sav', 'rb') as f:
+            req = requests.post("http://127.0.0.1:5002/Classifier", files={"uploaded": f})
+            assert req.status_code == 200, f'Expected 200, got {req}'
         for i in range(0, 5):
-            req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession.to_json())  # correct key
+            req = requests.post("http://127.0.0.1:5002/PreparedSession", json=preparedSession.to_json())  # correct key
             assert req.status_code == 200
 
         sleep(10)
-
-    def test_real_classfier(self):
-        #self.main_setup()
-        self.main_receiver()
-        preparedSession = PreparedSession(10.5, 25.5,
-                                         (-73.9857, 40.7484), "192.168.1.1",
-                                         "203.0.113.5")
-        with open('AverageClassifier.sav', 'rb') as f:
-            req = requests.post("http://127.0.0.1:5000/Classifier", files={"uploaded": f})
-            assert req.status_code == 200, f'Expected 200, got {req}'
-        req = requests.post("http://127.0.0.1:5000/PreparedSession", json=preparedSession.to_json())
-        assert req.status_code == 200  # correct key
-        sleep(5)
-
-    def test_internal(self):
-        from sklearn.neural_network import MLPClassifier
-        from sklearn.preprocessing import StandardScaler
-        from sklearn.pipeline import Pipeline
-        import joblib
-
-        # Load the trained classifier
-        mlp_classifier = joblib.load('AverageClassifier.sav')
-
-        # Define a function to predict the Attack Risk Label
-        def predict_attack_risk(prepared_session):
-            # Transform the input features as necessary
-            import ipaddress
-            prepared_session_features = [
-                prepared_session.mean_absolute_diff_timestamps,
-                prepared_session.mean_absolute_diff_amount,
-                prepared_session.median_longitude_latitude[0],
-                prepared_session.median_longitude_latitude[1],
-                #le.transform([prepared_session.median_target_ip]),
-                #le.transform([prepared_session.median_dest_ip])
-                int(ipaddress.ip_address(prepared_session.median_target_ip)),
-                int(ipaddress.ip_address(prepared_session.median_dest_ip))
-
-                # Add more numeric features here if necessary
-            ]
-            # Predict the Attack Risk Label
-            attack_risk_label = mlp_classifier.predict([prepared_session_features])[0]
-
-            return attack_risk_label
-
-        # Example usage:
-        # Create a Prepared Session object
-        prepared_session = PreparedSession(mean_absolute_diff_timestamps=10,
-                                           mean_absolute_diff_amount=0.5,
-                                           median_longitude_latitude=(40.7128, -74.0060),
-                                           median_target_ip="192.168.203.48",
-                                           median_dest_ip="8.8.8.8")
-
-        # Predict the Attack Risk Label
-        predicted_label = predict_attack_risk(prepared_session)
-        print("Predicted Attack Risk Label:", predicted_label)

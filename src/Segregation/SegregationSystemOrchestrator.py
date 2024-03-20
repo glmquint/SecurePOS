@@ -1,127 +1,115 @@
 from LearningSetGenerator import *
 from SegregationPlotController import SegregationPlotController
-from src.MessageBus.MessageBus import MessageBus
 from src.Segregation.SegregationSystemReceiver import PreparedSessionReceiver
 from src.Segregation.SegregationSystemConfig import SegregationSystemConfig
 from src.Segregation.SegregationSystemSender import SegregationSystemSender
 from src.Storage.StorageController import StorageController
 from src.DataObjects.PreparedSession import PreparedSession
-from src.Storage.dbConfig import DBConfig
 
 
-# def createTable(self):  # FIXME for debug
-#    return self.DBConnector.createTable()
+class SegregationSystemOrchestrator:
 
+    def __init__(self):
+        # get config parameter
+        self.config_parameter = SegregationSystemConfig()
+        self.service_flag = self.config_parameter.get_service_flag()
+        self.limit_prepared_session = self.config_parameter.get_sufficient_session_number()
 
-def run():
-    # get config parameter
-    configParameter = SegregationSystemConfig()
-    serviceFlag = configParameter.getServiceFlag()
-    limitPreparedSession = configParameter.getSufficientSessionNumber()
-    segregationSystemPort = configParameter.getSegregationSystemPort()
+        # instantiate database
+        self.storage_controller = StorageController(
+            {'name': 'PreparedSessionsDataStore', 'table_name': 'PreparedSessions'},
+            PreparedSession)
+        self.segregation_plot_controller = SegregationPlotController(self.storage_controller,
+                                                                     self.config_parameter.get_tolerance_data_balancing())
+        # instantiate and run receiver
+        self.preparedSessionReceiver = PreparedSessionReceiver(self.storage_controller)
 
-    # declare message bus
-    messageBus = MessageBus(["leaningSet"])
+    def run(self):
 
-    # instantiate database
-    # dbConfig = DBConfig("PreparedSessionsDataStore", "PreparedSessions")
-    storageController = StorageController({'name': 'PreparedSessionsDataStore', 'table_name': 'PreparedSessions'},
-                                          PreparedSession)
-    segregationPlotController = SegregationPlotController(storageController,
-                                                          configParameter.getToleranceDataBalancing())
-    # instantiate and run receiver
-    preparedSessionReceiver = PreparedSessionReceiver(messageBus, storageController)
-    # the server starts to run
-    # storageController.createTable()
-    preparedSessionReceiver.run()
+        # the server starts to run
+        self.preparedSessionReceiver.run()
 
-    # storageController.removeAll()
+        while True:
 
-    while True:
+            evaluation_check_data_balance = ""
+            evaluation_check_input_coverage = ""
+            print("Server started")  # the serviceFlag is false if the simplified stop and go interaction is not active
 
-        evaluationCheckDataBalance = ""
-        evaluationCheckInputCoverage = ""
-        print("Server started")  # the serviceFlag is false if the simplified stop and go interaction is not active
+            if self.service_flag is False:
+                # the value that can be assigned to the following two variable is ( checking | ok | not balanced )
+                evaluation_check_data_balance = self.segregation_plot_controller.get_check_data_balance()
+                evaluation_check_input_coverage = self.segregation_plot_controller.get_check_input_coverage()
+                if evaluation_check_input_coverage == "no coverage":
+                    # if the coverage is not satisfied the process has to start from the beginning
+                    self.segregation_plot_controller.set_evaluation_check_data_balance("checking")
+                    self.segregation_plot_controller.set_evaluation_check_input_coverage("checking")
+                    evaluation_check_data_balance = "checking"
+                    evaluation_check_input_coverage = "checking"
 
-        if serviceFlag is False:
-            # the value that can be assigned to the following two variable is ( checking | ok | not balanced )
-            evaluationCheckDataBalance = segregationPlotController.getCheckDataBalance()
-            evaluationCheckInputCoverage = segregationPlotController.getCheckInputCoverage()
-            if evaluationCheckInputCoverage == "no coverage":
-                # if the coverage is not satisfied the process has to start from the beginning
-                segregationPlotController.set_evaluation_check_data_balance("checking")
-                segregationPlotController.set_evaluation_check_input_coverage("checking")
-                evaluationCheckDataBalance = "checking"
-                evaluationCheckInputCoverage = "checking"
+            if self.service_flag is True or evaluation_check_data_balance != "ok":
+                # loop until I receive enough prepared session
+                print("Receiving data...")
 
-        if serviceFlag is True or evaluationCheckDataBalance != "ok":
-            # loop until I receive enough prepared session
-            print("Receiving data...")
-            # storageController.remove_all()
+                while self.storage_controller.count() < self.limit_prepared_session:
+                    # the storage controller will retrive the data from the messageBus and will store into the db
+                    pass
 
-            while storageController.count() < limitPreparedSession:
-                pass
-                # the storage controller will retrive the data from the messageBus and will store into the db
+                print("Data correctly stored")
 
-            print("Data correctly stored")
+                # plot the graph
+                self.segregation_plot_controller.plot_data_balance()
+                print("Check data balance correctly plotted")
 
-            # plot the graph
-            segregationPlotController.plotDataBalance()
-            print("Check data balance correctly plotted")
+                if self.service_flag is False:
+                    break
+                else:  # simulate the decision of the human
+                    evaluationDataBalanceCheck = self.segregation_plot_controller.get_simulated_check_data_balance()
+                    if evaluationDataBalanceCheck == "not performed":  # the test will not pass with a probability of 90%
+                        # "data not balanced"
+                        continue
 
-            if serviceFlag is False:
-                break
-            else:  # simulate the decision of the human
-                evaluationDataBalanceCheck = segregationPlotController.getSimulatedCheckDataBalance()
-                if evaluationDataBalanceCheck == "not performed":  # the test will not pass with a probability of 90%
-                    # "data not balanced"
-                    continue
+            if self.service_flag is True or (
+                    evaluation_check_data_balance == "ok" and evaluation_check_input_coverage != "ok"):
+                # here the human have checked that the data are correctly balanced
 
-        if serviceFlag is True or (evaluationCheckDataBalance == "ok" and evaluationCheckInputCoverage != "ok"):
-            # here the human have checked that the data are correctly balanced
+                # plot the checkInputCoverage graph
+                self.segregation_plot_controller.plot_check_input_coverage()
+                print("Check input coverage correctly plotted")
 
-            # plot the checkInputCoverage graph
-            segregationPlotController.plotCheckInputCoverage()
-            print("Check input coverage correctly plotted")
+                # let's check input coverage
+                if self.service_flag is False:
+                    break
+                else:
+                    evaluationCheckinputCoverage = self.segregation_plot_controller.get_simulated_check_input_coverage()
+                    # "input not covered"
+                    if evaluationCheckinputCoverage == "no":
+                        continue
 
-            # let's check input coverage
-            if serviceFlag is False:
-                break
-            else:
-                evaluationCheckinputCoverage = segregationPlotController.getSimulatedCheckInputCoverage()
-                # "input not covered"
-                if evaluationCheckinputCoverage == "no":
-                    continue
+            if self.service_flag is True or (
+                    evaluation_check_data_balance == "ok" and evaluation_check_input_coverage == "ok"):
+                # storageController.normalizeData()
 
-        if serviceFlag is True or (evaluationCheckDataBalance == "ok" and evaluationCheckInputCoverage == "ok"):
-            # TODO i have to normalize data?
-            # storageController.normalizeData()
+                # here the human have checked that the data are correctly balanced
+                # generate the learningSet
 
-            # here the human have checked that the data are correctly balanced
-            # generate the learningSet
-            learningSetGenerator = LearningSetGenerator(configParameter.getPercentageTrainingSplit(),
-                                                        configParameter.getPercentageTestSplit(),
-                                                        configParameter.getPercentageValidationSplit(),
-                                                        storageController)
-            learningSetGenerator.generateLearningSet()
-            print("Learning set generated")
+                learning_set_generator = LearningSetGenerator(self.config_parameter.get_percentage_training_split(),
+                                                              self.config_parameter.get_percentage_test_split(),
+                                                              self.config_parameter.get_percentage_validation_split(),
+                                                              self.storage_controller)
+                learning_set_generator.generate_learning_set()
+                print("Learning set generated")
 
+                sender = SegregationSystemSender(learning_set_generator)
 
-            sender = SegregationSystemSender(learningSetGenerator)
+                sender.send_to_development()
 
-            sender.send_to_development()
-            c=1
-            #storageController.remove_all()  # remove the sessions
+                self.storage_controller.remove_all()  # remove the sessions
 
-            # reset the evaluation in report files
-            segregationPlotController.set_evaluation_check_data_balance("checking")
-            segregationPlotController.set_evaluation_check_input_coverage("checking")
-
-            # FIXME just for debug
-            x = input('Do you want to continue: [Yes|No]')
-            if "No" in x:
-                break
+                # reset the evaluation in report files
+                self.segregation_plot_controller.set_evaluation_check_data_balance("checking")
+                self.segregation_plot_controller.set_evaluation_check_input_coverage("checking")
 
 
 if __name__ == "__main__":
-    run()
+    segregation_system_orchestrator = SegregationSystemOrchestrator()
+    segregation_system_orchestrator.run()

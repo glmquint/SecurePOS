@@ -7,13 +7,14 @@ class CheckInputCoverageModel:
         self.__storageController = storageController
         self.__preparedSessionList = None
 
-    def retrievePreparedSession(self):
-        self.__preparedSessionList = self.dataNormalized(self.__storageController.retrieve_all(False))
+    def retrieve_prepared_session(self):
+        self.__preparedSessionList = self.data_normalized(self.__storageController.retrieve_all(False))
 
-    def getPreparedSessionList(self):
+    def get_prepared_session_list(self):
         return self.__preparedSessionList
 
-    def dataNormalized(self, preparedSessions):
+    @staticmethod
+    def data_normalized(preparedSessions):
         tmp = []
         for p in preparedSessions:
             tmp.append(p.returnArray()[:len(p.returnArray()) - 1])
