@@ -13,6 +13,7 @@ DATAOBJ_PATH = "../DataObjects/Schema"
 
 
 class PreparationSysReceiver:
+    @log
     def __init__(self, config:dict, raw_session_topic:str, storage_controller:StorageController, message_bus:MessageBus):
         self.raw_session_topic  = raw_session_topic
         self.storage_controller = storage_controller

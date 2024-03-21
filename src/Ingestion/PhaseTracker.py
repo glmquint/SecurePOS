@@ -1,4 +1,8 @@
+from src.util import log
+
+
 class PhaseTracker:
+    @log
     def __init__(self, config):
         self.config = config
         self.count = 0

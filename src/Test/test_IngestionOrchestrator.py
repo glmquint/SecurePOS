@@ -13,6 +13,7 @@ from src.Ingestion.IngestionOrchestrator import PreparationSystemOrchestrator
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
+from src.util import PerformanceSample
 
 DATAOBJ_PATH = "../DataObjects/Schema"
 
@@ -55,7 +56,7 @@ class TestPreparationSystemOrchestrator:
             url = val['url'].split('/')[-1]
             print(f"Sending to {url}")
             objtype = {'segregationSystem': PreparedSession, 'production_system': PreparedSession,
-                       'label': Label}.get(url, None)
+                       'label': Label, 'monitoring':PerformanceSample}.get(url, None)
             objsent = objtype(
                 mean_abs_diff_transaction = 123,
                 mean_abs_diff_transaction_amount = 123,
@@ -63,7 +64,10 @@ class TestPreparationSystemOrchestrator:
                 median_latitude =  123,
                 median_target_ip =  123,
                 median_dest_ip =  123,
-                label =  "High").to_json()
+                label =  "High",
+                timestamp=123,
+                function_name='test_function_name',
+                class_name='test_class_name').to_json()
             r = requests.post(f"http://127.0.0.1:{TEST_PORT}/{url}", json=objsent)
             assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
             assert message_bus.popTopic(url) == objsent, "raw_session not received"
@@ -87,19 +91,22 @@ class TestPreparationSystemOrchestrator:
         c:dict = config.prepared_session_creator
         c.update({'label_receiver': config.raw_session_creator['label_receiver']})
         listener_setup(c, message_bus)
+        print("listener setup completed")
 
         # ok, now let's start our system orchestrator
         orchestrator = PreparationSystemOrchestrator(config)
         print(f"storage controller count = {orchestrator.storage_controller.count()}")
         orchestrator.storage_controller.remove_all()
-        assert orchestrator.storage_controller.count() == 0
+        assert orchestrator.storage_controller.count() == 0, "should have flushed the db"
         Thread(target=orchestrator.run, daemon=True).start()
 
         sufficient_records = config.raw_session_creator['number_of_systems']
         num_of_runs = 1
         for j in range(num_of_runs):
+            print(f"num_of_runs = {j}")
             uuid = str(uuid1())
             for i in range(sufficient_records): # simulate client-side systems
+                print(f"simulating record {i}")
                 url = "record"
                 record = [ LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord, Label][i](**{
                     "uuid":uuid,

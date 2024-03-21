@@ -12,6 +12,7 @@ from src.util import log
 DATAOBJ_PATH = "../DataObjects/Schema"
 
 class PreparedSessionCreator:
+    @log
     def __init__(self, config , message_bus:MessageBus, raw_session_topic:str, phase_tracker:PhaseTracker) -> None:
         self.config                                         = config
         self.message_bus               : MessageBus         = message_bus
@@ -25,6 +26,8 @@ class PreparedSessionCreator:
     def run(self) -> None:
         while True:
             self.raw_session : RawSession = self.message_bus.popTopic(self.raw_session_topic)
+            if len(self.raw_session.records) == 0:
+                continue
             self.correctMissingSamples()
             self.detectAndCorrectAbsoluteOutliers()
             self.extractFeatures()

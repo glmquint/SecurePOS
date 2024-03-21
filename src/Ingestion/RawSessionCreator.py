@@ -10,6 +10,7 @@ DATAOBJ_PATH = "../DataObjects/Schema"
 
 class RawSessionCreator:
 
+    @log
     def __init__(self, config, storage_controller:StorageController, phase_tracker:PhaseTracker) -> None:
         self.label              = None
         self.number_of_systems  = config['number_of_systems']
@@ -18,9 +19,11 @@ class RawSessionCreator:
         self.storage_controller = storage_controller
         self.phase_tracker      = phase_tracker
 
+    @log
     def retrieveRecords(self) -> [RecordOld]:
         pass
 
+    @log
     def isNumberOfRecordsSufficient(self) -> bool:
         uuid_with_max_count = self.storage_controller.executeQuery("select uuid, count(distinct(objtype)) as different_systems from record group by uuid order by different_systems desc limit 1;")
         if len(uuid_with_max_count) == 0:
@@ -28,10 +31,12 @@ class RawSessionCreator:
         self.max_uuid = uuid_with_max_count[0][0]
         return uuid_with_max_count[0][1] >= self.number_of_systems
 
+    @log
     def createRawSession(self) -> None:
         rows_with_max_count = self.storage_controller.retrieve_by_column('uuid', self.max_uuid)
         self.raw_session = RawSession(records = [Record.from_row(**x) for x in rows_with_max_count])
 
+    @log
     def markMissingSamples(self) -> None:
         if self.raw_session is None:
             return
@@ -39,6 +44,7 @@ class RawSessionCreator:
         for record in self.raw_session.records:
             self.missing_samples.update(record.getMissingSamples())
 
+    @log
     def isRawSessionValid(self) -> bool:
         if self.phase_tracker.isEvalPhase() and self.label is None:
             return False

@@ -6,9 +6,11 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 
 from src.JsonIO.JSONEndpoint import JSONEndpoint
+from src.util import log
 
 
 class Server:
+    @log
     def __init__(self, timeout=None):
         self.app = Flask(__name__)
         self.api = Api(self.app)
@@ -17,6 +19,7 @@ class Server:
     def run(self, debug=False, port=5002):
         self.app.run(debug=debug, use_reloader=False, port=port, host='0.0.0.0') # don't use reloader in threaded environment
 
+    @log
     def add_resource(self, resource, url, **kwargs):
         self.api.add_resource(resource, url, endpoint=url, resource_class_kwargs=kwargs)
 

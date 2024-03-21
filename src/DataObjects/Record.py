@@ -2,6 +2,14 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 
+'''
+CREATE TABLE record (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    uuid TEXT,
+    objtype TEXT,
+    data TEXT
+);
+'''
 
 class Record:
     def __init__(self, **kwargs):

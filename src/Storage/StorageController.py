@@ -8,6 +8,7 @@ class StorageController:
     DBConnector = None
     type = None
 
+    @log
     def __init__(self, dbConfig, type):
         self.type = type
         self.DBConnector = DBConnector(name = dbConfig['name'], table_name = dbConfig['table_name'])
@@ -60,6 +61,7 @@ class StorageController:
         return True
 
     def executeQuery(self, param):
+        self.wait_count_updated()
         cursor = self.DBConnector.connection.cursor()
         cursor.execute(param)
         return cursor.fetchall()
