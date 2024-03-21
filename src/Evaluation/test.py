@@ -35,14 +35,29 @@ for x in range(50):
     uid=str(uuid.uuid4())
     #sender.send(Label(label=st,uuid = uid))
     a.append(Label(label=st,uuid=uid))
+    #b.append(Label(label=st, uuid=uid))
     if randint(0,1000) < 10:
+        #pass
         print(uid)
         uid = str(uuid.uuid4())
         print(uid)
         ran = True
     b.append(Label(label=st2,uuid=uid))
-sorted(a, key=lambda x: randint(0,50))
-sorted(b, key=lambda x: randint(0,50))
+print([(x.uuid,x.label) for x in a])
+print([(x.uuid,x.label) for x in b])
+for i in range(50):
+    j = randint(0, 49)
+    k = randint(0, 49)
+    elem = a.pop(j)
+    element = b.pop(k)
+    a.append(elem)
+    b.append(element)
+print([(x.uuid,x.label) for x in a])
+print([(x.uuid,x.label) for x in b])
+#a.sort(key= lambda x:x.uuid)
+#b.sort(key= lambda x:x.uuid)
+#print([(x.uuid, x.label) for x in a])
+#print([(x.uuid, x.label) for x in b])
 inva = 50
 invb = 50
 for x in range(100):
@@ -78,7 +93,7 @@ for x in range(100):
 #sender.send(Label(label="bau",uuid="ci"))
 #sender2.send(Label(label="bau",uuid="cip"))
 if ran:
-    print("random!")
+    print("Different UUID sended!")
 exit()
 sender2.send({"attackRiskLabel": "moderate"})
 sender.send({"attackRiskLabel": "normal"})
