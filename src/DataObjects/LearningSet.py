@@ -4,14 +4,15 @@ import pandas as pd
 
 
 class LearningSet:
-    trainingSet = None
-    validationSet = None
-    testSet = None
-    trainingSetLabel = None
-    validationSetLabel = None
-    testSetLabel = None
+    trainingSet        : pd.DataFrame   = None
+    validationSet      : pd.DataFrame   = None
+    testSet            : pd.DataFrame   = None
+    trainingSetLabel   : [str]          = None
+    validationSetLabel : [str]          = None
+    testSetLabel       : [str]          = None
 
-    def __init__(self, dic, fromJson: False):
+    # maybe make a separated builder for json
+    def __init__(self, dic, fromJson = False):
         if fromJson:
             self.learningSetfromJson(dic)
             return
