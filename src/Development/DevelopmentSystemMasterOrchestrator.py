@@ -21,7 +21,7 @@ class DevelopmentSystemMasterOrchestrator:
     report_controller: ReportController = None
     status: DevelopmentSystemStatus = None
 
-    def __init__(self, simulate_humane_task: bool):
+    def __init__(self):
         self.status = DevelopmentSystemStatus("development_system_status.json", "schema/status_schema.json")
         self.status.load_status()
         self.development_system_configurations = DevelopmentSystemConfigurations('schema/config_schema.json')
@@ -62,6 +62,6 @@ class DevelopmentSystemMasterOrchestrator:
                 raise Exception("Invalid status")
 
 
-dsmo = DevelopmentSystemMasterOrchestrator(False)
+dsmo = DevelopmentSystemMasterOrchestrator()
 print("Starting Development System Master Orchestrator...")
 dsmo.start()
