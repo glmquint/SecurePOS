@@ -19,15 +19,27 @@ class RawSession(Session):
         return {"records": [Record.to_json(record) for record in self.records]}
 
 class PreparedSession(Session):
+    '''
+    CREATE TABLE PreparedSessions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        mean_abs_diff_transaction REAL,
+        mean_abs_diff_transaction_amount REAL,
+        median_longitude REAL,
+        median_latitude REAL,
+        median_target_ip INTEGER,
+        median_dest_ip INTEGER,
+        label TEXT
+    )
+    '''
 
-    def __init__(self, params):
-        self.mean_abs_diff_transaction         : int    = params.get("mean_abs_diff_transaction", None)
-        self.mean_abs_diff_transaction_amount  : int    = params.get("mean_abs_diff_transaction_amount", None)
-        self.median_longitude                  : float  = params.get("median_longitude", None)
-        self.median_latitude                   : float  = params.get("median_latitude", None)
-        self.median_target_ip                  : int    = params.get("median_target_ip", None)
-        self.median_dest_ip                    : int    = params.get("median_dest_ip", None)
-        self.label                             : str    = params.get("attack_risk_label", None)
+    def __init__(self, **kwargs):
+        self.mean_abs_diff_transaction         : int    = kwargs.get("mean_abs_diff_transaction", None)
+        self.mean_abs_diff_transaction_amount  : int    = kwargs.get("mean_abs_diff_transaction_amount", None)
+        self.median_longitude                  : float  = kwargs.get("median_longitude", None)
+        self.median_latitude                   : float  = kwargs.get("median_latitude", None)
+        self.median_target_ip                  : int    = kwargs.get("median_target_ip", None)
+        self.median_dest_ip                    : int    = kwargs.get("median_dest_ip", None)
+        self.label                             : str    = kwargs.get("label", None)
 
     def to_json(self):
         return {'mean_abs_diff_transaction': self.mean_abs_diff_transaction,
@@ -41,7 +53,7 @@ class PreparedSession(Session):
         return [self.mean_abs_diff_transaction,
                 self.mean_abs_diff_transaction_amount,
                 self.median_longitude, self.median_latitude, self.median_target_ip, self.median_dest_ip,
-                self.label]
+                self.label] # app logic heavily depends on label being last
 
     def getMeanAbsoluteDifferencingTransactionTimestamps(self):
         return self.mean_abs_diff_transaction
@@ -69,4 +81,4 @@ class PreparedSession(Session):
 
     @staticmethod
     def from_row(x):
-        return PreparedSession(x)
+        return PreparedSession(**x)
