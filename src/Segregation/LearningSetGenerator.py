@@ -30,7 +30,7 @@ class LearningSetGenerator:
         testSet = preparedSessionArray[trainingSetCardinality + testSetCardinality:]
 
         # prepare the dictionaries to be converted into dataframes
-        cols = trainingSet[0].to_json().keys()
+        cols = trainingSet[0].to_json().keys() - {'uuid'}
         trainingSetArray = dict(zip(cols, [0] * len(cols)))
         validationSetArray = dict(zip(cols, [0] * len(cols)))
         testSetArray = dict(zip(cols, [0] * len(cols)))

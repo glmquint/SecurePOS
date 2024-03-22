@@ -21,8 +21,6 @@ def recive():  # FIXME just for debug
          'label': random_num
          }
 
-    # d = ["ciao": random(), random(), random(), random(), random(), random(), random_num]
-
     p = PreparedSession(**d)
     return p
 

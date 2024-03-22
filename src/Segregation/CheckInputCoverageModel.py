@@ -15,7 +15,7 @@ class CheckInputCoverageModel:
 
     @staticmethod
     def data_normalized(preparedSessions : [PreparedSession]) -> pd.DataFrame:
-        columns = preparedSessions[0].to_json().keys() - {'label'}
+        columns = preparedSessions[0].to_json().keys() - {'label', 'uuid'}
         values = {attr: [ps.__dict__.get(attr, None) for ps in preparedSessions] for attr in columns}
 
         dataframe_data = pd.DataFrame(values)
