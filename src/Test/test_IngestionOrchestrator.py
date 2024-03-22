@@ -39,7 +39,7 @@ def listener_setup(prepared_session_creator, message_bus=None):
                 if message_bus:
                     message_bus.pushTopic(url, json_data)
             return callback
-        schema = {'segregationSystem':'PreparedSessionSchema', 'production_system':'PreparedSessionSchema', 'label': 'RecordSchema'}.get(url, None)
+        schema = {'segregationSystem':'PreparedSessionSchema', 'PreparedSession':'PreparedSessionSchema', 'label': 'RecordSchema'}.get(url, None)
         server.add_resource(JSONEndpoint, f"/{url}", recv_callback=builder(url), json_schema_path=f"../DataObjects/Schema/{schema}.json")
     Thread(target=server.run, daemon=True, kwargs={'debug':True, 'port':TEST_PORT}).start()
 
@@ -54,7 +54,7 @@ class TestPreparationSystemOrchestrator:
         for endpoint, val in c.items():
             url = val['url'].split('/')[-1]
             print(f"Sending to {url}")
-            objtype = {'segregation_system': PreparedSession, 'production_system': PreparedSession,
+            objtype = {'segregation_system': PreparedSession, 'PreparedSession': PreparedSession,
                        'label': Label}.get(url, None)
             objsent = objtype().to_json()
             r = requests.post(f"http://127.0.0.1:{TEST_PORT}/{url}", json=objsent)
@@ -107,9 +107,9 @@ class TestPreparationSystemOrchestrator:
                 assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
         #for i in range(num_of_runs):
             if local_test:
-                result = message_bus.popTopic("segregation_system")
+                result = message_bus.popTopic("segregationSystem")
                 assert result is not None, "raw_session not received"
-                assert len(message_bus.messageQueues['segregation_system'].queue) == 0, "still something in queue"
+                assert len(message_bus.messageQueues['segregationSystem'].queue) == 0, "still something in queue"
 
 if __name__ == '__main__':
     TestPreparationSystemOrchestrator().test_run()

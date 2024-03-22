@@ -16,7 +16,7 @@ class PreparationSystemOrchestrator:
         self.config = config
         self.storage_controller = StorageController(
             dbConfig           = self.config.db,
-            type               = Record
+            obj_type           = Record
         )
         self.message_bus = MessageBus(
             topics             = [self.config.raw_session_topic]
