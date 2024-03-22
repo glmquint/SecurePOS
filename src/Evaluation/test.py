@@ -9,12 +9,22 @@ from src.JsonIO.Server import Server
 
 
 #var = Label(label="high",uuid="bau")
-sender2 = JSONSender("../DataObjects/Schema/Label.json", "http://127.0.0.1:5002/security_expert_endpoint")
-sender = JSONSender("../DataObjects/Schema/Label.json", "http://127.0.0.1:5002/label_endpoint")
+sender2 = JSONSender("../DataObjects/Schema/Label.json", "http://127.0.0.1:5002/evaluation_security_label")
+sender = JSONSender("../DataObjects/Schema/Label.json", "http://127.0.0.1:5002/evaluation_label")
 #sender.send(Label(label="high"))
 #sender.send(var.to_json())
 a=[]
 b=[]
+uid = str(uuid.uuid4())
+sender2.send(Label(label="High",uuid=uid))
+sender.send(Label(label ="Moderate",uuid=uid))
+uid = str(uuid.uuid4())
+sender2.send(Label(label="Low",uuid=uid))
+sender.send(Label(label="Low",uuid=uid))
+uid = str(uuid.uuid4())
+sender.send(Label(label="High",uuid=uid))
+sender2.send(Label(label="High",uuid=uid))
+exit()
 ran = False
 for x in range(50):
     y = randint(1,3)

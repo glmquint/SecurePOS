@@ -22,9 +22,9 @@ class LabelReceiver:
         return
 
     def receive(self):
-        self.server.add_resource(JSONEndpoint, "/label_endpoint", recv_callback=self.callback_f,
+        self.server.add_resource(JSONEndpoint, "/evaluation_label", recv_callback=self.callback_f,
                                  json_schema_path="../DataObjects/Schema/Label.json")
-        self.server.add_resource(JSONEndpoint, "/security_expert_endpoint", recv_callback=self.callback_s,
+        self.server.add_resource(JSONEndpoint, "/evaluation_security_label", recv_callback=self.callback_s,
                                  json_schema_path="../DataObjects/Schema/Label.json")
         thread = Thread(target=self.server.run)
         thread.daemon = True
@@ -34,14 +34,21 @@ class LabelReceiver:
         #print(f"Received from security {json_data}")
         #???
         data = Label(**json_data)
+        print("sec")
+        print(data.uuid)
+        print(data.label)
         #self.scontroller_security.save(Label(label=json_data["label"],uuid=json_data["uuid"]))
         self.scontroller_security.save(data)
         self.mbus.pushTopic("sec_label", data)
 
+
     def callback_f(self, json_data):
         #print(f"Received {json_data}")
         #???
+        print("lab")
         data = Label(**json_data)
+        print(data.uuid)
+        print(data.label)
         self.scontroller_label.save(data)
         self.mbus.pushTopic("label", data)
 
