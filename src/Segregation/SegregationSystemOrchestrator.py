@@ -32,7 +32,7 @@ class SegregationSystemOrchestrator:
         self.sender = SegregationSystemSender(self.learning_set_generator)
 
     def run(self):
-
+        self.storage_controller.remove_all()
         # the server starts to run
         self.preparedSessionReceiver.run()
 
