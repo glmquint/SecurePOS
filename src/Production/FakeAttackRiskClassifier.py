@@ -37,5 +37,5 @@ class FakeAttackRiskClassifier:
         attack_risk_label = self.attackRiskClassifier.predict([prepared_session_features])[0]
         print(f"Attack risk label: {attack_risk_label}")
         # TODO: add uuid to PreparedSession
-        return Label(label=attack_risk_label, uuid= str(uuid1()))
+        return Label(label=attack_risk_label, uuid=self.preparedSession.uuid)
 

@@ -120,8 +120,8 @@ class IntegrationTest(TestCase):
         with open('AverageClassifier.sav', 'rb') as f:
             req = requests.post("http://127.0.0.1:5003/Classifier", files={"uploaded": f})
             assert req.status_code == 200, f'Expected 200, got {req}'
-        for i in range(0, 5):
+        for i in range(0, 10):
             req = requests.post("http://127.0.0.1:5003/PreparedSession", json=preparedSession.to_json())  # correct key
             assert req.status_code == 200
 
-        sleep(10)
+        input("Press Enter to continue...")
