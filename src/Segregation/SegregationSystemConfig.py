@@ -9,6 +9,7 @@ class SegregationSystemConfig:
 
         self.__sufficient_session_number = jsonParameter.get("sufficientSessionNumber")
         self.__segregation_system_port = jsonParameter.get("segregationSystemPort")
+        self.__segregation_system_endpoint = jsonParameter.get("segregationSystemEndpoint")
         self.__developmentSystemIp = jsonParameter.get("developmentSystemIp")
         self.__development_system_port = jsonParameter.get("developmentSystemPort")
         self.__development_system_endpoint = jsonParameter.get("developmentSystemEndpoint")
@@ -47,4 +48,7 @@ class SegregationSystemConfig:
 
     def get_development_system_endpoint(self):
         return self.__development_system_endpoint
+
+    def get_segregation_system_endpoint(self):
+        return self.__segregation_system_endpoint
 

@@ -1,11 +1,10 @@
-from LearningSetGenerator import *
-from SegregationPlotController import SegregationPlotController
+from src.Segregation.LearningSetGenerator import LearningSetGenerator
+from src.Segregation.SegregationPlotController import SegregationPlotController
 from src.Segregation.SegregationSystemReceiver import PreparedSessionReceiver
 from src.Segregation.SegregationSystemConfig import SegregationSystemConfig
 from src.Segregation.SegregationSystemSender import SegregationSystemSender
 from src.Storage.StorageController import StorageController
 from src.DataObjects.Session import PreparedSession
-
 
 class SegregationSystemOrchestrator:
 
@@ -22,12 +21,14 @@ class SegregationSystemOrchestrator:
         self.segregation_plot_controller = SegregationPlotController(self.storage_controller,
                                                                      self.config_parameter.get_tolerance_data_balancing())
         # instantiate and run receiver
-        self.preparedSessionReceiver = PreparedSessionReceiver(self.storage_controller)
+        self.preparedSessionReceiver = PreparedSessionReceiver(self.storage_controller,
+                                                               self.config_parameter.get_segregation_system_port(),
+                                                               self.config_parameter.get_segregation_system_endpoint())
 
         self.learning_set_generator = LearningSetGenerator(self.config_parameter.get_percentage_training_split(),
-                                                      self.config_parameter.get_percentage_test_split(),
-                                                      self.config_parameter.get_percentage_validation_split(),
-                                                      self.storage_controller)
+                                                           self.config_parameter.get_percentage_test_split(),
+                                                           self.config_parameter.get_percentage_validation_split(),
+                                                           self.storage_controller)
 
         self.sender = SegregationSystemSender(self.learning_set_generator)
 
@@ -102,6 +103,7 @@ class SegregationSystemOrchestrator:
 
                 self.sender.send_to_development()
 
+                break
                 self.storage_controller.remove_all()  # remove the sessions
 
                 # reset the evaluation in report files

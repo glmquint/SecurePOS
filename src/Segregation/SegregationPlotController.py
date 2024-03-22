@@ -1,7 +1,5 @@
-from CheckInputCoverageModel import *
-from CheckInputCoverageView import *
-from CheckDataBalancingModel import *
-from CheckDataBalancingView import *
+from src.Segregation.CheckInputCoverageView import *
+from src.Segregation.CheckDataBalancingView import *
 
 
 class SegregationPlotController:

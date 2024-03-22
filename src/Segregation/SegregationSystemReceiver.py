@@ -6,18 +6,19 @@ from src.Storage.StorageController import StorageController
 
 
 class PreparedSessionReceiver:
-    def __init__(self,storage_controller):
+    def __init__(self, storage_controller, port,endpoint):
         self.__server = Server()
-        self.__storage_controller : StorageController = storage_controller
+        self.__storage_controller: StorageController = storage_controller
+        self.__port = port
+        self.__endpoint = endpoint
         pass
 
-   # def run(self,port: int):
+    # def run(self,port: int):
     def run(self):
-
-        self.__server.add_resource(JSONEndpoint, "/segregationSystem", recv_callback=self.callaback_prepared_session,
+        self.__server.add_resource(JSONEndpoint, "/"+str(self.__endpoint), recv_callback=self.callaback_prepared_session,
                                    json_schema_path="../DataObjects/Schema/PreparedSessionSchema.json")
-        #thread = Thread(target=self.__server.run,args=(port,))
-        thread = Thread(target=self.__server.run)
+        # thread = Thread(target=self.__server.run,args=(port,))
+        thread = Thread(target=self.__server.run,kwargs={'port': self.__port})
         # this will allow the main thread to exit even if the server is still running
         thread.daemon = True
         thread.start()
@@ -26,6 +27,7 @@ class PreparedSessionReceiver:
     def callaback_prepared_session(self, json_data):
         self.__storage_controller.save(PreparedSession(**json_data))
         pass
+
 
 '''
 class PreparedSessionReceiver:
@@ -47,5 +49,6 @@ class PreparedSessionReceiver:
     def callaback_prepared_session(self, json_data):
         self.__storage_controller.save(PreparedSession(**json_data))
         pass
+
 
 '''
