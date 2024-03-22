@@ -21,5 +21,5 @@ class PreparedSessionReceiver:
         pass
 
     def callaback_prepared_session(self, json_data):
-        self.__storage_controller.save(PreparedSession(json_data))
+        self.__storage_controller.save(PreparedSession(**json_data))
         pass
