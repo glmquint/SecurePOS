@@ -13,6 +13,7 @@ from src.Development.Training.Scoreboard import Scoreboard
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
 from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
+from src.util import log
 
 
 class TrainProcess:
@@ -123,6 +124,7 @@ class TrainProcess:
             neurons.append(i)
         self.grid_search = list(itertools.product(layers, neurons))
 
+    @log
     def select_best_classifier(self):
         best_models = []
         error_difference = []
@@ -142,7 +144,7 @@ class TrainProcess:
         if len(best_models) == 0:  # none of the classifiers are valid
             self.status.best_classifier_name = "Invalid"
             self.status.best_validation_error = -1.0
-            return
+            return  # no valid classifier found, skip saving the model
         elif len(best_models) == 1:
             self.classifier = best_models[0]
             self.status.best_validation_error = self.grid_space.validation_error[0]
