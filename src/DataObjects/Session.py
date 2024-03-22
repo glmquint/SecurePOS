@@ -33,6 +33,7 @@ class PreparedSession(Session):
     '''
 
     def __init__(self, **kwargs):
+        self.uuid                              : str    = kwargs.get("uuid", None)
         self.mean_abs_diff_transaction         : int    = kwargs.get("mean_abs_diff_transaction", None)
         self.mean_abs_diff_transaction_amount  : int    = kwargs.get("mean_abs_diff_transaction_amount", None)
         self.median_longitude                  : float  = kwargs.get("median_longitude", None)
@@ -42,7 +43,8 @@ class PreparedSession(Session):
         self.label                             : str    = kwargs.get("label", None)
 
     def to_json(self):
-        return {'mean_abs_diff_transaction': self.mean_abs_diff_transaction,
+        return {'uuid': self.uuid,
+                'mean_abs_diff_transaction': self.mean_abs_diff_transaction,
                 'mean_abs_diff_transaction_amount': self.mean_abs_diff_transaction_amount,
                 'median_longitude' : self.median_longitude,
                 'median_latitude' : self.median_latitude,
@@ -50,10 +52,14 @@ class PreparedSession(Session):
                 'median_dest_ip': self.median_dest_ip,
                 'label': self.label}
     def returnArray(self):
-        return [self.mean_abs_diff_transaction,
+        return [self.uuid,
+                self.mean_abs_diff_transaction,
                 self.mean_abs_diff_transaction_amount,
                 self.median_longitude, self.median_latitude, self.median_target_ip, self.median_dest_ip,
                 self.label] # app logic heavily depends on label being last
+
+    def getUuid(self):
+        return self.uuid
 
     def getMeanAbsoluteDifferencingTransactionTimestamps(self):
         return self.mean_abs_diff_transaction

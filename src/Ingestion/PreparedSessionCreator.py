@@ -63,7 +63,8 @@ class PreparedSessionCreator:
         median_dest_ip = statistics.median(dest_ips)
         labels = [record.label for record in self.raw_session.records if type(record) is Label]
         label = labels[-1] if len(labels) > 0 else None
-        self.prepared_session = PreparedSession(mean_abs_diff_transaction=mean_abs_diff_transaction,
+        self.prepared_session = PreparedSession(uuid=self.raw_session.records[0].uuid, # all records have the same uuid
+                                               mean_abs_diff_transaction=mean_abs_diff_transaction,
                                                mean_abs_diff_transaction_amount= mean_abs_diff_transaction_amount,
                                                median_longitude=median_longitude,
                                                median_latitude=median_latitude,
