@@ -12,6 +12,7 @@ class ProductionSystemConfig:
                 self.config = json.load(file)
                 jsonValidator = JSONValidator(path_to_schema)
                 jsonValidator.validate_data(self.config)
+                self.server_port = self.config['server_port']
                 self.monitoring_window = self.config['monitoring_window']
                 self.evaluation_window = self.config['evaluation_window']
                 self.client_url = self.config['client_url']

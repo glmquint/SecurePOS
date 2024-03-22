@@ -16,7 +16,7 @@ class ProductionSystemOrchestrator:
         self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
                                                          self.productionConfig.evaluation_window)
         self.systemBus = MessageBus(["PreparedSession", "Classifier"])
-        self.prodSysRec = ProductionSystemReceiver(self.systemBus)
+        self.prodSysRec = ProductionSystemReceiver(self.productionConfig.server_port, self.systemBus)
         self.sender = ProductionSystemSender()
     def main(self):
         thread = Thread(target=self.prodSysRec.run)
