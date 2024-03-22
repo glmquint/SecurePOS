@@ -46,7 +46,8 @@ class TrainProcess:
             self.avg_hyperparameters[key] = (self.configurations.hyperparameters.__dict__[key]['min'] +
                                              self.configurations.hyperparameters.__dict__[key]['max']) // 2
         self.status.average_hyperparameters = self.avg_hyperparameters
-        print(f'[{self.__class__.__name__}]: average number of neurons: {self.avg_hyperparameters["number_of_neurons"]}')
+        print(
+            f'[{self.__class__.__name__}]: average number of neurons: {self.avg_hyperparameters["number_of_neurons"]}')
         print(f'[{self.__class__.__name__}]: average number of layers: {self.avg_hyperparameters["number_of_layers"]}')
 
     def receive_learning_set(self):
@@ -84,7 +85,8 @@ class TrainProcess:
             self.classifier = Classifier(self.current_hyperparameter[0],
                                          self.current_hyperparameter[1], self.status.number_of_iterations,
                                          f'Classifier {current_iteration}')
-        self.classifier.model.fit(self.status.learning_set.trainingSet, pd.Series(self.status.learning_set.trainingSetLabel))
+        self.classifier.model.fit(self.status.learning_set.trainingSet,
+                                  pd.Series(self.status.learning_set.trainingSetLabel))
         if not self.status.should_validate:
             # self.classifier.save_model('classifiers')
             loss_curve = self.classifier.get_loss_curve()
@@ -96,12 +98,12 @@ class TrainProcess:
     def validate(self):
         print(f'[{self.__class__.__name__}]: validating classifier')
         self.classifier.number_of_iterations = len(self.classifier.get_loss_curve()) + 1
-        y_train_pred = self.classifier.model.predict(self.learning_set.trainingSet)
-        y_val_predicted = self.classifier.model.predict(self.learning_set.validationSet)
+        y_train_pred = self.classifier.model.predict(self.status.learning_set.trainingSet)
+        y_val_predicted = self.classifier.model.predict(self.status.learning_set.validationSet)
         # TODO: maybe change to minimum
         mse = self.classifier.model.best_loss_
-        train_error = 1.0 - accuracy_score(self.learning_set.trainingSetLabel, y_train_pred)
-        val_error = 1.0 - accuracy_score(self.learning_set.validationSetLabel, y_val_predicted)
+        train_error = 1.0 - accuracy_score(self.status.learning_set.trainingSetLabel, y_train_pred)
+        val_error = 1.0 - accuracy_score(self.status.learning_set.validationSetLabel, y_val_predicted)
         self.grid_space.insert_classifier(self.classifier, mse, train_error, val_error)
 
     def set_next_hyperparamter(self, next_hyperparam: tuple):
@@ -128,7 +130,7 @@ class TrainProcess:
         number_of_layers = []
         limit = 2
         for i in range(len(self.grid_space.classifiers)):
-            current_difference = self.grid_space.validation_error[i] - self.grid_space.train_error[i]
+            current_difference = abs(self.grid_space.validation_error[i] - self.grid_space.train_error[i])
             if current_difference < self.configurations.overfitting_tolerance:
                 best_models.append(self.grid_space.classifiers[i])
                 error_difference.append(current_difference)
@@ -136,11 +138,16 @@ class TrainProcess:
                 number_of_layers.append(self.grid_space.classifiers[i].number_of_layers)
                 if len(best_models) == limit:
                     break
-        # check if one of the error difference is 0 and select that in case
-        if 0 in error_difference:
+
+        if len(best_models) == 0:  # none of the classifiers are valid
+            self.status.best_classifier_name = "Invalid"
+            self.status.best_validation_error = -1.0
+            return
+        if 0 in error_difference:  # check if one of the error difference is 0 and select that in case
             self.classifier = best_models[error_difference.index(0)]
             self.status.best_validation_error = self.grid_space.validation_error[error_difference.index(0)]
-        elif int(math.floor(math.log10(error_difference[0]))) - int(math.floor(math.log10(error_difference[1]))) <= 1: # if there is no significant difference (one order of magnitude) between the two best models
+        elif int(math.floor(math.log10(abs(error_difference[0])))) - int(math.floor(abs(math.log10(error_difference[
+                                                                                                       1])))) <= 1:  # if there is no significant difference (one order of magnitude) between the two best models
             complexity = []
             for i in range(len(best_models)):
                 complexity.append(number_of_layers[i] * number_of_neurons[i])
@@ -180,5 +187,3 @@ class TrainProcess:
             file_path = os.path.join(path, file_name)
             if os.path.isfile(file_path):
                 os.remove(file_path)
-
-

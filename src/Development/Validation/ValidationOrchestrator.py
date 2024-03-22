@@ -37,6 +37,9 @@ class ValidationOrchestrator:
                     ret_val = -1  # AI expert has not filled the file
                 elif data['result'] in ["ok", "OK", "Ok", "oK"]:
                     ret_val = 1
+                    if self.status.best_classifier_name == "Invalid":  # if no best classifier has been found, repeat the process
+                        ret_val = 0
+                        print(f'[{self.__class__.__name__}]: no valid classifier from validation phase, overriding user choice')
         except FileNotFoundError as e:  # create file so that AI expert can fill it
             with open('Validation/validation_result.json', 'w') as json_file:
                 json.dump({"result": ""}, json_file)
