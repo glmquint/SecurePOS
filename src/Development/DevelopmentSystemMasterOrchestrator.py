@@ -21,9 +21,12 @@ class DevelopmentSystemMasterOrchestrator:
     report_controller: ReportController = None
     status: DevelopmentSystemStatus = None
 
-    def __init__(self):
-        self.status = DevelopmentSystemStatus("development_system_status.json", "schema/status_schema.json")
-        self.status.load_status()
+    def __init__(self, status: DevelopmentSystemStatus = None):
+        if status is None:
+            self.status = DevelopmentSystemStatus("development_system_status.json", "schema/status_schema.json")
+            self.status.load_status()
+        else:
+            self.status = status
         self.development_system_configurations = DevelopmentSystemConfigurations('schema/config_schema.json')
         self.development_system_configurations.load_config('config/config.json', True)
         self.message_bus = MessageBus(self.development_system_configurations.topics)
@@ -32,14 +35,17 @@ class DevelopmentSystemMasterOrchestrator:
                                                        self.development_system_configurations)
         self.validation_orchestrator = ValidationOrchestrator(self.status, self.report_controller, self.message_bus,
                                                               self.development_system_configurations)
-        self.test_orchestrator = TestingOrchestrator(self.status, self.report_controller, self.message_bus, self.development_system_configurations)
-        self.learning_set_receiver = LearningSetReceiver(self.message_bus, self.development_system_configurations.endpoint_url)
-        self.development_system_sender = DevelopmentSystemSender(self.development_system_configurations,self.status)
+        self.test_orchestrator = TestingOrchestrator(self.status, self.report_controller, self.message_bus,
+                                                     self.development_system_configurations)
+        self.learning_set_receiver = LearningSetReceiver(self.message_bus,
+                                                         self.development_system_configurations.endpoint_url)
+        self.development_system_sender = DevelopmentSystemSender(self.development_system_configurations, self.status)
 
     def start(self):
         while True:
             if self.status.status == "receive_learning_set":
-                th = Thread(target=self.learning_set_receiver.run, kwargs={'port': self.development_system_configurations.port})
+                th = Thread(target=self.learning_set_receiver.run,
+                            kwargs={'port': self.development_system_configurations.port})
                 th.daemon = True
                 th.start()
                 self.status.status = "pop_learning_set"
@@ -62,6 +68,7 @@ class DevelopmentSystemMasterOrchestrator:
                 raise Exception("Invalid status")
 
 
-dsmo = DevelopmentSystemMasterOrchestrator()
-print("Starting Development System Master Orchestrator...")
-dsmo.start()
+if __name__ == "__main__":
+    dsmo = DevelopmentSystemMasterOrchestrator()
+    print("Starting Development System Master Orchestrator...")
+    dsmo.start()
