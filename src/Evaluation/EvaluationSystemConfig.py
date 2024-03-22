@@ -13,6 +13,7 @@ class EvaluationSystemConfig:
         self.path_config = "config/config.json"
         self.tollerated_error = 0
         self.tollerated_consecutive_error = 0
+        self.port = 0
         self.load()
 
     def write_state(self,state=0):
@@ -38,6 +39,7 @@ class EvaluationSystemConfig:
         self.state = data["state"]
         self.tollerated_error = data["tollerated_error"]
         self.tollerated_consecutive_error = data["tollerated_consecutive_error"]
+        self.port = data["port"]
         if data["simulate_human_task"] == "True":
             self.simulate_human_task = True
         else:

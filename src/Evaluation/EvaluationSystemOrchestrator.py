@@ -15,7 +15,7 @@ class EvaluationSystemOrchestrator:
         self.simulateHumanTasks = False
         self.config = EvaluationSystemConfig()
         self.sender = EvaluationSystemSender()
-        self.receiver = LabelReceiver()
+        self.receiver = LabelReceiver(self.config.port)
         self.evaluation = EvaluationReportController(self.config)
 
     def isnumberoflabelssufficient(self):

@@ -16,14 +16,14 @@ sender = JSONSender("../DataObjects/Schema/Label.json", "http://127.0.0.1:5002/e
 a=[]
 b=[]
 uid = str(uuid.uuid4())
-sender2.send(Label(label="High",uuid=uid))
-sender.send(Label(label ="Moderate",uuid=uid))
+sender2.send(Label(label="low",uuid=uid))
+sender.send(Label(label ="high",uuid=uid))
 uid = str(uuid.uuid4())
-sender2.send(Label(label="Low",uuid=uid))
-sender.send(Label(label="Low",uuid=uid))
+sender2.send(Label(label="low",uuid=uid))
+sender.send(Label(label="low",uuid=uid))
 uid = str(uuid.uuid4())
-sender.send(Label(label="High",uuid=uid))
-sender2.send(Label(label="High",uuid=uid))
+sender.send(Label(label="moderate",uuid=uid))
+sender2.send(Label(label="high",uuid=uid))
 exit()
 ran = False
 for x in range(50):
