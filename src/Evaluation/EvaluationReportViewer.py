@@ -4,7 +4,6 @@ from random import randint
 
 from PIL import Image, ImageDraw, ImageFont
 
-from src.DataObjects.AttackRiskLabel import AttackRiskLabel
 from src.DataObjects.Record import Label
 from src.Evaluation.EvaluationReportModel import EvaluationReportModel
 from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig

@@ -7,7 +7,8 @@ from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
 
 class ProductionSystemReceiver:
-    def __init__(self, systemBus):
+    def __init__(self, port, systemBus):
+        self.port = port
         self.systemBus = systemBus
         self.server = Server()
         self.server.add_resource(JSONEndpoint, "/PreparedSession",
@@ -33,5 +34,5 @@ class ProductionSystemReceiver:
         return 200
 
     def run(self):
-        self.server.run()
+        self.server.run(port=self.port)
 

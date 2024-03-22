@@ -5,6 +5,7 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 class PreparationSystemConfig:
     def __init__(self, schema_path:str):
+        self.preparation_sys_receiver = None
         self.prepared_session_creator = None
         self.raw_session_creator = None
         self.phase_tracker = None

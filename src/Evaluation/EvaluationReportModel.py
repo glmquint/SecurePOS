@@ -1,4 +1,5 @@
-from src.DataObjects.AttackRiskLabel import AttackRiskLabel
+from random import randint
+
 from src.DataObjects.Record import Label
 from src.Storage.StorageController import StorageController
 from src.Storage.dbConfig import DBConfig
@@ -47,10 +48,16 @@ class EvaluationReportModel:
             self.removelabels()
             exit()
         return
+
+    def sort_labels(self):
+        self.labels[0].sort(key= lambda x:x.uuid)
+        self.labels[1].sort(key= lambda x:x.uuid)
+
     def generatereport(self):
         self.labels = self.retrieve()
         self.tick_array.clear()
         self.check_valid_labels()
+        self.sort_labels()
         labels = self.labels[0]
         security_labels = self.labels[1]
         consecutiverror = 0
