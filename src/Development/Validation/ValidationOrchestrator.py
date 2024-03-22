@@ -7,6 +7,7 @@ from src.Development.ReportController import ReportController
 from src.Development.Training.TrainProcess import TrainProcess
 from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
+from src.util import log
 
 
 class ValidationOrchestrator:
@@ -26,6 +27,7 @@ class ValidationOrchestrator:
         self.trainining_process = TrainProcess(self.status, self.message_bus,
                                                self.configurations)
 
+    @log
     def check_validation_result(self) -> int:
         ret_val = -1
         try:
@@ -61,6 +63,9 @@ class ValidationOrchestrator:
                     response = self.check_validation_result()
                 else:
                     response = random.randint(0, 1)
+                if self.status.best_classifier_name == "Invalid":  # if no best classifier has been found, repeat the process
+                    response = 0
+                    print(f'[{self.__class__.__name__}]: no valid classifier from validation phase, overriding user choice')
                 if response < 0:
                     self.status.status = "check_validation_report"
                     self.status.save_status()

@@ -20,5 +20,6 @@ class DevelopmentSystemSender:
         self.messaging_sender.send(self.development_system_configurations.to_dict())
 
     def send_to_production(self):
+        print(f'[{self.__class__.__name__}]: Sending classifier to production')
         with open(f'classifiers/{self.status.best_classifier_name}.sav', 'rb') as file:
             self.production_sender.send(file)
