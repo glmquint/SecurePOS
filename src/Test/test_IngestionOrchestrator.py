@@ -89,7 +89,7 @@ class TestPreparationSystemOrchestrator:
         Thread(target=orchestrator.run, daemon=True).start()
 
         sufficient_records = config.raw_session_creator['number_of_systems']
-        num_of_runs = 5
+        num_of_runs = 50
         for j in range(num_of_runs):
             uuid = str(uuid1())
             for i in range(sufficient_records): # simulate client-side systems
@@ -113,4 +113,4 @@ class TestPreparationSystemOrchestrator:
 
 if __name__ == '__main__':
     TestPreparationSystemOrchestrator().test_run()
-    pass
+    input('press a key to exit...')

@@ -69,6 +69,6 @@ class PreparedSessionCreator:
                                                median_latitude=median_latitude,
                                                median_target_ip=median_target_ip,
                                                median_dest_ip=median_dest_ip,
-                                               attack_risk_label=label)
+                                               label=label)
 
 
