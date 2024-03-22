@@ -1,6 +1,5 @@
 from random import randint
 
-from src.DataObjects.AttackRiskLabel import AttackRiskLabel
 from src.DataObjects.Record import Label
 from src.Storage.StorageController import StorageController
 from src.Storage.dbConfig import DBConfig
