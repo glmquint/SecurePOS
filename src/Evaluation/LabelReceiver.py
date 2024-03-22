@@ -10,7 +10,8 @@ from src.Storage.dbConfig import DBConfig
 
 
 class LabelReceiver:
-    def __init__(self):
+    def __init__(self,port = 0):
+        self.port = port
         self.server = Server()
         self.mbus = MessageBus(["label", "sec_label"])
         self.scontroller_label = StorageController({'name': 'evaluation', 'table_name': 'labels'},type(Label()))
@@ -26,7 +27,10 @@ class LabelReceiver:
                                  json_schema_path="../DataObjects/Schema/Label.json")
         self.server.add_resource(JSONEndpoint, "/evaluation_security_label", recv_callback=self.callback_s,
                                  json_schema_path="../DataObjects/Schema/Label.json")
-        thread = Thread(target=self.server.run)
+        if self.port == 0:
+            thread = Thread(target=self.server.run)
+        else:
+            thread = Thread(target=self.server.run,args=[False,self.port])
         thread.daemon = True
         thread.start()
 
@@ -34,7 +38,7 @@ class LabelReceiver:
         #print(f"Received from security {json_data}")
         #???
         data = Label(**json_data)
-        print("sec")
+        print("Received security label.")
         print(data.uuid)
         print(data.label)
         #self.scontroller_security.save(Label(label=json_data["label"],uuid=json_data["uuid"]))
@@ -45,7 +49,7 @@ class LabelReceiver:
     def callback_f(self, json_data):
         #print(f"Received {json_data}")
         #???
-        print("lab")
+        print("Received label.")
         data = Label(**json_data)
         print(data.uuid)
         print(data.label)

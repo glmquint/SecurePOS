@@ -8,6 +8,9 @@
             "type": "string",
           "enum": ["False","True"]
         },
+        "port": {
+           "type":"integer"
+        },
         "state": {
             "type": "integer",
             "enum": [0,1]
