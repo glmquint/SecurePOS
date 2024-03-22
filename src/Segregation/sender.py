@@ -12,8 +12,8 @@ def recive():  # FIXME just for debug
     label = ["normal", "moderate", "high"]
     test_array = np.array(label)
     random_num = np.random.choice(test_array)
-    d = {'mean_absolute_differencing_transaction_timestamps': random.uniform(0,100),
-         'mean_absolute_differencing_transaction_amount': random.uniform(0,100),
+    d = {'mean_abs_diff_transaction': random.uniform(0,100),
+         'mean_abs_diff_transaction_amount': random.uniform(0,100),
          'median_longitude': random.uniform(0,360)-180,
          'median_latitude': random.uniform(0,180)-90,
          'median_target_ip': int(ipaddress.IPv4Address(str(random.randint(0, 255))+"."+str(random.randint(0, 255))+"."+str(random.randint(0, 255))+"."+str(random.randint(0, 255)))),
@@ -23,7 +23,7 @@ def recive():  # FIXME just for debug
 
     # d = ["ciao": random(), random(), random(), random(), random(), random(), random_num]
 
-    p = PreparedSession(d)
+    p = PreparedSession(**d)
     return p
 
 
