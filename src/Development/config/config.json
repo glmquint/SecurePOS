@@ -15,11 +15,11 @@
     }
   },
   "loss_threshold" : 0.1,
-  "overfitting_tolerance" : -1.0,
+  "overfitting_tolerance" : 0.1,
   "generalization_tolerance" : 0.1,
   "port": 5002,
   "endpoint_url" : "/learning_set",
   "classifiers_limit" : 5,
-  "stop&go" : true
+  "stop&go" : false
 
 }
