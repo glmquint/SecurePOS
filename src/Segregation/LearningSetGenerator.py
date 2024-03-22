@@ -17,33 +17,37 @@ class LearningSetGenerator:
     def generate_learning_set(self):
         preparedSessionArray : [PreparedSession] = self.__storageController.retrieve_all(False)
         cardinalityPreparedSession = self.__storageController.count(False)
+        assert len(preparedSessionArray) == cardinalityPreparedSession, f"got unexpected cardinality for prepared session: {cardinalityPreparedSession} instead of {len(preparedSessionArray)}"
 
-        testSetCardinality = math.ceil(cardinalityPreparedSession * self.__testPercentage / 100)
-        valSetCardinality = math.ceil(cardinalityPreparedSession * self.__validationPercentage / 100)
+        # calculate train, test and validation splits
+        testSetCardinality = math.ceil(cardinalityPreparedSession * self.__testPercentage)
+        valSetCardinality = math.ceil(cardinalityPreparedSession * self.__validationPercentage)
         trainingSetCardinality = cardinalityPreparedSession - testSetCardinality - valSetCardinality
 
+        # split the dataset into train, test and validation
         trainingSet = preparedSessionArray[:trainingSetCardinality]
         validationSet = preparedSessionArray[trainingSetCardinality:trainingSetCardinality + testSetCardinality]
         testSet = preparedSessionArray[trainingSetCardinality + testSetCardinality:]
 
-        trainingSetArray = validationSetArray = testSetArray = []
-        trainingSetLabel = validationSetLabel = testSetLabel = []
+        # prepare the dictionaries to be converted into dataframes
+        cols = trainingSet[0].to_json().keys()
+        trainingSetArray = dict(zip(cols, [0] * len(cols)))
+        validationSetArray = dict(zip(cols, [0] * len(cols)))
+        testSetArray = dict(zip(cols, [0] * len(cols)))
+        for col in cols:
+            trainingSetArray[col]   = [v.to_json()[col] for v in trainingSet]
+            validationSetArray[col] = [v.to_json()[col] for v in validationSet]
+            testSetArray[col]       = [v.to_json()[col] for v in testSet]
 
-        for i in trainingSet:
-            trainingSetArray.append(i.returnArray())
-            trainingSetLabel.append((i.getLabel()))
+        # target labels are stored on a separate array
+        trainingSetLabel = trainingSetArray.pop('label')
+        validationSetLabel = validationSetArray.pop('label')
+        testSetLabel = testSetArray.pop('label')
 
-        for i in validationSet:
-            validationSetArray.append(i.returnArray())
-            validationSetLabel.append((i.getLabel()))
-
-        for i in testSet:
-            testSetArray.append(i.returnArray())
-            testSetLabel.append((i.getLabel()))
-
-        trainingSetArray = pd.DataFrame(trainingSetArray).drop([6], axis=1)
-        validationSetArray = pd.DataFrame(validationSetArray).drop([6], axis=1)
-        testSetArray = pd.DataFrame(testSetArray).drop([6], axis=1)
+        # convert into named dataframes
+        trainingSetArray = pd.DataFrame(trainingSetArray)
+        validationSetArray = pd.DataFrame(validationSetArray)
+        testSetArray = pd.DataFrame(testSetArray)
 
         dic = dict()
         dic['trainingSet'] = trainingSetArray
@@ -54,4 +58,16 @@ class LearningSetGenerator:
         dic['testSetLabel'] = testSetLabel
 
         learningSet = LearningSet(dic, False)
+
+        ''' TODO: after cleaning the constructor, this will be possible
+        learningSet = LearningSet(
+            trainingSetArray = trainingSetArray,
+            validationSetArray = validationSetArray,
+            testSetArray = testSetArray,
+            trainingSetLabel = trainingSetLabel,
+            validationSetLabel = validationSetLabel,
+            testSetLabel = testSetLabel
+        )
+        '''
+
         self.leaning_set = learningSet
