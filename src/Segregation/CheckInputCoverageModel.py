@@ -5,36 +5,30 @@ from src.DataObjects.Session import PreparedSession
 class CheckInputCoverageModel:
     def __init__(self, storageController):
         self.__storageController = storageController
-        self.__preparedSessionList = None
+        self.__preparedSessionDF : pd.DataFrame = None
 
     def retrieve_prepared_session(self):
-        self.__preparedSessionList = self.data_normalized(self.__storageController.retrieve_all(False))
+        self.__preparedSessionDF = self.data_normalized(self.__storageController.retrieve_all(False))
 
-    def get_prepared_session_list(self):
-        return self.__preparedSessionList
+    def get_prepared_session_df(self) -> [PreparedSession]:
+        return self.__preparedSessionDF
 
     @staticmethod
-    def data_normalized(preparedSessions):
-        tmp = []
-        for p in preparedSessions:
-            tmp.append(p.returnArray()[:len(p.returnArray()) - 1])
+    def data_normalized(preparedSessions : [PreparedSession]) -> pd.DataFrame:
+        columns = preparedSessions[0].to_json().keys() - {'label'}
+        values = {attr: [ps.__dict__.get(attr, None) for ps in preparedSessions] for attr in columns}
 
-        dataframe_data = pd.DataFrame(tmp)
+        dataframe_data = pd.DataFrame(values)
 
-        df_max_scaled = dataframe_data.copy()
-        for column in df_max_scaled.columns:
-            if column == 2:
-                df_max_scaled[column] += 180
-            if column == 3:
-                df_max_scaled[column] += 90
-            df_max_scaled[column] = df_max_scaled[column] / df_max_scaled[column].abs().max()
+        for column in dataframe_data.columns:
+            if column == 'median_longitude':
+                dataframe_data[column] += 180
+            if column == 'median_latitude':
+                dataframe_data[column] += 90
+            dataframe_data[column] = dataframe_data[column] / dataframe_data[column].abs().max()
 
-        # print dataframe data
-        prepared_sessions_list = []
-        for index, row in df_max_scaled.iterrows():
-            array = row.to_list()
-            array.append("")
-            prepared_sessions_list.append(PreparedSession(array))
+        # FIXME: why are we creating a new list of PreparedSession objects when in the end we just recompute the dataframe?
+        # prepared_sessions_list = [PreparedSession(**row.to_dict()) for _, row in dataframe_data.iterrows()] # labels will be None
 
-        return prepared_sessions_list
+        return dataframe_data
 
