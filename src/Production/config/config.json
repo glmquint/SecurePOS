@@ -1,6 +1,7 @@
 {
+    "server_port": 5003,
     "monitoring_window": 2,
     "evaluation_window": 1,
     "client_url": "http://localhost:5001/client",
-    "evaluation_url": "http://localhost:5001/evaluation"
+    "evaluation_url": "http://192.168.0.1:5001/evaluation"
 }
