@@ -50,7 +50,7 @@ class TestingOrchestrator:
                 if self.configurations.stop_and_go:
                     response = self.check_test_result()
                 else:
-                    response = random.randint(0, 1)
+                    response = random.randint(1, 1) # TODO: change to 0
                 if response < 0:
                     self.status.save_status()
                 elif response == 0:
