@@ -1,5 +1,5 @@
 import pandas as pd
-from src.DataObjects.PreparedSession import PreparedSession
+from src.DataObjects.Session import PreparedSession
 
 
 class CheckInputCoverageModel:

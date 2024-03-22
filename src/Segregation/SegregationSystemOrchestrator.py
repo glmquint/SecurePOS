@@ -4,7 +4,7 @@ from src.Segregation.SegregationSystemReceiver import PreparedSessionReceiver
 from src.Segregation.SegregationSystemConfig import SegregationSystemConfig
 from src.Segregation.SegregationSystemSender import SegregationSystemSender
 from src.Storage.StorageController import StorageController
-from src.DataObjects.PreparedSession import PreparedSession
+from src.DataObjects.Session import PreparedSession
 
 
 class SegregationSystemOrchestrator:

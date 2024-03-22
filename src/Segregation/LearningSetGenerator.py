@@ -2,6 +2,8 @@ import pandas as pd
 from src.DataObjects.LearningSet import LearningSet
 import math
 
+from src.DataObjects.Session import PreparedSession
+
 
 class LearningSetGenerator:
 
@@ -13,7 +15,7 @@ class LearningSetGenerator:
         self.leaning_set = None
 
     def generate_learning_set(self):
-        preparedSessionArray = self.__storageController.retrieve_all(False)
+        preparedSessionArray : [PreparedSession] = self.__storageController.retrieve_all(False)
         cardinalityPreparedSession = self.__storageController.count(False)
 
         testSetCardinality = math.ceil(cardinalityPreparedSession * self.__testPercentage / 100)

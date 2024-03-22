@@ -3,18 +3,21 @@ from random import random
 import matplotlib.pyplot as plt
 import numpy as np
 
+from src.DataObjects.Session import PreparedSession
+from src.Segregation.CheckDataBalancingModel import CheckDataBalancingModel
+
 
 class CheckDataBalanceView:
     __tolerance_parameter = 0
 
-    def __init__(self, toleraceParameter, model):
+    def __init__(self, toleraceParameter, model : CheckDataBalancingModel):
         self.__tolerance_parameter = toleraceParameter
-        self.__check_data_balance_model = model
+        self.__check_data_balance_model : CheckDataBalancingModel = model
 
     def plot_check_data_balance(self):
 
         # retrive data from the model
-        PreparedSessionList = self.__check_data_balance_model.get_prepared_session_list()
+        preparedSessionList : [PreparedSession] = self.__check_data_balance_model.get_prepared_session_list()
 
         labels = ["normal", "moderate", "high"]
 

@@ -4,11 +4,14 @@ import plotly.graph_objects as go
 import pandas as pd
 from random import random
 
+from src.DataObjects.Session import PreparedSession
+from src.Segregation.CheckInputCoverageModel import CheckInputCoverageModel
+
 
 class CheckInputCoverageView:
 
     def __init__(self, model):
-        self.__checkInputCoverageModel = model
+        self.__checkInputCoverageModel : CheckInputCoverageModel = model
 
     def plot_check_input_coverage_view(self):
 

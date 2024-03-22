@@ -4,7 +4,7 @@ import random
 import numpy as np
 import requests
 
-from src.DataObjects.PreparedSession import PreparedSession
+from src.DataObjects.Session import PreparedSession
 
 
 def recive():  # FIXME just for debug
