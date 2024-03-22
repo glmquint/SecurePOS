@@ -2,7 +2,7 @@ import json
 import jsonschema
 from jsonschema import validate, ValidationError, Draft7Validator
 
-actually_validate = True
+actually_validate = False #TODO: change me
 
 class JSONValidator:
     def __init__(self, schema_file):
