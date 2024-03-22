@@ -9,7 +9,7 @@ class PhaseTracker:
         self.count %= self.config['production_phase_duration'] + self.config['evaluation_phase_duration']
 
     def isEvalPhase(self):
-        return self.count > self.config['production_phase_duration']
+        return self.count >= self.config['production_phase_duration']
 
     def isDevPhase(self):
         return self.config['phase'] == "Development"
