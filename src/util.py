@@ -33,7 +33,7 @@ class PerformanceSample:
 
 def monitorPerformance(should_sample_after: bool):
     # TODO: make it configurable from a config file
-    sampler_endpoint = "http://localhost:6000/performance_sampler"
+    sampler_endpoint = "http://127.0.0.1:6000/performance_sampler"
     def decorator(func):
         def wrapper(*args, **kwargs):
             if should_sample_after:

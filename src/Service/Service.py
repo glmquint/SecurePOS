@@ -99,7 +99,7 @@ class Service:
                     del df_row_cleaned[col]
             print(f"Sending row {i} to the ingestion system: {df_row_cleaned.to_dict()}")
             start = time.time()
-            requests.post("http://localhost:5005/record", json=df_row_cleaned.to_dict())
+            requests.post("http://127.0.0.1:5005/record", json=df_row_cleaned.to_dict())
             print(f"Sent row in {time.time() - start} seconds")
             pass
 
