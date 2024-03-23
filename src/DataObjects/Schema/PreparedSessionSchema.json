@@ -1,6 +1,9 @@
 {
     "type": "object",
     "properties": {
+      "uuid": {
+            "type": "string"
+        },
         "mean_abs_diff_transaction": {
             "type": "number"
         },
