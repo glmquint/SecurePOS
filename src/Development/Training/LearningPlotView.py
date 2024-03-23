@@ -1,5 +1,7 @@
 import os
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from src.Development.Training.LearningPlotModel import LearningPlotModel
