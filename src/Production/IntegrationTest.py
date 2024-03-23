@@ -1,4 +1,5 @@
 import ipaddress
+import os
 from socket import inet_aton
 
 from threading import Thread
@@ -42,9 +43,9 @@ class IntegrationTest(TestCase):
         test_callback_evaluation = lambda json_data: print(f"Evaluation endpoint received {json_data}")
         test_callback_client = lambda json_data: print(f"Client endpoint received {json_data}")
         server.add_resource(JSONEndpoint, "/evaluation", recv_callback=test_callback_evaluation,
-                            json_schema_path="../DataObjects/Schema/Label.json")
+                            json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json")
         server.add_resource(JSONEndpoint, "/client", recv_callback=test_callback_client,
-                            json_schema_path="../DataObjects/Schema/Label.json")
+                            json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json")
         threadServer = Thread(target=server.run, kwargs={'port':5001})
         threadServer.daemon = True  # this will allow the main thread to exit even if the server is still running
         threadServer.start()

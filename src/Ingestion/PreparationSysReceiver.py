@@ -1,3 +1,4 @@
+import os
 from threading import Thread
 
 from src.DataObjects.Record import LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord, Record, Label
@@ -9,7 +10,7 @@ from src.MessageBus.MessageBus import MessageBus
 from src.Storage.StorageController import StorageController
 from src.util import log
 
-DATAOBJ_PATH = "../DataObjects/Schema"
+DATAOBJ_PATH = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
 
 
 class PreparationSysReceiver:
@@ -25,6 +26,20 @@ class PreparationSysReceiver:
     def receiveRecord(self, json_data):
         if not isinstance(json_data, dict):
             raise Exception(f"Expected dict, got {type(json_data)}")
+        # change UUID filed into uuid
+        expected_key = {
+            'UUID': 'uuid',
+            'LABEL': 'label',
+            'latitude': 'location_latitude',
+            'longitude': 'location_longitude',
+            'targetIP': 'target_ip',
+            'destIP': 'dest_ip',
+            'timestamp': 'timestamp',
+            'amount': 'amount'
+        }
+        if any(k not in expected_key.keys() for k in json_data.keys()):
+            raise Exception(f"Expected {expected_key.keys()}, got {json_data.keys()}")
+        json_data = {expected_key[k]: v for k, v in json_data.items()}
         if 'uuid' not in json_data:
             raise Exception(f"Expected uuid, got {json_data}")
         if 'location_latitude' in json_data or 'location_longitude' in json_data:

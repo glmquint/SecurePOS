@@ -1,3 +1,5 @@
+import os
+
 from src.DataObjects.Record import Record, Label
 from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import RawSession
@@ -6,7 +8,7 @@ from src.JsonIO.JSONSender import JSONSender
 from src.Storage.StorageController import StorageController
 from src.util import log
 
-DATAOBJ_PATH = "../DataObjects/Schema"
+DATAOBJ_PATH = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
 
 class RawSessionCreator:
 
@@ -22,7 +24,7 @@ class RawSessionCreator:
         pass
 
     def isNumberOfRecordsSufficient(self) -> bool:
-        uuid_with_max_count = self.storage_controller.executeQuery("select uuid, count(distinct(objtype)) as different_systems from record group by uuid order by different_systems desc limit 1;")
+        uuid_with_max_count = self.storage_controller.isNumberOfRecordsSufficient()
         if len(uuid_with_max_count) == 0:
             return False
         self.max_uuid = uuid_with_max_count[0][0]
@@ -52,8 +54,10 @@ class RawSessionCreator:
 
     def run(self):
         while True:
+            print(f"[{self.__class__.__name__}] Waiting for records")
             while not self.isNumberOfRecordsSufficient():
                 pass
+            print(f"[{self.__class__.__name__}] Found enough records")
             self.createRawSession()
             self.storage_controller.remove_by_column('uuid', self.max_uuid)
             self.markMissingSamples()

@@ -62,10 +62,9 @@ class StorageController:
             return False
         return True
 
-    def executeQuery(self, param):
-        cursor = self.DBConnector.connection.cursor()
-        cursor.execute(param)
-        return cursor.fetchall()
+    def isNumberOfRecordsSufficient(self):
+        self.wait_count_updated()
+        return self.DBConnector.isNumberOfRecordsSufficient()
 
     def retrieve_by_column(self, param, value):
         try:

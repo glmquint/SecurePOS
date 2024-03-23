@@ -1,4 +1,5 @@
 import json
+import os
 import random
 import plotly.graph_objects as go
 import pandas as pd
@@ -72,7 +73,7 @@ class CheckInputCoverageView:
             title="Coverage Report",
         )
 
-        fig.write_image("Data/Plot/PlotCheckInputCoverage.png")
+        fig.write_image(f"{os.path.dirname(__file__)}/Data/Plot/PlotCheckInputCoverage.png")
 
     @staticmethod
     def get_simulated_check_input_coverage():
@@ -84,7 +85,7 @@ class CheckInputCoverageView:
 
     @staticmethod
     def get_check_input_coverage():
-        with open('Data/checkInputCoverageReport.json', 'r') as checkInputCoverageFile:
+        with open(f'{os.path.dirname(__file__)}/Data/checkInputCoverageReport.json', 'r') as checkInputCoverageFile:
             jsonData = json.load(checkInputCoverageFile)
             evaluationCheckInputCoverage = jsonData.get("evaluation")
             checkInputCoverageFile.close()

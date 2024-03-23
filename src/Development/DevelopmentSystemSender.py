@@ -23,5 +23,5 @@ class DevelopmentSystemSender:
 
     def send_to_production(self):
         print(f'[{self.__class__.__name__}]: Sending classifier to production')
-        with open(f'classifiers/{self.status.best_classifier_name}.sav', 'rb') as file:
+        with open(f'{os.path.dirname(__file__)}/classifiers/{self.status.best_classifier_name}.sav', 'rb') as file:
             self.production_sender.send(file)

@@ -1,4 +1,5 @@
 import json
+import os
 
 from src.DataObjects.LearningSet import LearningSet
 from src.JsonIO.Server import Server
@@ -16,7 +17,7 @@ class LearningSetReceiver:
         self.server = Server()
         self.server.add_resource(JSONEndpoint, endpoint_url,
                                  recv_callback=self.receive_learning_set,
-                                 json_schema_path="../DataObjects/Schema/learning_set_schema.json")
+                                 json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/learning_set_schema.json")
 
     def receive_learning_set(self, json_data):
         self.learning_set = LearningSet(json_data,True)

@@ -1,4 +1,5 @@
 import ipaddress
+import os
 import statistics
 from timeit import timeit
 
@@ -9,7 +10,7 @@ from src.JsonIO.JSONSender import JSONSender
 from src.MessageBus.MessageBus import MessageBus
 from src.util import log
 
-DATAOBJ_PATH = "../DataObjects/Schema"
+DATAOBJ_PATH = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
 
 class PreparedSessionCreator:
     def __init__(self, config , message_bus:MessageBus, raw_session_topic:str, phase_tracker:PhaseTracker) -> None:
@@ -24,6 +25,7 @@ class PreparedSessionCreator:
 
     def run(self) -> None:
         while True:
+            print(f"[{self.__class__.__name__}] Waiting for raw session")
             self.raw_session : RawSession = self.message_bus.popTopic(self.raw_session_topic)
             self.correctMissingSamples()
             self.detectAndCorrectAbsoluteOutliers()

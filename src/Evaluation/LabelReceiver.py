@@ -1,3 +1,4 @@
+import os
 from threading import Thread
 
 
@@ -24,9 +25,9 @@ class LabelReceiver:
 
     def receive(self):
         self.server.add_resource(JSONEndpoint, "/evaluation_label", recv_callback=self.callback_f,
-                                 json_schema_path="../DataObjects/Schema/Label.json")
+                                 json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json")
         self.server.add_resource(JSONEndpoint, "/evaluation_security_label", recv_callback=self.callback_s,
-                                 json_schema_path="../DataObjects/Schema/Label.json")
+                                 json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json")
         if self.port == 0:
             thread = Thread(target=self.server.run)
         else:

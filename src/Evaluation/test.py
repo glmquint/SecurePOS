@@ -1,3 +1,4 @@
+import os
 import time
 import uuid
 from asyncio import wait
@@ -9,8 +10,8 @@ from src.JsonIO.Server import Server
 
 
 #var = Label(label="high",uuid="bau")
-sender2 = JSONSender("../DataObjects/Schema/Label.json", "http://127.0.0.1:5002/evaluation_security_label")
-sender = JSONSender("../DataObjects/Schema/Label.json", "http://127.0.0.1:5002/evaluation_label")
+sender2 = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json", "http://127.0.0.1:5002/evaluation_security_label")
+sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json", "http://127.0.0.1:5002/evaluation_label")
 #sender.send(Label(label="high"))
 #sender.send(var.to_json())
 a=[]

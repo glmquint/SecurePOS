@@ -1,4 +1,5 @@
 import json
+import os
 from random import randint
 
 from src.Evaluation.EvaluationReportModel import EvaluationReportModel
@@ -23,8 +24,8 @@ class EvaluationReportController:
     def getresult(self,human_simulate = False):
 
         if not human_simulate:
-            validator = JSONValidator("./../DataObjects/Schema/action.json")
-            action_json = open("data/action.json")
+            validator = JSONValidator(f"{os.path.dirname(__file__)}/./../DataObjects/Schema/action.json")
+            action_json = open(f"{os.path.dirname(__file__)}/data/action.json")
             action = json.load(action_json)
             validator.validate_data(action)
             self.result = action["action"]

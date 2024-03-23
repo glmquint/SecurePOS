@@ -53,3 +53,8 @@ class DBConnector:
         cursor = self.connection.cursor()
         cursor.execute(f'SELECT {" ,".join(self.columns)} FROM {self.tableName} WHERE {param} = ?', (value,))
         return [dict(zip(self.columns, x)) for x in cursor.fetchall()]
+
+    def isNumberOfRecordsSufficient(self):
+        cursor = self.connection.cursor()
+        cursor.execute("select uuid, count(distinct(objtype)) as different_systems from record group by uuid order by different_systems desc limit 1;")
+        return cursor.fetchall()

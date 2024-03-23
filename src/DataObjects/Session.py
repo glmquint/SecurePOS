@@ -22,6 +22,7 @@ class PreparedSession(Session):
     '''
     CREATE TABLE PreparedSessions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        uuid TEXT,
         mean_abs_diff_transaction REAL,
         mean_abs_diff_transaction_amount REAL,
         median_longitude REAL,

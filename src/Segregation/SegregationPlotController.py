@@ -38,7 +38,7 @@ class SegregationPlotController:
     @staticmethod
     def set_evaluation_check_data_balance(state):
         try:
-            with open('Data/checkDataBalanceReport.json', 'w') as f:
+            with open(f'{os.path.dirname(__file__)}/Data/checkDataBalanceReport.json', 'w') as f:
                 json.dump({"evaluation": state}, f)
                 f.close()
         except Exception as e:
@@ -47,7 +47,7 @@ class SegregationPlotController:
     @staticmethod
     def set_evaluation_check_input_coverage(state):
         try:
-            with open('Data/checkInputCoverageReport.json', 'w') as f:
+            with open(f'{os.path.dirname(__file__)}/Data/checkInputCoverageReport.json', 'w') as f:
                 json.dump({"evaluation": state}, f)
                 f.close()
         except Exception as e:

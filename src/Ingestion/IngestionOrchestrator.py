@@ -1,5 +1,5 @@
 import os
-from threading import Thread
+from threading import Thread, Event
 
 from src.DataObjects.Record import Record
 from src.DataObjects.RecordOld import RecordOld
@@ -45,11 +45,12 @@ class PreparationSystemOrchestrator:
             storage_controller = self.storage_controller,
             message_bus        = self.message_bus
         )
+        self.completed = Event()
 
     def run(self) -> None:
         Thread(target=self.raw_session_creator.run).start()
         Thread(target=self.prepared_session_creator.run).start()
         Thread(target=self.preparation_sys_receiver.run).start()
-        while True:
-            pass
+        self.completed.clear()
+        self.completed.wait() # this should wait forever
 

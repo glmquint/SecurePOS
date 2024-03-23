@@ -1,4 +1,5 @@
 import json
+import os
 from random import random
 import matplotlib.pyplot as plt
 import numpy as np
@@ -60,7 +61,7 @@ class CheckDataBalanceView:
         plt.text(0.5, 1.10, string,
                  horizontalalignment='center', transform=plt.gca().transAxes)
 
-        plt.savefig('Data/Plot/PlotCheckDataBalancePlot.png')
+        plt.savefig(f'{os.path.dirname(__file__)}/Data/Plot/PlotCheckDataBalancePlot.png')
 
     @staticmethod
     def get_simulated_check_data_balance():
@@ -72,7 +73,7 @@ class CheckDataBalanceView:
 
     @staticmethod
     def get_check_data_balance():
-        with open('Data/checkDataBalanceReport.json', 'r') as checkDataBalanceFile:
+        with open(f'{os.path.dirname(__file__)}/Data/checkDataBalanceReport.json', 'r') as checkDataBalanceFile:
             jsonData = json.load(checkDataBalanceFile)
             evaluationCheckDataBalance = jsonData.get("evaluation")
             checkDataBalanceFile.close()

@@ -1,3 +1,4 @@
+import os
 import uuid
 from datetime import datetime
 from random import randint
@@ -108,7 +109,7 @@ class EvaluationReportViewer:
         imgDraw.line([(self.firstcorner,self.secondcorner),(self.firstcorner,self.height)],fill=(self.black),width=self.widthline)
         imgDraw.line([(self.firstcorner,self.secondcorner),(self.width,self.secondcorner)],fill=(self.black),width=self.widthline)
 
-        img.save('data/result.png')
+        img.save(f'{os.path.dirname(__file__)}/data/result.png')
         pass
 
 

@@ -32,16 +32,16 @@ class ValidationOrchestrator:
     def check_validation_result(self) -> int:
         ret_val = -1
         try:
-            with open('Validation/validation_result.json', 'r') as json_file:
+            with open(f'{os.path.dirname(__file__)}/Validation/validation_result.json', 'r') as json_file:
                 ret_val = 0
                 data = json.load(json_file)
-                JSONValidator("schema/result_schema.json").validate_data(data)
+                JSONValidator(f"{os.path.dirname(__file__)}/schema/result_schema.json").validate_data(data)
                 if data['result'] in [""]:
                     ret_val = -1  # AI expert has not filled the file
                 elif data['result'] in ["ok", "OK", "Ok", "oK"]:
                     ret_val = 1
         except FileNotFoundError as e:  # create file so that AI expert can fill it
-            with open('Validation/validation_result.json', 'w') as json_file:
+            with open(f'{os.path.dirname(__file__)}/Validation/validation_result.json', 'w') as json_file:
                 json.dump({"result": ""}, json_file)
         finally:
             return ret_val

@@ -1,8 +1,8 @@
 {
   "raw_session_topic" : "RawSessionTopic",
   "phase_tracker" : {
-      "phase" : "Production",
-      "production_phase_duration" : 5,
+      "phase" : "Development",
+      "production_phase_duration" : 2,
       "evaluation_phase_duration" : 1
   },
   "db" : {

@@ -62,12 +62,12 @@ class TrainProcess:
         try:
             with open(f'{os.path.dirname(__file__)}/number_of_iterations.json', 'r') as json_file:
                 data = json.load(json_file)
-                JSONValidator("schema/iteration_schema.json").validate_data(data)
+                JSONValidator(f"{os.path.dirname(__file__)}/schema/iteration_schema.json").validate_data(data)
                 ret_val = data['number_of_iterations']
                 self.number_of_iterations = ret_val
                 print(f'[{self.__class__.__name__}]: number of iterations read: {ret_val}')
         except FileNotFoundError as e:  # create file so that AI expert can fill it
-            with open('Training/number_of_iterations.json', 'w') as json_file:
+            with open(f'{os.path.dirname(__file__)}/Training/number_of_iterations.json', 'w') as json_file:
                 json.dump({"number_of_iterations": 0}, json_file)
         finally:
             return ret_val

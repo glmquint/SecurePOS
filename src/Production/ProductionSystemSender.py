@@ -1,3 +1,5 @@
+import os
+
 from src.JsonIO.JSONSender import JSONSender
 
 
@@ -6,5 +8,5 @@ class ProductionSystemSender:
         pass
 
     def send(self, url, label):
-        sender = JSONSender("../DataObjects/Schema/AttackRiskLabelSchema.json", url)
+        sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/AttackRiskLabelSchema.json", url)
         sender.send(label)

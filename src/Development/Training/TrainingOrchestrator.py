@@ -32,10 +32,10 @@ class TrainingOrchestrator:
         print(f'[{self.__class__.__name__}]: getting AI expert response')
         ret_val = -1
         try:
-            with open('Training/learning_result.json', 'r') as json_file:
+            with open(f'{os.path.dirname(__file__)}/Training/learning_result.json', 'r') as json_file:
                 ret_val = 0
                 data = json.load(json_file)
-                JSONValidator("schema/result_schema.json").validate_data(data)
+                JSONValidator(f"{os.path.dirname(__file__)}/schema/result_schema.json").validate_data(data)
                 if data['result'] in [""]:
                     ret_val = -1  # AI expert has not filled the file
                 elif data['result'] in ["ok", "OK", "Ok", "oK"]:
@@ -43,7 +43,7 @@ class TrainingOrchestrator:
                     print(f'[{self.__class__.__name__}]: learning phase is ok')
         except FileNotFoundError as e:  # create file so that AI expert can fill it
             print('File learning_result.json not found, creating it...')
-            with open('Training/learning_result.json', 'w') as json_file:
+            with open(f'{os.path.dirname(__file__)}/Training/learning_result.json', 'w') as json_file:
                 print("Please insert your decision in learning_result.json")
                 json.dump({"result": ""}, json_file)
         finally:

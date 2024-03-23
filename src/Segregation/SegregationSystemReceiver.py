@@ -1,3 +1,4 @@
+import os
 from threading import Thread
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
@@ -16,7 +17,7 @@ class PreparedSessionReceiver:
     # def run(self,port: int):
     def run(self):
         self.__server.add_resource(JSONEndpoint, "/"+str(self.__endpoint), recv_callback=self.callaback_prepared_session,
-                                   json_schema_path="../DataObjects/Schema/PreparedSessionSchema.json")
+                                   json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/PreparedSessionSchema.json")
         # thread = Thread(target=self.__server.run,args=(port,))
         thread = Thread(target=self.__server.run,kwargs={'port': self.__port})
         # this will allow the main thread to exit even if the server is still running
@@ -39,7 +40,7 @@ class PreparedSessionReceiver:
     def run(self,port: int):
 
         self.__server.add_resource(JSONEndpoint, "/segregationSystem", recv_callback=self.callaback_prepared_session,
-                                   json_schema_path="../DataObjects/Schema/PreparedSessionSchema.json")
+                                   json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/PreparedSessionSchema.json")
         thread = Thread(target=self.__server.run,args=(port,))
         # this will allow the main thread to exit even if the server is still running
         thread.daemon = True
