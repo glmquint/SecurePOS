@@ -13,15 +13,11 @@ from src.DataObjects.Record import Label
 
 class FakeAttackRiskClassifier:
 
-    def __init__(self, systemBus):
+    def __init__(self, systemBus, classifier=None):
         self.systemBus = systemBus
-        self.attackRiskClassifier = None
+        self.attackRiskClassifier = classifier
 
     def provideAttackRiskLabel(self):
-        if self.attackRiskClassifier is None:
-            self.attackRiskClassifier = self.systemBus.popTopic("Classifier")
-            print(f"Fake classifier classifier {self.attackRiskClassifier}")
-            # assert self.attackRiskClassifier is not None
         self.preparedSession = self.systemBus.popTopic("PreparedSession")
         print(f"Prepared session {self.preparedSession}")
         print(f"Fake classifier prepared session {self.preparedSession.to_json()}")
