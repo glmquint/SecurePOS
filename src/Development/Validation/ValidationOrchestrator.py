@@ -63,7 +63,7 @@ class ValidationOrchestrator:
                 if self.configurations.stop_and_go:
                     response = self.check_validation_result()
                 else:
-                    response = random.randint(0, 1)
+                    response = random.randint(1, 1) #TODO: change me
                 if self.status.best_classifier_name == "Invalid":  # if no best classifier has been found, repeat the process
                     response = 0
                     print(f'[{self.__class__.__name__}]: no valid classifier from validation phase, overriding user choice')
