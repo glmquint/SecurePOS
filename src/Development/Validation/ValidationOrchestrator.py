@@ -32,16 +32,16 @@ class ValidationOrchestrator:
     def check_validation_result(self) -> int:
         ret_val = -1
         try:
-            with open(f'{os.path.dirname(__file__)}/Validation/validation_result.json', 'r') as json_file:
+            with open(f'{os.path.dirname(__file__)}/validation_result.json', 'r') as json_file:
                 ret_val = 0
                 data = json.load(json_file)
-                JSONValidator(f"{os.path.dirname(__file__)}/schema/result_schema.json").validate_data(data)
+                JSONValidator(f"{os.path.dirname(__file__)}/../schema/result_schema.json").validate_data(data)
                 if data['result'] in [""]:
                     ret_val = -1  # AI expert has not filled the file
                 elif data['result'] in ["ok", "OK", "Ok", "oK"]:
                     ret_val = 1
         except FileNotFoundError as e:  # create file so that AI expert can fill it
-            with open(f'{os.path.dirname(__file__)}/Validation/validation_result.json', 'w') as json_file:
+            with open(f'{os.path.dirname(__file__)}/validation_result.json', 'w') as json_file:
                 json.dump({"result": ""}, json_file)
         finally:
             return ret_val
@@ -72,10 +72,10 @@ class ValidationOrchestrator:
                     self.status.save_status()
                 elif response == 0:  # no valid classifier, repeat the process
                     self.status.status = "set_avg_hyperparams"
-                    self.trainining_process.remove_classifiers(f'{os.path.dirname(__file__)}/classifiers')
-                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/Validation/validation_result')
-                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/Training/learning_result')
-                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/Training/number_of_iterations')
+                    self.trainining_process.remove_classifiers(f'{os.path.dirname(__file__)}/../classifiers')
+                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/validation_result')
+                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/../Training/learning_result')
+                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/../Training/number_of_iterations')
                     if self.configurations.stop_and_go:
                         self.status.save_status()
                     else:

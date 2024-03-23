@@ -16,7 +16,7 @@ from src.Segregation.SegregationSystemOrchestrator import SegregationSystemOrche
 
 ''' factory map
 
-ingestion 		- 5000
+ingestion 		- 5005
 	/record
 	/raw_session
 segregation 	- 5001
@@ -99,7 +99,7 @@ class Service:
                     del df_row_cleaned[col]
             print(f"Sending row {i} to the ingestion system: {df_row_cleaned.to_dict()}")
             start = time.time()
-            requests.post("http://localhost:5000/record", json=df_row_cleaned.to_dict())
+            requests.post("http://localhost:5005/record", json=df_row_cleaned.to_dict())
             print(f"Sent row in {time.time() - start} seconds")
             pass
 
@@ -137,7 +137,7 @@ class Service:
 
     def start_evaluation_system(self):
         self.evaluation_system = EvaluationSystemOrchestrator()
-        Thread(target=self.evaluation_system.run, daemon=True).start()
+        Thread(target=self.evaluation_system.main, daemon=True).start()
 
 
 if __name__ == '__main__':

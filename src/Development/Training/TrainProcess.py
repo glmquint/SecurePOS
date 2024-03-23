@@ -62,12 +62,12 @@ class TrainProcess:
         try:
             with open(f'{os.path.dirname(__file__)}/number_of_iterations.json', 'r') as json_file:
                 data = json.load(json_file)
-                JSONValidator(f"{os.path.dirname(__file__)}/schema/iteration_schema.json").validate_data(data)
+                JSONValidator(f"{os.path.dirname(__file__)}/../schema/iteration_schema.json").validate_data(data)
                 ret_val = data['number_of_iterations']
                 self.number_of_iterations = ret_val
                 print(f'[{self.__class__.__name__}]: number of iterations read: {ret_val}')
         except FileNotFoundError as e:  # create file so that AI expert can fill it
-            with open(f'{os.path.dirname(__file__)}/Training/number_of_iterations.json', 'w') as json_file:
+            with open(f'{os.path.dirname(__file__)}/number_of_iterations.json', 'w') as json_file:
                 json.dump({"number_of_iterations": 0}, json_file)
         finally:
             return ret_val
@@ -162,7 +162,7 @@ class TrainProcess:
             self.classifier = best_models[0]
             self.status.best_validation_error = self.grid_space.validation_error[0]
         self.status.best_classifier_name = self.classifier.name
-        self.classifier.save_model('classifiers')
+        self.classifier.save_model(f'{os.path.dirname(__file__)}/../classifiers')
 
     def perform_grid_search(self):
         print(f'[{self.__class__.__name__}]: starting grid search')
@@ -180,7 +180,7 @@ class TrainProcess:
     def test_classifier(self):
         print(f'[{self.__class__.__name__}]: testing classifier')
         self.classifier = Classifier()
-        self.classifier.load_model(f'{os.path.dirname(__file__)}/classifiers/{self.status.best_classifier_name}')
+        self.classifier.load_model(f'{os.path.dirname(__file__)}/../classifiers/{self.status.best_classifier_name}')
         y_test_predicted = self.classifier.model.predict(self.status.learning_set.testSet)
         test_error = 1.0 - accuracy_score(self.status.learning_set.testSetLabel, y_test_predicted)
         self.message_bus.pushTopic("test_report", [self.classifier.name, self.status.best_validation_error, test_error,
