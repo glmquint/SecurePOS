@@ -2,7 +2,7 @@
   "sufficientSessionNumber" : 9,
   "segregationSystemPort" : 5001,
   "segregationSystemEndpoint": "segregationSystem",
-  "developmentSystemIp" : "localhost",
+  "developmentSystemIp" : "127.0.0.1",
   "developmentSystemPort" : 5002,
   "developmentSystemEndpoint": "learning_set",
 
