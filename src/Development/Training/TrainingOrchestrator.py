@@ -79,7 +79,7 @@ class TrainingOrchestrator:
                 if self.configurations.stop_and_go:
                     response = self.get_ai_export_response()
                 else:
-                    response = random.randint(0, 1)
+                    response = random.randint(1, 1) # TODO: change me
                 if response < 0:
                     self.status.save_status()
                 elif response == 0:

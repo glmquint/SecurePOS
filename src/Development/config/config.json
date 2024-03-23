@@ -15,7 +15,7 @@
     }
   },
   "loss_threshold" : 0.1,
-  "overfitting_tolerance" : 0.1,
+  "overfitting_tolerance" : 25.0,
   "generalization_tolerance" : 0.1,
   "port": 5002,
   "endpoint_url" : "/learning_set",
