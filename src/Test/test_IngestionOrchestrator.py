@@ -89,7 +89,7 @@ class TestPreparationSystemOrchestrator:
         Thread(target=orchestrator.run, daemon=True).start()
 
         sufficient_records = config.raw_session_creator['number_of_systems']
-        num_of_runs = 10
+        num_of_runs = 30
         for j in range(num_of_runs):
             uuid = str(uuid1())
             for i in range(sufficient_records): # simulate client-side systems
@@ -110,7 +110,9 @@ class TestPreparationSystemOrchestrator:
                 result = message_bus.popTopic("segregationSystem")
                 assert result is not None, "raw_session not received"
                 assert len(message_bus.messageQueues['segregationSystem'].queue) == 0, "still something in queue"
+        if not local_test: # we need to wait for the orchestrator to finish
+            input('press a key to exit...')
+
 
 if __name__ == '__main__':
     TestPreparationSystemOrchestrator().test_run()
-    input('press a key to exit...')
