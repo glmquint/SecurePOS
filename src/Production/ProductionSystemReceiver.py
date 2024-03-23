@@ -1,3 +1,5 @@
+import os.path
+
 import joblib
 
 from src.DataObjects.ClassifierTest import ClassifierTest
@@ -29,7 +31,7 @@ class ProductionSystemReceiver:
     def classifier_callback(self, file):
         classifier = joblib.load(file)
         # Save in a file called classifier.sav
-        joblib.dump(classifier, "classifier.sav")
+        joblib.dump(classifier, f"{os.path.dirname(__file__)}/classifier.sav")
         print("Classifier received and saved")
         self.systemBus.pushTopic("Classifier", classifier)
         return 200

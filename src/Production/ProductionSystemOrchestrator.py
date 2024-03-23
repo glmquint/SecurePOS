@@ -21,7 +21,8 @@ class ProductionSystemOrchestrator:
         self.prodSysRec = ProductionSystemReceiver(self.productionConfig.server_port, self.systemBus)
         self.sender = ProductionSystemSender()
         try:
-            self.classifier = joblib.load("classifier.sav") # The absence of this file means we are in development phase
+            self.classifier = joblib.load(f"{os.path.dirname(__file__)}/classifier.sav") # The absence of this file means we are in development phase
+            print(f"Classifier loaded {self.classifier}")
         except FileNotFoundError:
             self.classifier = None
 
