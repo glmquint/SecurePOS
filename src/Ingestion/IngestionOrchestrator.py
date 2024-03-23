@@ -1,3 +1,4 @@
+import os
 from threading import Thread
 
 from src.DataObjects.Record import Record
@@ -12,7 +13,11 @@ from src.Storage.StorageController import StorageController
 
 
 class PreparationSystemOrchestrator:
-    def __init__(self, config:PreparationSystemConfig) -> None:
+    def __init__(self, config:PreparationSystemConfig = None) -> None:
+        self.dirname = os.path.dirname(__file__)
+        if not config:
+            config = PreparationSystemConfig(f"{self.dirname}/../DataObjects/Schema/PreparationSystemConfigSchema.json")
+            config.init_from_file(f"{self.dirname}/config/PreparationSystemConfig.json")
         self.config = config
         self.storage_controller = StorageController(
             dbConfig           = self.config.db,

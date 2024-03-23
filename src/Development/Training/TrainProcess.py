@@ -60,7 +60,7 @@ class TrainProcess:
         print(f'[{self.__class__.__name__}]: getting number of iterations')
         ret_val = -1
         try:
-            with open('Training/number_of_iterations.json', 'r') as json_file:
+            with open(f'{os.path.dirname(__file__)}/number_of_iterations.json', 'r') as json_file:
                 data = json.load(json_file)
                 JSONValidator("schema/iteration_schema.json").validate_data(data)
                 ret_val = data['number_of_iterations']

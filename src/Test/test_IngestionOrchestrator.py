@@ -76,7 +76,7 @@ class TestPreparationSystemOrchestrator:
     def test_run(self):
         global message_bus
         config = PreparationSystemConfig(f"{DATAOBJ_PATH}/PreparationSystemConfigSchema.json")
-        config.init_from_file("PreparationSystemConfig.json")
+        config.init_from_file("../Ingestion/config/PreparationSystemConfig.json")
         c:dict = config.prepared_session_creator
         c.update({'label_receiver': config.raw_session_creator['label_receiver']})
         listener_setup(c, message_bus)

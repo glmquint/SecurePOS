@@ -1,7 +1,7 @@
 {
   "topics" : ["LearningSet","learning_plot","Scoreboard","test_report"],
-  "messaging_system_receiver" : "http://localhost:4000/messaging_system",
-  "production_system_receiver" :  "http://192.168.149.26:5003/Classifier",
+  "messaging_system_receiver" : "http://localhost:6000/messaging_system",
+  "production_system_receiver" :  "http://localhost:5003/Classifier",
   "hyperparameters": {
     "number_of_layers": {
       "min":10,
