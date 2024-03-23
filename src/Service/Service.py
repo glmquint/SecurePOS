@@ -144,5 +144,5 @@ class Service:
 if __name__ == '__main__':
     service = Service()
     service.run()
-    input('press a key to exit...')
-    pass
+    answer = input('press a key to exit...')
+    print(answer)

@@ -24,7 +24,7 @@ class EvaluationSystemOrchestrator:
 
     def run(self):
         print("start")
-        while not self.isnumberoflabelssufficient():
+        while not self.isnumberoflabelssufficient(): # TODO @mirco: retrieve n and delete n from db as check if we have enough labels
             self.receiver.mbus.popTopic("label")
             self.label_counter = self.label_counter + 1
             self.receiver.mbus.popTopic("sec_label")

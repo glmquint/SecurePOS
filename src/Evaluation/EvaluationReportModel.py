@@ -70,7 +70,7 @@ class EvaluationReportModel:
                 self.tick_array.append("X")
                 if not consecutive:
                     consecutive = True
-                    if consecutive == 0:
+                    if consecutiverror == 0:
                         consecutiverror = 1
                     else:
                         consecutiverror = consecutiverror + 1

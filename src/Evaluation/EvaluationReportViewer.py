@@ -32,7 +32,7 @@ class EvaluationReportViewer:
     def y_offset(self, y: int):
         return 10 + 30 * y
 
-    def print(self, modelcontroller,tick_array):
+    def save_evaluation_result(self, modelcontroller, tick_array): # TODO @mirco: check consecutive is actually boolean/integer
         print("Printing .png evaluation report.")
         self.title = "Evaluation report, " + str(datetime.now().strftime(self.format_date))
         labels = modelcontroller.labels[0]

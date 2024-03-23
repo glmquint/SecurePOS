@@ -17,7 +17,7 @@ class EvaluationReportController:
 
     def update(self):
         self.evaluationmodel.generatereport()
-        self.reportviewer.print(self.evaluationmodel,self.evaluationmodel.tick_array)
+        self.reportviewer.save_evaluation_result(self.evaluationmodel, self.evaluationmodel.tick_array)
         self.evaluationmodel.removelabels()
         return
 
