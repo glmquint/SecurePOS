@@ -90,7 +90,8 @@ class Service:
         Thread(target=self.messaging_system.run, daemon=True, kwargs={'port': 6000}).start()
 
     def send_data(self):
-        for i, row in self.df.iterrows():
+        i = 0
+        for _, row in self.df.iterrows():
             # remove nan values and lists with only nan values
             df_row_cleaned = row.dropna()
             for col in df_row_cleaned.keys():
@@ -101,7 +102,7 @@ class Service:
             start = time.time()
             requests.post("http://127.0.0.1:5005/record", json=df_row_cleaned.to_dict())
             print(f"Sent row in {time.time() - start} seconds")
-            pass
+            i += 1
 
     def run(self):
         self.start_clientside_server()
@@ -144,3 +145,4 @@ if __name__ == '__main__':
     service = Service()
     service.run()
     input('press a key to exit...')
+    pass
