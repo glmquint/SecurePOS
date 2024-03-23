@@ -47,8 +47,8 @@ class Service:
 
     def setup_messaging_listener(self):
         self.messaging_system = Server()
-        self.messaging_system.add_resource(JSONEndpoint, '/messaging_system', recv_callback=self.messaging_system_callback, json_schema_path=f'{os.path.dirname(__file__)}/DataObjects/Schema/empty.json')
-        self.messaging_system.add_resource(JSONEndpoint, '/performance_sampler', recv_callback=self.performance_sampler_callback, json_schema_path=f'{os.path.dirname(__file__)}/DataObjects/Schema/emtpy.json')
+        self.messaging_system.add_resource(JSONEndpoint, '/messaging_system', recv_callback=self.messaging_system_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
+        self.messaging_system.add_resource(JSONEndpoint, '/performance_sampler', recv_callback=self.performance_sampler_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/emtpy.json')
 
     def messaging_system_callback(self, json_data):
         print(f"Received data from messaging system: {json_data}")
@@ -60,7 +60,7 @@ class Service:
 
     def setup_client_listener(self):
         self.server = Server()
-        self.server.add_resource(JSONEndpoint, '/client', recv_callback=self.client_callback, json_schema_path=f'{os.path.dirname(__file__)}/DataObjects/Schema/empty.json')
+        self.server.add_resource(JSONEndpoint, '/client', recv_callback=self.client_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
 
     def client_callback(self, json_data):
         print(f"Received data from client: {json_data}")
