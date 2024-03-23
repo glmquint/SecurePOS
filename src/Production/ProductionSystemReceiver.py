@@ -28,10 +28,12 @@ class ProductionSystemReceiver:
 
     def classifier_callback(self, file):
         classifier = joblib.load(file)
-        # push the classifierTest into the Messegebus
+        # Save in a file called classifier.sav
+        joblib.dump(classifier, "classifier.sav")
+        print("Classifier received and saved")
         self.systemBus.pushTopic("Classifier", classifier)
-        print("Received Classifier")
         return 200
+
 
     def run(self):
         self.server.run(port=self.port)

@@ -1,6 +1,7 @@
 import os
 from threading import Thread
 
+import joblib
 
 from src.MessageBus.MessageBus import MessageBus
 from src.Production.FakeAttackRiskClassifier import FakeAttackRiskClassifier
@@ -19,14 +20,24 @@ class ProductionSystemOrchestrator:
         self.systemBus = MessageBus(["PreparedSession", "Classifier"])
         self.prodSysRec = ProductionSystemReceiver(self.productionConfig.server_port, self.systemBus)
         self.sender = ProductionSystemSender()
+        try:
+            self.classifier = joblib.load("classifier.sav") # The absence of this file means we are in development phase
+        except FileNotFoundError:
+            self.classifier = None
+
     def main(self):
         thread = Thread(target=self.prodSysRec.run)
         thread.daemon = True  # this will allow the main thread to exit even if the server is still running
         thread.start()
-        classifier = FakeAttackRiskClassifier(self.systemBus)
+        attackRiskClassifier = FakeAttackRiskClassifier(self.systemBus, self.classifier)
         while True:
+            # if the classifier.sav is not present try to pop it from the systemBus
+            if self.classifier is None:
+                self.classifier = self.systemBus.popTopic("Classifier")
+                print(f"Classifier {self.classifier}")
+                quit()
             #print(f"Fake classifier classifier pre {fakeClassifier.attackRiskClassifier}")
-            attackRiskLabel = classifier.provideAttackRiskLabel()
+            attackRiskLabel = attackRiskClassifier.provideAttackRiskLabel()
             print(type(attackRiskLabel))
             #print(f"Fake classifier classifier post {fakeClassifier.attackRiskClassifier}")
             self.phaseTracker.increseCounter()
