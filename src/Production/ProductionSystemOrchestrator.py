@@ -41,13 +41,13 @@ class ProductionSystemOrchestrator:
             attackRiskLabel = attackRiskClassifier.provideAttackRiskLabel()
             print(type(attackRiskLabel))
             #print(f"Fake classifier classifier post {fakeClassifier.attackRiskClassifier}")
-            self.phaseTracker.increseCounter()
             # TODO: fix schema for attackRiskLabel
 
             if not (self.phaseTracker.isProduction()):
                 self.sender.send(self.productionConfig.evaluation_url, attackRiskLabel)
                 print("Send to evaluation")
             self.sender.send(self.productionConfig.client_url, attackRiskLabel)
+            self.phaseTracker.increseCounter()
             print("Send to client")
 
     def run(self):
