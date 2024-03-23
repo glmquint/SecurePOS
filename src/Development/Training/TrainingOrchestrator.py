@@ -1,4 +1,5 @@
 import json
+import os
 import random
 
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
@@ -83,9 +84,9 @@ class TrainingOrchestrator:
                     self.status.save_status()
                 elif response == 0:
                     self.status.status = "set_number_of_iterations"
-                    self.train_process.remove_classifiers('classifiers')
-                    self.train_process.remove_precedent_response('Training/learning_result')
-                    self.train_process.remove_precedent_response('Training/number_of_iterations')
+                    self.train_process.remove_classifiers(f'{os.path.dirname(__file__)}/classifiers')
+                    self.train_process.remove_precedent_response(f'{os.path.dirname(__file__)}/Training/learning_result')
+                    self.train_process.remove_precedent_response(f'{os.path.dirname(__file__)}/Training/number_of_iterations')
                     if self.configurations.stop_and_go:
                         self.status.save_status()
                     else:

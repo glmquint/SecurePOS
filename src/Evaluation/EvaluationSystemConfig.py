@@ -1,4 +1,6 @@
 import json
+import os
+
 from src.JsonIO.JsonValidator import JSONValidator
 
 
@@ -9,8 +11,8 @@ class EvaluationSystemConfig:
         self.sufficient_label_number = 0
         self.simulate_human_task = False
         self.state = 0
-        self.path_config_validator = "config/validator.json"
-        self.path_config = "config/config.json"
+        self.path_config_validator = f"{os.path.dirname(__file__)}/config/validator.json"
+        self.path_config = f"{os.path.dirname(__file__)}/config/config.json"
         self.tollerated_error = 0
         self.tollerated_consecutive_error = 0
         self.port = 0

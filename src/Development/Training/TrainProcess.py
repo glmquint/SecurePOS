@@ -180,7 +180,7 @@ class TrainProcess:
     def test_classifier(self):
         print(f'[{self.__class__.__name__}]: testing classifier')
         self.classifier = Classifier()
-        self.classifier.load_model(f'classifiers/{self.status.best_classifier_name}')
+        self.classifier.load_model(f'{os.path.dirname(__file__)}/classifiers/{self.status.best_classifier_name}')
         y_test_predicted = self.classifier.model.predict(self.status.learning_set.testSet)
         test_error = 1.0 - accuracy_score(self.status.learning_set.testSetLabel, y_test_predicted)
         self.message_bus.pushTopic("test_report", [self.classifier.name, self.status.best_validation_error, test_error,

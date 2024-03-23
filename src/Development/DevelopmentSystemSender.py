@@ -1,3 +1,5 @@
+import os
+
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.JsonIO.FileSender import FileSender
@@ -12,7 +14,7 @@ class DevelopmentSystemSender:
 
     def __init__(self, development_system_configurations: DevelopmentSystemConfigurations, status: DevelopmentSystemStatus):
         self.development_system_configurations = development_system_configurations
-        self.messaging_sender = JSONSender('schema/config_schema.json', self.development_system_configurations.messaging_system_receiver)
+        self.messaging_sender = JSONSender(f'{os.path.dirname(__file__)}/schema/config_schema.json', self.development_system_configurations.messaging_system_receiver)
         self.production_sender = FileSender(self.development_system_configurations.production_system_receiver)
         self.status = status
 

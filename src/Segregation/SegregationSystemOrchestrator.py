@@ -41,7 +41,7 @@ class SegregationSystemOrchestrator:
 
             evaluation_check_data_balance = ""
             evaluation_check_input_coverage = ""
-            print("Server started")  # the serviceFlag is false if the simplified stop and go interaction is not active
+            print(f"[{self.__class__.__name__}]: Server started")  # the serviceFlag is false if the simplified stop and go interaction is not active
 
             if not self.service_flag:
                 # the value that can be assigned to the following two variable is ( checking | ok | not balanced )
@@ -56,7 +56,7 @@ class SegregationSystemOrchestrator:
 
             if self.service_flag or evaluation_check_data_balance != "ok":
                 # loop until I receive enough prepared session
-                print("Receiving data...")
+                print(f"[{self.__class__.__name__}]: Receiving data...")
 
                 while self.storage_controller.count() < self.limit_prepared_session:
                     # the storage controller will retrive the data from the messageBus and will store into the db

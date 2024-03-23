@@ -1,3 +1,4 @@
+import os
 from threading import Thread
 
 
@@ -11,8 +12,8 @@ from src.Production.ProductuinSystemConfig import ProductionSystemConfig
 class ProductionSystemOrchestrator:
 
     def __init__(self):
-        self.productionConfig = ProductionSystemConfig('./config/config.json',
-                                                       './config/configSchema.json')
+        self.productionConfig = ProductionSystemConfig(f'{os.path.dirname(__file__)}/config/config.json',
+                                                       f'{os.path.dirname(__file__)}/config/configSchema.json')
         self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
                                                          self.productionConfig.evaluation_window)
         self.systemBus = MessageBus(["PreparedSession", "Classifier"])

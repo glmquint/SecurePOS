@@ -1,4 +1,5 @@
 import json
+import os
 import random
 
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
@@ -71,10 +72,10 @@ class ValidationOrchestrator:
                     self.status.save_status()
                 elif response == 0:  # no valid classifier, repeat the process
                     self.status.status = "set_avg_hyperparams"
-                    self.trainining_process.remove_classifiers('classifiers')
-                    self.trainining_process.remove_precedent_response('Validation/validation_result')
-                    self.trainining_process.remove_precedent_response('Training/learning_result')
-                    self.trainining_process.remove_precedent_response('Training/number_of_iterations')
+                    self.trainining_process.remove_classifiers(f'{os.path.dirname(__file__)}/classifiers')
+                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/Validation/validation_result')
+                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/Training/learning_result')
+                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/Training/number_of_iterations')
                     if self.configurations.stop_and_go:
                         self.status.save_status()
                     else:

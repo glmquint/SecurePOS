@@ -14,10 +14,9 @@ from src.Storage.StorageController import StorageController
 
 class PreparationSystemOrchestrator:
     def __init__(self, config:PreparationSystemConfig = None) -> None:
-        self.dirname = os.path.dirname(__file__)
         if not config:
-            config = PreparationSystemConfig(f"{self.dirname}/../DataObjects/Schema/PreparationSystemConfigSchema.json")
-            config.init_from_file(f"{self.dirname}/config/PreparationSystemConfig.json")
+            config = PreparationSystemConfig(f"{os.path.dirname(__file__)}/../DataObjects/Schema/PreparationSystemConfigSchema.json")
+            config.init_from_file(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json")
         self.config = config
         self.storage_controller = StorageController(
             dbConfig           = self.config.db,

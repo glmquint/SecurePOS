@@ -10,7 +10,7 @@ class LearningPlotView:
     model: LearningPlotModel = None
 
     def __init__(self, filename: str, learning_plot_model: LearningPlotModel):
-        self.path_to_save = f'Training/{filename}.png'
+        self.path_to_save = f'{os.path.dirname(__file__)}/Training/{filename}.png'
         self.model = learning_plot_model
 
     def update(self):
