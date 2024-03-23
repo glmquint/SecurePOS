@@ -1,4 +1,4 @@
-from src.DataObjects.Record import Record
+from src.DataObjects.Record import Record, Label
 from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import RawSession
 from src.Ingestion.PhaseTracker import PhaseTracker
@@ -31,6 +31,8 @@ class RawSessionCreator:
     def createRawSession(self) -> None:
         rows_with_max_count = self.storage_controller.retrieve_by_column('uuid', self.max_uuid)
         self.raw_session = RawSession(records = [Record.from_row(**x) for x in rows_with_max_count])
+        label_records = [x for x in self.raw_session.records if type(x) == Label]
+        self.label = label_records[-1] if len(label_records) > 0 else None
 
     def markMissingSamples(self) -> None:
         if self.raw_session is None:
@@ -60,5 +62,5 @@ class RawSessionCreator:
             if self.phase_tracker.isEvalPhase():
                 self.label_sender.send(self.label)
             self.raw_session_sender.send(self.raw_session)
-            continue
+            self.phase_tracker.increment()
 
