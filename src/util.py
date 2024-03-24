@@ -12,12 +12,13 @@ def log(func):
     def wrapper(*args, **kwargs):
         global nesting_level
         # get current time with milliseconds
-        if nesting_level < 7:
-            try:
-                arg = [a.__dict__ for a in args]
-            except:
-                arg = args
-            print(" " * nesting_level + f"[{time.time():.7f}]: Calling {func.__name__} with args {arg} and kwargs {kwargs}")
+        try:
+            arg = [a.__dict__ for a in args]
+        except:
+            arg = args
+        with open(f"{func.__name__}.log", 'a') as f:
+            f.write(f"[{time.time()}]: Calling {func.__name__} with args {arg} and kwargs {kwargs}\n")
+        #print(" " * nesting_level + f"[{time.time():.7f}]: Calling {func.__name__} with args {arg} and kwargs {kwargs}")
         nesting_level += 1
         result = func(*args, **kwargs)
         nesting_level -= 1
