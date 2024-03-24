@@ -93,10 +93,12 @@ class Service:
     def start_clientside_server(self):
         # start the server on another thread
         Thread(target=self.server.run, daemon=True, kwargs={'port': 6001}).start()
+        time.sleep(1)
 
     def start_messaging_server(self):
         # start the server on another thread
         Thread(target=self.messaging_system.run, daemon=True, kwargs={'port': 6000}).start()
+        time.sleep(1)
 
     def send_data(self):
         i = 0
@@ -131,11 +133,13 @@ class Service:
         self.ingestion_system = PreparationSystemOrchestrator()
         self.ingestion_system.storage_controller.remove_all() # reset db
         Thread(target=self.ingestion_system.run, daemon=True).start()
+        time.sleep(1)
 
     def start_segregation_system(self):
         self.segregation_system = SegregationSystemOrchestrator()
         self.segregation_system.storage_controller.remove_all() # reset db
         Thread(target=self.segregation_system.run, daemon=True).start()
+        time.sleep(1)
 
     def start_development_system(self):
         # delete all files inside the classifiers folder
@@ -143,6 +147,7 @@ class Service:
             os.remove(f"{os.path.dirname(__file__)}/../Development/classifiers/{f}")
         self.development_system = DevelopmentSystemMasterOrchestrator()
         Thread(target=self.development_system.start, daemon=True).start()
+        time.sleep(1)
 
     def start_production_system(self):
         with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
@@ -154,10 +159,12 @@ class Service:
                 pass
         self.production_system = ProductionSystemOrchestrator()
         Thread(target=self.production_system.run, daemon=True).start()
+        time.sleep(1)
 
     def start_evaluation_system(self):
         self.evaluation_system = EvaluationSystemOrchestrator()
         Thread(target=self.evaluation_system.main, daemon=True).start()
+        time.sleep(1)
 
 
 if __name__ == '__main__':
