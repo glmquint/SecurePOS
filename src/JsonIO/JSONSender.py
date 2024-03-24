@@ -10,7 +10,6 @@ class JSONSender:
         self.url = url
         self.validator = JSONValidator(json_schema_path)
 
-    @log
     def send(self, obj):
         try:
             self.validator.validate_data(obj.to_json())

@@ -4,6 +4,7 @@ from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemCon
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.JsonIO.FileSender import FileSender
 from src.JsonIO.JSONSender import JSONSender
+from src.util import monitorPerformance
 
 
 class DevelopmentSystemSender:
@@ -18,9 +19,11 @@ class DevelopmentSystemSender:
         self.production_sender = FileSender(self.development_system_configurations.production_system_receiver)
         self.status = status
 
+    @monitorPerformance(should_sample_after=True)
     def send_to_messaging(self):
         self.messaging_sender.send(self.development_system_configurations.to_dict())
 
+    @monitorPerformance(should_sample_after=True)
     def send_to_production(self):
         print(f'[{self.__class__.__name__}]: Sending classifier to production')
         with open(f'{os.path.dirname(__file__)}/classifiers/{self.status.best_classifier_name}.sav', 'rb') as file:

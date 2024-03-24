@@ -8,6 +8,7 @@ from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
 from src.Storage.StorageController import StorageController
 from src.Storage.dbConfig import DBConfig
+from src.util import monitorPerformance
 
 
 class LabelReceiver:
@@ -35,6 +36,7 @@ class LabelReceiver:
         thread.daemon = True
         thread.start()
 
+    @monitorPerformance(should_sample_after=False)
     def callback_s(self, json_data):
         #print(f"Received from security {json_data}")
         #???
@@ -47,6 +49,7 @@ class LabelReceiver:
         self.mbus.pushTopic("sec_label", data)
 
 
+    @monitorPerformance(should_sample_after=False)
     def callback_f(self, json_data):
         #print(f"Received {json_data}")
         #???

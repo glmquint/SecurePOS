@@ -2,6 +2,7 @@ import os
 
 from src.JsonIO.JSONSender import JSONSender
 from src.Segregation.SegregationSystemConfig import SegregationSystemConfig
+from src.util import monitorPerformance
 
 
 class SegregationSystemSender:
@@ -21,6 +22,7 @@ class SegregationSystemSender:
 
         self.__learning_set_generator = learningSetGenerator
 
+    @monitorPerformance(should_sample_after=True)
     def send_to_development(self):
         learning_set = self.__learning_set_generator.leaning_set
         print(learning_set.to_json())
