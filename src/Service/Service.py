@@ -1,3 +1,4 @@
+import json
 import math
 import os
 import time
@@ -137,11 +138,20 @@ class Service:
         Thread(target=self.segregation_system.run, daemon=True).start()
 
     def start_development_system(self):
+        # delete all files inside the classifiers folder
+        for f in os.listdir(f"{os.path.dirname(__file__)}/../Development/classifiers"):
+            os.remove(f"{os.path.dirname(__file__)}/../Development/classifiers/{f}")
         self.development_system = DevelopmentSystemMasterOrchestrator()
         Thread(target=self.development_system.start, daemon=True).start()
 
     def start_production_system(self):
-        # TODO: using ingestion's config, remove production's classifier if we're in development phase
+        with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
+            config = json.load(f)
+        if config['phase_tracker']['phase'] == 'Development':
+            try:
+                os.remove(f"{os.path.dirname(__file__)}/../Production/classifier.sav")
+            except FileNotFoundError:
+                pass
         self.production_system = ProductionSystemOrchestrator()
         Thread(target=self.production_system.run, daemon=True).start()
 
