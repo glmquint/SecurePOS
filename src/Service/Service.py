@@ -135,7 +135,6 @@ class Service:
         self.ingestion_system.storage_controller.remove_all() # reset db
         Thread(target=self.ingestion_system.run, name="self.ingestion_system.run", daemon=True).start()
         time.sleep(1) # wait for the server to start
-        time.sleep(1)
 
     def start_segregation_system(self):
         print("starting segregation system...")
@@ -143,7 +142,6 @@ class Service:
         self.segregation_system.storage_controller.remove_all() # reset db
         Thread(target=self.segregation_system.run, name="self.segregation_system.run", daemon=True).start()
         time.sleep(1) # wait for the server to start
-        time.sleep(1)
 
     def start_development_system(self):
         print("starting development system...")
@@ -153,7 +151,6 @@ class Service:
         self.development_system = DevelopmentSystemMasterOrchestrator()
         Thread(target=self.development_system.start, name="self.development_system.start", daemon=True).start()
         time.sleep(1) # wait for the server to start
-        time.sleep(1)
 
     def start_production_system(self):
         print("starting production system...")
@@ -171,14 +168,12 @@ class Service:
         self.production_system = ProductionSystemOrchestrator()
         Thread(target=self.production_system.run, name="self.production_system.run", daemon=True).start()
         time.sleep(1) # wait for the server to start
-        time.sleep(1)
 
     def start_evaluation_system(self):
         print("starting evaluation system...")
         self.evaluation_system = EvaluationSystemOrchestrator()
         Thread(target=self.evaluation_system.main, name="self.evaluation_system.main", daemon=True).start()
         time.sleep(1) # wait for the server to start
-        time.sleep(1)
 
 
 if __name__ == '__main__':
@@ -196,4 +191,5 @@ if __name__ == '__main__':
     config['phase_tracker']['phase'] = 'Production'
     with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'w') as f:
         json.dump(config, f, indent=4)
+    service = Service()
     service.run()
