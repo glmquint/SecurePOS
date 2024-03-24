@@ -43,7 +43,11 @@ class EvaluationSystemOrchestrator:
         print("=====================================")
         while True:
             if self.config.state == 0:
-                self.run()
+                try:
+                    self.run()
+                except Exception as e:
+                    print(e)
+                    continue
                 self.config.write_state(1)
                 if self.config.simulate_human_task:
                     self.evaluation.getresult(True)

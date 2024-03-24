@@ -46,7 +46,7 @@ class EvaluationReportModel:
             print(difference)
             print("Labels and Security Labels are not matching.Aborting.")
             self.removelabels()
-            exit()
+            raise Exception("Labels and Security Labels are not matching.")
         return
 
     def sort_labels(self):
