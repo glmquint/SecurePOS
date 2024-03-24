@@ -43,6 +43,20 @@ class StorageController:
             return False
         return True
 
+    def retrieve_n(self, number:int,blocking=True) -> [type]:
+        if blocking:
+            self.wait_count_updated()
+        return [self.obj_type.from_row(x) for x in self.DBConnector.retrieve_n(number)]
+
+    def remove_n(self,number:int):
+        try:
+            self.DBConnector.remove_n(number)
+            self.count_updated.set()
+        except Exception as e:
+            print(e)
+            return False
+        return True
+
     def retrieve_all(self, blocking=True) -> [type]:
         if blocking:
             self.wait_count_updated()

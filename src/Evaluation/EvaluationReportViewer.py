@@ -17,6 +17,7 @@ class EvaluationReportViewer:
         self.second_column_offset = 275
         self.third_column_offset = 555
         self.format_date = "%Y-%m-%d %H:%M:%S"
+        self.format_timestamp = "%Y-%m-%d_%H-%M-%S"
         self.title = "Evaluation report, " + str(datetime.now().strftime(self.format_date))
         self.row_id_x_offset = 5
         self.first_label_x_offset = 45
@@ -32,7 +33,7 @@ class EvaluationReportViewer:
     def y_offset(self, y: int):
         return 10 + 30 * y
 
-    def save_evaluation_result(self, modelcontroller, tick_array): # TODO @mirco: check consecutive is actually boolean/integer
+    def save_evaluation_result(self, modelcontroller, tick_array):
         print("Printing .png evaluation report.")
         self.title = "Evaluation report, " + str(datetime.now().strftime(self.format_date))
         labels = modelcontroller.labels[0]
@@ -109,7 +110,7 @@ class EvaluationReportViewer:
         imgDraw.line([(self.firstcorner,self.secondcorner),(self.firstcorner,self.height)],fill=(self.black),width=self.widthline)
         imgDraw.line([(self.firstcorner,self.secondcorner),(self.width,self.secondcorner)],fill=(self.black),width=self.widthline)
 
-        img.save(f'{os.path.dirname(__file__)}/data/result.png')
+        img.save(f'{os.path.dirname(__file__)}/data/result_'+str(datetime.now().strftime(self.format_timestamp))+'.png')
         pass
 
 

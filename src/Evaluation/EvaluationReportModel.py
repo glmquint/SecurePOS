@@ -24,14 +24,14 @@ class EvaluationReportModel:
 
 
     def retrieve(self):
-        labels = self.scontroller_label.retrieve_all()
-        slabels = self.scontroller_security.retrieve_all()
+        labels = self.scontroller_label.retrieve_n(self.sufficient_label_number)
+        slabels = self.scontroller_security.retrieve_n(self.sufficient_label_number)
         return [labels, slabels]
 
 
     def removelabels(self):
-        self.scontroller_security.remove_all()
-        self.scontroller_label.remove_all()
+        self.scontroller_security.remove_n(self.sufficient_label_number)
+        self.scontroller_label.remove_n(self.sufficient_label_number)
 
     def check_valid_labels(self):
         x = {x.uuid for x in self.labels[0]}
@@ -70,12 +70,8 @@ class EvaluationReportModel:
                 self.tick_array.append("X")
                 if not consecutive:
                     consecutive = True
-                    if consecutiverror == 0:
-                        consecutiverror = 1
-                    else:
-                        consecutiverror = consecutiverror + 1
-                else:
-                    consecutiverror = consecutiverror + 1
+                consecutiverror = consecutiverror + 1
+                maxconsecutive= max(consecutiverror,maxconsecutive)
             else:
                 self.tick_array.append("V")
                 consecutive = False
