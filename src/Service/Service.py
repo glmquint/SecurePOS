@@ -162,7 +162,7 @@ class Service:
             except FileNotFoundError:
                 pass
         elif config['phase_tracker']['phase'] == 'Production':
-            assert os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav")
+            assert os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav"), "last development phase did not finish correctly"
         else:
             raise Exception("Invalid phase")
         self.production_system = ProductionSystemOrchestrator()
@@ -172,11 +172,14 @@ class Service:
     def start_evaluation_system(self):
         print("starting evaluation system...")
         self.evaluation_system = EvaluationSystemOrchestrator()
+        self.evaluation_system.evaluation.evaluationmodel.scontroller_label.remove_all() # reset db
+        self.evaluation_system.evaluation.evaluationmodel.scontroller_security.remove_all() # reset db
         Thread(target=self.evaluation_system.main, name="self.evaluation_system.main", daemon=True).start()
         time.sleep(1) # wait for the server to start
 
 
 def test_development():
+    global service
     with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
         config = json.load(f)
     config['phase_tracker']['phase'] = 'Development'
@@ -187,6 +190,7 @@ def test_development():
     print("Done with development, now switching to production...")
 
 def test_production():
+    global service
     with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
         config = json.load(f)
     config['phase_tracker']['phase'] = 'Production'
@@ -196,6 +200,7 @@ def test_production():
     service.run()
 
 if __name__ == '__main__':
+    service = None
     #test_development()
     time.sleep(2)
     test_production()
