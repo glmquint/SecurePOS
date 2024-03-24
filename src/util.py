@@ -1,8 +1,11 @@
 # log decorator
 import json
 import time
+from threading import Thread
 
 import requests
+
+from src.MessageBus.MessageBus import MessageBus
 
 nesting_level = 0
 def log(func):
@@ -30,10 +33,20 @@ class PerformanceSample:
     def to_json(self):
         return self.__dict__
 
+def continous_sending():
+    sampler_endpoint = "http://127.0.0.1:6000/performance_sampler"
+    while True:
+        performanceSample = message_bus.popTopic("performance_sample")
+        requests.post(sampler_endpoint, json=performanceSample.to_json())
+
+
+message_bus = MessageBus(['performance_sample'])
+thread = Thread(target=continous_sending)
 
 def monitorPerformance(should_sample_after: bool):
     # TODO: make it configurable from a config file
-    sampler_endpoint = "http://127.0.0.1:6000/performance_sampler"
+    if not thread.is_alive():
+        thread.start()
     def decorator(func):
         def wrapper(*args, **kwargs):
             if should_sample_after:
@@ -44,7 +57,7 @@ def monitorPerformance(should_sample_after: bool):
                 result = func(*args, **kwargs)
             sample = {"timestamp": timestamp, "function_name": func.__name__, "class_name": str(args[0].__class__).split("'>", maxsplit=1)[0].split('.')[-1]}
             performanceSample = PerformanceSample(**sample)
-            requests.post(sampler_endpoint, json=performanceSample)
+            message_bus.pushTopic("performance_sample", performanceSample)
             return result
         return wrapper
     return decorator
