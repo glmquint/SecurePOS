@@ -16,5 +16,5 @@ class JSONSender:
             requests.post(self.url, json=obj.to_json())
         except Exception as e:
             print(e, f"({__file__})")
-            return False
+            raise e
         return True
