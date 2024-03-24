@@ -2,9 +2,9 @@ import queue
 
 
 class MessageBus:
-    messageQueues = dict()
 
     def __init__(self, topics=list()):
+        self.messageQueues = dict()
         for t in topics:
             self.messageQueues[t] = queue.Queue()
 
