@@ -3,6 +3,7 @@ from threading import Thread, Event
 
 from src.DataObjects.Record import Record
 from src.DataObjects.RecordOld import RecordOld
+from src.Ingestion.IngestionSystemSender import IngestionSystemSender
 from src.Ingestion.PhaseTracker import PhaseTracker
 from src.Ingestion.PreparationSysReceiver import PreparationSysReceiver
 from src.Ingestion.PreparationSystemConfig import PreparationSystemConfig
@@ -28,16 +29,9 @@ class PreparationSystemOrchestrator:
         self.phase_tracker = PhaseTracker(
             config             = self.config.phase_tracker
         )
-        self.raw_session_creator = RawSessionCreator(
-            config             = self.config.raw_session_creator,
-            storage_controller = self.storage_controller,
-            phase_tracker      = self.phase_tracker
-        )
-        self.prepared_session_creator = PreparedSessionCreator(
-            config             = self.config.prepared_session_creator,
-            message_bus        = self.message_bus,
-            raw_session_topic  = self.config.raw_session_topic,
-            phase_tracker      = self.phase_tracker
+        self.IngestionSystemSender = IngestionSystemSender(
+            config             = self.config.ingestion_sys_sender,
+            is_dev_phase       = self.phase_tracker.isDevPhase()
         )
         self.preparation_sys_receiver = PreparationSysReceiver(
             config             = self.config.preparation_sys_receiver,
@@ -45,12 +39,28 @@ class PreparationSystemOrchestrator:
             storage_controller = self.storage_controller,
             message_bus        = self.message_bus
         )
-        self.completed = Event()
+        self.raw_session_creator = RawSessionCreator(
+            config             = self.config.raw_session_creator,
+            storage_controller = self.storage_controller,
+            phase_tracker      = self.phase_tracker,
+            sender             = self.IngestionSystemSender
+        )
+        self.prepared_session_creator = PreparedSessionCreator(
+            config             = self.config.prepared_session_creator,
+            message_bus        = self.message_bus,
+            raw_session_topic  = self.config.raw_session_topic,
+            phase_tracker      = self.phase_tracker,
+            sender             = self.IngestionSystemSender
+        )
 
     def run(self) -> None:
-        Thread(target=self.raw_session_creator.run).start()
-        Thread(target=self.prepared_session_creator.run).start()
-        Thread(target=self.preparation_sys_receiver.run).start()
-        self.completed.clear()
-        self.completed.wait() # this should wait forever
+        threads = [
+            Thread(target=self.preparation_sys_receiver.run),
+            Thread(target=self.raw_session_creator.run),
+            Thread(target=self.prepared_session_creator.run),
+        ]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
 

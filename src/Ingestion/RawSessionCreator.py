@@ -3,22 +3,21 @@ import os
 from src.DataObjects.Record import Record, Label
 from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import RawSession
+from src.Ingestion.IngestionSystemSender import IngestionSystemSender
 from src.Ingestion.PhaseTracker import PhaseTracker
 from src.JsonIO.JSONSender import JSONSender
 from src.Storage.StorageController import StorageController
 from src.util import log
 
-DATAOBJ_PATH = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
-
 class RawSessionCreator:
 
-    def __init__(self, config, storage_controller:StorageController, phase_tracker:PhaseTracker) -> None:
-        self.label              = None
-        self.number_of_systems  = config['number_of_systems']
-        self.label_sender       = JSONSender(f"{DATAOBJ_PATH}/AttackRiskLabelSchema.json", config['label_receiver']['url'])
-        self.raw_session_sender = JSONSender(f"{DATAOBJ_PATH}/RawSessionSchema.json", config['raw_session_receiver']['url'])
-        self.storage_controller = storage_controller
-        self.phase_tracker      = phase_tracker
+    def __init__(self, config, storage_controller: StorageController, phase_tracker: PhaseTracker,
+                 sender : IngestionSystemSender) -> None:
+        self.label                  = None
+        self.number_of_systems      = config['number_of_systems']
+        self.storage_controller     = storage_controller
+        self.phase_tracker          = phase_tracker
+        self.ingestion_sys_sender   = sender
 
     def retrieveRecords(self) -> [RecordOld]:
         pass
@@ -64,7 +63,7 @@ class RawSessionCreator:
             if not self.isRawSessionValid():
                 continue
             if self.phase_tracker.isEvalPhase():
-                self.label_sender.send(self.label)
-            self.raw_session_sender.send(self.raw_session)
+                self.ingestion_sys_sender.send_label(self.label)
+            self.ingestion_sys_sender.send_raw_session(self.raw_session)
             self.phase_tracker.increment()
 
