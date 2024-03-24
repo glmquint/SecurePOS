@@ -9,6 +9,8 @@ from src.Production.ProductionSystemPhaseTracker import ProductionSystemPhaseTra
 from src.Production.ProductionSystemReceiver import ProductionSystemReceiver
 from src.Production.ProductionSystemSender import ProductionSystemSender
 from src.Production.ProductuinSystemConfig import ProductionSystemConfig
+from src.util import Message
+
 
 class ProductionSystemOrchestrator:
 
@@ -38,7 +40,7 @@ class ProductionSystemOrchestrator:
             if self.classifier is None:
                 self.classifier = self.systemBus.popTopic("Classifier")
                 print(f"Classifier {self.classifier}")
-                self.sender.sendToMessaging("Classifier received")
+                self.sender.sendToMessaging(Message(msg="Classifier received"))
                 quit()
             #print(f"Fake classifier classifier pre {fakeClassifier.attackRiskClassifier}")
             attackRiskLabel = attackRiskClassifier.provideAttackRiskLabel()

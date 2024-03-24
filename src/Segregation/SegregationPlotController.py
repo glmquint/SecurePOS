@@ -4,7 +4,8 @@ from src.Segregation.CheckDataBalancingView import *
 
 class SegregationPlotController:
 
-    def __init__(self, storageController, checkDataBalanceTolerance):
+    def __init__(self, storageController, checkDataBalanceTolerance, limitPreparedSession):
+        self.__limit_prepared_session = limitPreparedSession
         self.__storage_controller = storageController
         self.__check_data_balancing_model = CheckDataBalancingModel(storageController)
         self.__check_data_balancing_view = CheckDataBalanceView(checkDataBalanceTolerance, self.__check_data_balancing_model)
@@ -13,7 +14,7 @@ class SegregationPlotController:
 
     def plot_data_balance(self):
         # retrieve data from the model
-        self.__check_data_balancing_model.retrive_prepared_session()
+        self.__check_data_balancing_model.retrive_prepared_session(self.__limit_prepared_session)
         # pass data to the view to plot
         self.__check_data_balancing_view.plot_check_data_balance()
 

@@ -41,13 +41,13 @@ class DBConnector:
     def remove_n(self,number:int):
         with self.lock:
             cursor = self.connection.cursor()
-            cursor.execute('DELETE FROM ' + self.tableName + ' WHERE rowid IN ( select rowid from ' + self.tableName + ' limit '+str(number)+')')
+            cursor.execute('DELETE FROM ' + self.tableName + ' WHERE rowid IN ( select rowid from ' + self.tableName + ' order by rowid limit '+str(number)+')')
             self.connection.commit()
 
     def retrieve_n(self,number:int):
         with self.lock:
             cursor = self.connection.cursor()
-            cursor.execute('SELECT ' + ' ,'.join(self.columns) + ' FROM ' + self.tableName + ' limit ' + str(number))
+            cursor.execute('SELECT ' + ' ,'.join(self.columns) + ' FROM ' + self.tableName + ' order by rowid limit ' + str(number))
             return [dict(zip(self.columns, x)) for x in cursor.fetchall()]
 
     def retrieve(self):

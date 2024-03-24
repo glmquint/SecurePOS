@@ -33,6 +33,12 @@ class PerformanceSample:
     def to_json(self):
         return self.__dict__
 
+class Message:
+    def __init__(self, msg:str):
+        self.msg = msg
+    def to_json(self):
+        return self.__dict__
+
 def continous_sending():
     sampler_endpoint = "http://127.0.0.1:6000/performance_sampler"
     while True:

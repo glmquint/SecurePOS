@@ -176,7 +176,7 @@ class Service:
         time.sleep(1) # wait for the server to start
 
 
-if __name__ == '__main__':
+def test_development():
     with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
         config = json.load(f)
     config['phase_tracker']['phase'] = 'Development'
@@ -185,7 +185,8 @@ if __name__ == '__main__':
     service = Service()
     service.run()
     print("Done with development, now switching to production...")
-    time.sleep(2)
+
+def test_production():
     with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
         config = json.load(f)
     config['phase_tracker']['phase'] = 'Production'
@@ -193,3 +194,10 @@ if __name__ == '__main__':
         json.dump(config, f, indent=4)
     service = Service()
     service.run()
+
+if __name__ == '__main__':
+    #test_development()
+    time.sleep(2)
+    test_production()
+    pass
+

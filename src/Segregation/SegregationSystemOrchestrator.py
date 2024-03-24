@@ -19,7 +19,8 @@ class SegregationSystemOrchestrator:
             {'name': 'PreparedSessionsDataStore', 'table_name': 'PreparedSessions'},
             PreparedSession)
         self.segregation_plot_controller = SegregationPlotController(self.storage_controller,
-                                                                     self.config_parameter.get_tolerance_data_balancing())
+                                                                     self.config_parameter.get_tolerance_data_balancing(),
+                                                                     self.limit_prepared_session)
         # instantiate and run receiver
         self.preparedSessionReceiver = PreparedSessionReceiver(self.storage_controller,
                                                                self.config_parameter.get_segregation_system_port(),
@@ -28,7 +29,8 @@ class SegregationSystemOrchestrator:
         self.learning_set_generator = LearningSetGenerator(self.config_parameter.get_percentage_training_split(),
                                                            self.config_parameter.get_percentage_test_split(),
                                                            self.config_parameter.get_percentage_validation_split(),
-                                                           self.storage_controller)
+                                                           self.storage_controller,
+                                                           self.limit_prepared_session)
 
         self.sender = SegregationSystemSender(self.learning_set_generator)
 
