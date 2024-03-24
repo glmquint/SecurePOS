@@ -10,7 +10,7 @@ class IngestionSystemSender:
         self.label_sender               : JSONSender = JSONSender(f"{DATAOBJ_PATH}/AttackRiskLabelSchema.json", config['label_receiver']['url'])
         self.raw_session_sender         : JSONSender = JSONSender(f"{DATAOBJ_PATH}/RawSessionSchema.json", config['raw_session_receiver']['url'])
         # dev/prod phase doesn't change during execution. We switch between segregation_sys and production_sys only once
-        self.prepared_session_sender    : JSONSender = JSONSender(f"{DATAOBJ_PATH}/PreparedSessionSchema.json", config["segregation_system_receiver"] if is_dev_phase else config["production_system_receiver"]["url"])
+        self.prepared_session_sender    : JSONSender = JSONSender(f"{DATAOBJ_PATH}/PreparedSessionSchema.json", config["segregation_system_receiver"]['url'] if is_dev_phase else config["production_system_receiver"]["url"])
 
     @monitorPerformance(should_sample_after=True)
     def send_label(self, label):
