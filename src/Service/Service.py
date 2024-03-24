@@ -92,12 +92,12 @@ class Service:
 
     def start_clientside_server(self):
         # start the server on another thread
-        Thread(target=self.server.run, daemon=True, kwargs={'port': 6001}).start()
+        Thread(target=self.server.run, daemon=True, name="self.server.run", kwargs={'port': 6001}).start()
         time.sleep(1)
 
     def start_messaging_server(self):
         # start the server on another thread
-        Thread(target=self.messaging_system.run, daemon=True, kwargs={'port': 6000}).start()
+        Thread(target=self.messaging_system.run, daemon=True, name="self.messaging_system.run", kwargs={'port': 6000}).start()
         time.sleep(1)
 
     def send_data(self):
@@ -111,8 +111,8 @@ class Service:
                     del df_row_cleaned[col]
             print(f"Sending row {i} to the ingestion system: {df_row_cleaned.to_dict()}")
             start = time.time()
-            self.ingestion_system.preparation_sys_receiver.receiveRecord(df_row_cleaned.to_dict())
-            #requests.post("http://127.0.0.1:5005/record", json=df_row_cleaned.to_dict())
+            #self.ingestion_system.preparation_sys_receiver.receiveRecord(df_row_cleaned.to_dict())
+            requests.post("http://127.0.0.1:5005/record", json=df_row_cleaned.to_dict())
             print(f"Sent row in {time.time() - start} seconds")
             i += 1
 
@@ -130,26 +130,33 @@ class Service:
         self.start_evaluation_system()
 
     def start_ingestion_system(self):
+        print("starting ingestion system...")
         self.ingestion_system = PreparationSystemOrchestrator()
         self.ingestion_system.storage_controller.remove_all() # reset db
-        Thread(target=self.ingestion_system.run, daemon=True).start()
+        Thread(target=self.ingestion_system.run, name="self.ingestion_system.run", daemon=True).start()
+        time.sleep(1) # wait for the server to start
         time.sleep(1)
 
     def start_segregation_system(self):
+        print("starting segregation system...")
         self.segregation_system = SegregationSystemOrchestrator()
         self.segregation_system.storage_controller.remove_all() # reset db
-        Thread(target=self.segregation_system.run, daemon=True).start()
+        Thread(target=self.segregation_system.run, name="self.segregation_system.run", daemon=True).start()
+        time.sleep(1) # wait for the server to start
         time.sleep(1)
 
     def start_development_system(self):
+        print("starting development system...")
         # delete all files inside the classifiers folder
         for f in os.listdir(f"{os.path.dirname(__file__)}/../Development/classifiers"):
             os.remove(f"{os.path.dirname(__file__)}/../Development/classifiers/{f}")
         self.development_system = DevelopmentSystemMasterOrchestrator()
-        Thread(target=self.development_system.start, daemon=True).start()
+        Thread(target=self.development_system.start, name="self.development_system.start", daemon=True).start()
+        time.sleep(1) # wait for the server to start
         time.sleep(1)
 
     def start_production_system(self):
+        print("starting production system...")
         with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
             config = json.load(f)
         if config['phase_tracker']['phase'] == 'Development':
@@ -157,18 +164,36 @@ class Service:
                 os.remove(f"{os.path.dirname(__file__)}/../Production/classifier.sav")
             except FileNotFoundError:
                 pass
+        elif config['phase_tracker']['phase'] == 'Production':
+            assert os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav")
+        else:
+            raise Exception("Invalid phase")
         self.production_system = ProductionSystemOrchestrator()
-        Thread(target=self.production_system.run, daemon=True).start()
+        Thread(target=self.production_system.run, name="self.production_system.run", daemon=True).start()
+        time.sleep(1) # wait for the server to start
         time.sleep(1)
 
     def start_evaluation_system(self):
+        print("starting evaluation system...")
         self.evaluation_system = EvaluationSystemOrchestrator()
-        Thread(target=self.evaluation_system.main, daemon=True).start()
+        Thread(target=self.evaluation_system.main, name="self.evaluation_system.main", daemon=True).start()
+        time.sleep(1) # wait for the server to start
         time.sleep(1)
 
 
 if __name__ == '__main__':
+    with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
+        config = json.load(f)
+    config['phase_tracker']['phase'] = 'Development'
+    with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'w') as f:
+        json.dump(config, f, indent=4)
     service = Service()
     service.run()
-    answer = input('press a key to exit...')
-    print(answer)
+    print("Done with development, now switching to production...")
+    time.sleep(2)
+    with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
+        config = json.load(f)
+    config['phase_tracker']['phase'] = 'Production'
+    with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'w') as f:
+        json.dump(config, f, indent=4)
+    service.run()

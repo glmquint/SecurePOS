@@ -1,29 +1,49 @@
-from threading import Event
+from threading import Event, Thread
+from time import sleep
 
 from src.Storage.DBConnector import DBConnector
 from src.DataObjects.Session import PreparedSession
-from src.util import log
+from src.util import log, monitorPerformance
 
 
 class StorageController:
     DBConnector = None
     obj_type = None
 
-    def __init__(self, dbConfig, obj_type):
+    def __init__(self, dbConfig, obj_type, buffer_size=1):
         self.obj_type = obj_type
         self.DBConnector = DBConnector(name=dbConfig['name'], table_name=dbConfig['table_name'])
         self.count_updated = Event()
         self.count_updated.set()
+        self.buffer_size = buffer_size
+        self.buffer = []
+        self.timeout_flush_thread = Thread(target=self.timeout_flush, daemon=True)
+        self.timeout_flush_thread.start()
 
-    def save(self, obj):
+
+    @monitorPerformance(should_sample_after=False)
+    def save(self, obj) -> bool:
         if not issubclass(type(obj), self.obj_type):
             raise Exception(f'Invalid type, expected {self.obj_type} got {type(obj)}')
         #row = [obj.to_row()]
         #todo fix this to be parametric
         row = [self.obj_type.to_row(obj)]
+        self.buffer.extend(row)
+        if len(self.buffer) >= self.buffer_size:
+            return self.flush()
+        return True
+
+    def timeout_flush(self):
+        while True:
+            sleep(5)
+            if len(self.buffer) > 0:
+                self.flush()
+
+    def flush(self) -> bool:
         try:
-            self.DBConnector.insert(row)
+            self.DBConnector.insert(self.buffer)
             self.count_updated.set()
+            self.buffer = []
         except Exception as e:
             print(__name__, e)
             return False

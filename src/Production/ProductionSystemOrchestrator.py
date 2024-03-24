@@ -38,7 +38,7 @@ class ProductionSystemOrchestrator:
             if self.classifier is None:
                 self.classifier = self.systemBus.popTopic("Classifier")
                 print(f"Classifier {self.classifier}")
-                self.sender.sendToMessaging("Classifier received")
+                self.sender.sendToMessaging(f"Classifier received {self.classifier.name}")
                 quit()
             #print(f"Fake classifier classifier pre {fakeClassifier.attackRiskClassifier}")
             attackRiskLabel = attackRiskClassifier.provideAttackRiskLabel()

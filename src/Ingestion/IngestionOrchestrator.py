@@ -19,9 +19,11 @@ class PreparationSystemOrchestrator:
             config = PreparationSystemConfig(f"{os.path.dirname(__file__)}/../DataObjects/Schema/PreparationSystemConfigSchema.json")
             config.init_from_file(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json")
         self.config = config
+        self.config.db.update({'buffer_size': 5})
         self.storage_controller = StorageController(
             dbConfig           = self.config.db,
-            obj_type           = Record
+            obj_type           = Record,
+            buffer_size        = 100
         )
         self.message_bus = MessageBus(
             topics             = [self.config.raw_session_topic]
