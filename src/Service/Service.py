@@ -11,6 +11,7 @@ from src.Evaluation.EvaluationSystemOrchestrator import EvaluationSystemOrchestr
 from src.Ingestion.IngestionOrchestrator import PreparationSystemOrchestrator
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
+from src.MessageBus.MessageBus import MessageBus
 from src.Production.ProductionSystemOrchestrator import ProductionSystemOrchestrator
 from src.Segregation.SegregationSystemOrchestrator import SegregationSystemOrchestrator
 
@@ -41,6 +42,7 @@ clientside		- 6001
 
 class Service:
     def __init__(self):
+        self.message_bus = MessageBus()
         self.load_data()
         self.setup_client_listener()
         self.setup_messaging_listener()
@@ -48,22 +50,28 @@ class Service:
     def setup_messaging_listener(self):
         self.messaging_system = Server()
         self.messaging_system.add_resource(JSONEndpoint, '/messaging_system', recv_callback=self.messaging_system_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
-        self.messaging_system.add_resource(JSONEndpoint, '/performance_sampler', recv_callback=self.performance_sampler_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/emtpy.json')
+        self.message_bus.addTopic('messaging_system')
+        self.messaging_system.add_resource(JSONEndpoint, '/performance_sampler', recv_callback=self.performance_sampler_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
+        self.message_bus.addTopic('performance_sampler')
 
     def messaging_system_callback(self, json_data):
         print(f"Received data from messaging system: {json_data}")
+        self.message_bus.pushTopic('messaging_system', json_data)
         return {"status": "ok"}
 
     def performance_sampler_callback(self, json_data):
         print(f"Received performance data: {json_data}")
+        self.message_bus.pushTopic('performance_sampler', json_data)
         return {"status": "ok"}
 
     def setup_client_listener(self):
         self.server = Server()
         self.server.add_resource(JSONEndpoint, '/client', recv_callback=self.client_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
+        self.message_bus.addTopic('client')
 
     def client_callback(self, json_data):
         print(f"Received data from client: {json_data}")
+        self.message_bus.pushTopic('client', json_data)
         return {"status": "ok"}
 
     def load_data(self):
@@ -100,7 +108,8 @@ class Service:
                     del df_row_cleaned[col]
             print(f"Sending row {i} to the ingestion system: {df_row_cleaned.to_dict()}")
             start = time.time()
-            requests.post("http://127.0.0.1:5005/record", json=df_row_cleaned.to_dict())
+            self.ingestion_system.preparation_sys_receiver.receiveRecord(df_row_cleaned.to_dict())
+            #requests.post("http://127.0.0.1:5005/record", json=df_row_cleaned.to_dict())
             print(f"Sent row in {time.time() - start} seconds")
             i += 1
 
