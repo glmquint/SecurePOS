@@ -38,7 +38,7 @@ class EvaluationReportViewer:
         self.title = "Evaluation report, " + str(datetime.now().strftime(self.format_date))
         labels = modelcontroller.labels[0]
         security_labels = modelcontroller.labels[1]
-        font = ImageFont.truetype("arial.ttf", size=20)
+        font = ImageFont.truetype("Arial.ttf", size=20)
         img = Image.new('RGB', (self.width,self.height), color='white')
         imgDraw = ImageDraw.Draw(img)
         imgDraw.text((10, 5), self.title, font=font, fill=self.black)
