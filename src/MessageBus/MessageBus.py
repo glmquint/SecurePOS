@@ -4,7 +4,7 @@ import queue
 class MessageBus:
     messageQueues = dict()
 
-    def __init__(self, topics):
+    def __init__(self, topics=list()):
         for t in topics:
             self.messageQueues[t] = queue.Queue()
 
