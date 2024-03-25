@@ -27,8 +27,5 @@ class CheckInputCoverageModel:
                 dataframe_data[column] += 90
             dataframe_data[column] = dataframe_data[column] / dataframe_data[column].abs().max()
 
-        # FIXME: why are we creating a new list of PreparedSession objects when in the end we just recompute the dataframe?
-        # prepared_sessions_list = [PreparedSession(**row.to_dict()) for _, row in dataframe_data.iterrows()] # labels will be None
-
         return dataframe_data
 

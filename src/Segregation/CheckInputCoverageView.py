@@ -4,8 +4,6 @@ import random
 import plotly.graph_objects as go
 import pandas as pd
 from random import random
-
-from src.DataObjects.Session import PreparedSession
 from src.Segregation.CheckInputCoverageModel import CheckInputCoverageModel
 
 
@@ -27,27 +25,6 @@ class CheckInputCoverageView:
                   'MedianDestIP']
         assert len(labels) == len(pandas_dataset.columns), f"cannot rename different number of columns: {len(labels)} instead of {len(pandas_dataset.columns)}"
         pandas_dataset.columns = labels
-
-        # FIXME: cleanup
-        '''
-        data = []
-        for i in PreparedSessionList:
-            row = [i.getMeanAbsoluteDifferencingTransactionTimestamps(), i.getMeanAbsoluteDifferencingTransactionAmount(),
-                   i.getMedianLongitude(), i.getMedianLatitude(), i.getMedianTargetIP(), i.getMedianDestIP()]
-            data.append(row)
-
-        # Create a pandas DataFrame with the generated data and labels
-        dataset = pd.DataFrame(data, columns=labels)
-
-
-        dataset = pd.DataFrame([ps.to_json() for ps in preparedSessionPd], columns=preparedSessionPd[0].to_json().keys())
-        dataset.drop(['label'], axis=1, inplace=True)
-
-        numeric_columns = dataset.columns[0::]
-        numeric_values_dataset = dataset[numeric_columns].values
-
-        pandas_dataset = pd.DataFrame(data=numeric_values_dataset, columns=labels)
-        '''
 
         fig = go.Figure()
 

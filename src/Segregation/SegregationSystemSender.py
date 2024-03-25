@@ -30,9 +30,6 @@ class SegregationSystemSender:
             "http://" + str(messaging_system_ip) + ":" + str(
                 messaging_system_port) + "/" + str(
                 messaging_system_endpoint))
-
-
-
         self.__learning_set_generator = learningSetGenerator
 
     @monitorPerformance(should_sample_after=True)

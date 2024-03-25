@@ -65,3 +65,5 @@ def test_run():
     segregation_system_orchestrator.run()
 
     assert True
+
+test_run()
