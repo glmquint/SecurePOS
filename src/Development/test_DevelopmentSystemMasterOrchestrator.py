@@ -8,7 +8,9 @@ from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 
 class TestDevelopmentSystemMasterOrchestrator(TestCase):
     def test_start(self):
-        status = DevelopmentSystemStatus(f"{os.path.dirname(__file__)}/development_system_status.json", f"{os.path.dirname(__file__)}/schema/status_schema.json")
+        status = DevelopmentSystemStatus(
+            f"{os.path.dirname(__file__)}/development_system_status.json",
+            f"{os.path.dirname(__file__)}/schema/status_schema.json")
         status.load_status()
         status.status = "pop_learning_set"
         ls_json = {

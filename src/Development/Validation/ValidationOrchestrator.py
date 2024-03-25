@@ -17,7 +17,7 @@ class ValidationOrchestrator:
     status: DevelopmentSystemStatus = None
     configurations: DevelopmentSystemConfigurations = None
     grid_search = None
-    trainining_process: TrainProcess = None
+    training_process: TrainProcess = None
 
     def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus,
                  configurations: DevelopmentSystemConfigurations):
@@ -25,10 +25,9 @@ class ValidationOrchestrator:
         self.message_bus = message_bus
         self.status = status
         self.configurations = configurations
-        self.trainining_process = TrainProcess(self.status, self.message_bus,
-                                               self.configurations)
+        self.training_process = TrainProcess(self.status, self.message_bus,
+                                             self.configurations)
 
-    @log
     def check_validation_result(self) -> int:
         ret_val = -1
         try:
@@ -49,11 +48,11 @@ class ValidationOrchestrator:
     def start(self):
         while True:
             if self.status.status == "set_hyperparams":
-                self.trainining_process.set_hyperparams()
+                self.training_process.set_hyperparams()
                 self.status.should_validate = True
                 self.status.status = "do_grid_search"
             if self.status.status == "do_grid_search":
-                self.trainining_process.perform_grid_search()
+                self.training_process.perform_grid_search()
                 self.status.should_validate = False
                 self.status.status = "generate_validation_report"
             elif self.status.status == "generate_validation_report":
@@ -63,19 +62,21 @@ class ValidationOrchestrator:
                 if self.configurations.stop_and_go:
                     response = self.check_validation_result()
                 else:
-                    response = random.randint(1, 1) #TODO: change me
-                if self.status.best_classifier_name == "Invalid":  # if no best classifier has been found, repeat the process
+                    response = random.randint(1, 1)  # TODO: change me
+                if self.status.best_classifier_name == "Invalid":  # if no best classifier repeat the process
                     response = 0
-                    print(f'[{self.__class__.__name__}]: no valid classifier from validation phase, overriding user choice')
+                    print(f'[{self.__class__.__name__}]: no valid classifier from validation, overriding user choice')
                 if response < 0:
                     self.status.status = "check_validation_report"
                     self.status.save_status()
                 elif response == 0:  # no valid classifier, repeat the process
                     self.status.status = "set_avg_hyperparams"
-                    self.trainining_process.remove_classifiers(f'{os.path.dirname(__file__)}/../classifiers')
-                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/validation_result')
-                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/../Training/learning_result')
-                    self.trainining_process.remove_precedent_response(f'{os.path.dirname(__file__)}/../Training/number_of_iterations')
+                    self.training_process.remove_classifiers(f'{os.path.dirname(__file__)}/../classifiers')
+                    self.training_process.remove_precedent_response(f'{os.path.dirname(__file__)}/validation_result')
+                    self.training_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/../Training/learning_result')
+                    self.training_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/../Training/number_of_iterations')
                     if self.configurations.stop_and_go:
                         self.status.save_status()
                     else:

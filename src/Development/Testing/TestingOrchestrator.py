@@ -57,10 +57,14 @@ class TestingOrchestrator:
                 elif response == 0:
                     self.status.status = "send_config"
                     # TODO: maybe remove classifier if not needed
-                    self.training_process.remove_precedent_response(f'{os.path.dirname(__file__)}/../Validation/validation_result')
-                    self.training_process.remove_precedent_response(f'{os.path.dirname(__file__)}/../Training/learning_result')
-                    self.training_process.remove_precedent_response(f'{os.path.dirname(__file__)}/../Training/number_of_iterations')
-                    self.training_process.remove_precedent_response(f'{os.path.dirname(__file__)}/../Testing/test_result')
+                    self.training_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/../Validation/validation_result')
+                    self.training_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/../Training/learning_result')
+                    self.training_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/../Training/number_of_iterations')
+                    self.training_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/../Testing/test_result')
                 elif response == 1:
                     self.status.status = "send_classifier"
                 break

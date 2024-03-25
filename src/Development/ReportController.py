@@ -27,7 +27,9 @@ class ReportController:
         print(f'[{self.__class__.__name__}]: creating validation report')
         scoreboard = self.message_bus.popTopic("Scoreboard")
         validation_report_model = ValidationReportModel(scoreboard)
-        validation_report_view = ValidationReportView(f'{os.path.dirname(__file__)}/Validation', validation_report_model)
+        validation_report_view = ValidationReportView(
+            f'{os.path.dirname(__file__)}/Validation',
+            validation_report_model)
         validation_report_view.update()
         print(f'[{self.__class__.__name__}]: validation report created')
 
