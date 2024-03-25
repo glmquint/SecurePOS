@@ -17,8 +17,6 @@ class ProductionSystemOrchestrator:
     def __init__(self):
         self.productionConfig = ProductionSystemConfig(f'{os.path.dirname(__file__)}/config/config.json',
                                                        f'{os.path.dirname(__file__)}/config/configSchema.json')
-        #self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
-        #                                                 self.productionConfig.evaluation_window)
         self.phaseTracker = PhaseTracker({"production_phase_duration": self.productionConfig.monitoring_window,
                                           "evaluation_phase_duration": self.productionConfig.evaluation_window,
                                           "phase": self.productionConfig.phase})
