@@ -20,6 +20,10 @@ class SegregationSystemConfig:
         self.__percentage_test_split = jsonParameter.get("percentageTestSplit")
         self.__percentage_validation_split = jsonParameter.get("percentageValidationSplit")
 
+        self.__messaging_SystemIp = jsonParameter.get("messagingSystemIp")
+        self.__messaging__system_port = jsonParameter.get("messagingSystemPort")
+        self.__messaging__system_endpoint = jsonParameter.get("messagingSystemEndpoint")
+
     def get_sufficient_session_number(self):
         return self.__sufficient_session_number
 
@@ -53,3 +57,11 @@ class SegregationSystemConfig:
     def get_segregation_system_endpoint(self):
         return self.__segregation_system_endpoint
 
+    def get_messaging_system_ip(self):
+        return self.__messaging_SystemIp
+
+    def get_messaging_system_port(self):
+        return self.__messaging__system_port
+
+    def get_messaging_system_endpoint(self):
+        return self.__messaging__system_endpoint
