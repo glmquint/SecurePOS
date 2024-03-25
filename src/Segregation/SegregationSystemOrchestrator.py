@@ -109,7 +109,7 @@ class SegregationSystemOrchestrator:
 
                 self.sender.send_to_development()
 
-                self.storage_controller.remove_all()  # remove the sessions
+                #self.storage_controller.remove_all()  # remove the sessions
 
                 # reset the evaluation in report files
                 self.segregation_plot_controller.set_evaluation_check_data_balance("checking")

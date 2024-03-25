@@ -22,10 +22,13 @@ def recive():  # FIXME just for debug
          }
 
     p = PreparedSession(**d)
+    print(p)
     return p
 
+print(recive().__dict__)
+quit()
 
-for i in range(50):
-    r = requests.post('http://127.0.0.1:5002/segregationSystem', json=recive().__dict__)
+for i in range(200):
+    r = requests.post('http://127.0.0.1:5001/segregationSystem', json=recive().__dict__)
     print(r.json())
 
