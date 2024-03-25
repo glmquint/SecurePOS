@@ -3,9 +3,9 @@ from threading import Thread
 
 import joblib
 
+from src.Ingestion.PhaseTracker import PhaseTracker
 from src.MessageBus.MessageBus import MessageBus
 from src.Production.FakeAttackRiskClassifier import FakeAttackRiskClassifier
-from src.Production.ProductionSystemPhaseTracker import ProductionSystemPhaseTracker
 from src.Production.ProductionSystemReceiver import ProductionSystemReceiver
 from src.Production.ProductionSystemSender import ProductionSystemSender
 from src.Production.ProductuinSystemConfig import ProductionSystemConfig
@@ -17,8 +17,9 @@ class ProductionSystemOrchestrator:
     def __init__(self):
         self.productionConfig = ProductionSystemConfig(f'{os.path.dirname(__file__)}/config/config.json',
                                                        f'{os.path.dirname(__file__)}/config/configSchema.json')
-        self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
-                                                         self.productionConfig.evaluation_window)
+        #self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
+        #                                                 self.productionConfig.evaluation_window)
+        self.phaseTracker = PhaseTracker({"production_phase_duration": self.productionConfig.monitoring_window,"evaluation_phase_duration": self.productionConfig.evaluation_window})
         self.systemBus = MessageBus(["PreparedSession", "Classifier"])
         self.prodSysRec = ProductionSystemReceiver(self.productionConfig.server_port, self.systemBus)
         self.sender = ProductionSystemSender(self.productionConfig.message_url,
@@ -48,11 +49,11 @@ class ProductionSystemOrchestrator:
             #print(f"Fake classifier classifier post {fakeClassifier.attackRiskClassifier}")
             # TODO: fix schema for attackRiskLabel
 
-            if not (self.phaseTracker.isProduction()):
+            if self.phaseTracker.isEvalPhase():
                 self.sender.sendToEvaluation(attackRiskLabel)
                 print("Send to evaluation")
             self.sender.sendToClient(attackRiskLabel)
-            self.phaseTracker.increseCounter()
+            self.phaseTracker.increment()
             print("Send to client")
 
     def run(self):
