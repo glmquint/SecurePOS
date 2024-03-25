@@ -1,8 +1,5 @@
 import os.path
-
 import joblib
-
-from src.DataObjects.ClassifierTest import ClassifierTest
 from src.DataObjects.Session import PreparedSession
 from src.JsonIO.FileEndpoint import FileEndpoint
 from src.JsonIO.JSONEndpoint import JSONEndpoint
@@ -23,10 +20,9 @@ class ProductionSystemReceiver:
 
     @monitorPerformance(should_sample_after=False)
     def session_callback(self, json_data):
-        #print(json_data)
         prepared_session = PreparedSession(**json_data)
         print("PreparedSession created")
-        # push the preparedSession into the Messegebus
+        # push the prepared_session into the Messegebus
         self.systemBus.pushTopic("PreparedSession", prepared_session)
         print("Received PreparedSession")
         return 200
@@ -39,7 +35,6 @@ class ProductionSystemReceiver:
         print("Classifier received and saved")
         self.systemBus.pushTopic("Classifier", classifier)
         return 200
-
 
     def run(self):
         self.server.run(port=self.port)
