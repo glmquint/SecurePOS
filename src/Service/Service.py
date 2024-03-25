@@ -43,12 +43,12 @@ clientside		- 6001
 
 class Service:
     def __init__(self):
+        with open(f"{os.path.dirname(__file__)}/config/ServiceConfig.json", 'r') as f:
+            self.config = json.load(f)
         self.message_bus = MessageBus()
         self.load_data()
         self.setup_client_listener()
         self.setup_messaging_listener()
-        with open(f"{os.path.dirname(__file__)}/config/ServiceConfig.json", 'r') as f:
-            self.config = json.load(f)
 
     def setup_messaging_listener(self):
         self.messaging_system = Server()
@@ -126,10 +126,10 @@ class Service:
 
     def start_factory(self):
         self.start_ingestion_system()
-        self.start_segregation_system()
-        self.start_development_system()
-        self.start_production_system()
-        self.start_evaluation_system()
+        #self.start_segregation_system()
+        #self.start_development_system()
+        #self.start_production_system()
+        #self.start_evaluation_system()
 
     def start_ingestion_system(self):
         print("starting ingestion system...")
@@ -203,8 +203,14 @@ def test_production():
 
 if __name__ == '__main__':
     service = None
-    #test_development()
-    time.sleep(2)
+    test_development()
+    '''
+    while True:
+        time.sleep(2)
+        if os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav"):
+            print("development finished, production requirements met")
+            break
+    '''
     test_production()
     pass
 
