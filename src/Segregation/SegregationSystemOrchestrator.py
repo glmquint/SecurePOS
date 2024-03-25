@@ -105,7 +105,7 @@ class SegregationSystemOrchestrator:
 
                 self.sender.send_to_development()
 
-                break
+
                 self.storage_controller.remove_all()  # remove the sessions
 
                 # reset the evaluation in report files
