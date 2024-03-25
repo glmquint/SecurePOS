@@ -7,7 +7,6 @@ from uuid import uuid1
 import requests
 
 from src.DataObjects.Record import Label, Record, TransactionCloudRecord, NetworkMonitorRecord, LocalizationSysRecord
-from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import PreparedSession, RawSession
 from src.Ingestion.PreparationSystemConfig import PreparationSystemConfig
 from src.Ingestion.IngestionOrchestrator import PreparationSystemOrchestrator

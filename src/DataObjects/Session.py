@@ -1,8 +1,6 @@
 import json
 from dataclasses import dataclass
 
-from src.DataObjects.Feature import MeanAbsDiffTransaction, MeanAbsDiffTransactionAmount, MedianLongitudeLatitude, \
-    MedianTargetIP, MedianDestIP, Feature, AttackRiskLabel
 from src.DataObjects.Record import Record
 
 

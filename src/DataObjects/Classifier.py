@@ -1,14 +1,12 @@
 import os
 
 import joblib
-from io import BytesIO
 from sklearn.neural_network import MLPClassifier
 
 
 class Classifier:
     name: str = None
     model: MLPClassifier = None
-    bytes_container: BytesIO = None
     number_of_neurons: int = None
     number_of_layers: int = None
     number_of_iterations: int = None
@@ -33,9 +31,6 @@ class Classifier:
         print(f'[{self.__class__.__name__}]: model loaded successfully from file {path}')
 
     def save_model(self, path: str):
-        # self.bytes_container = BytesIO()
-        # joblib.dump(self.model, self.bytes_container)
-        # self.bytes_container.seek(0)
         joblib.dump(self.model, f'{path}/{self.name}.sav')
         print(
             f'[{self.__class__.__name__}]: model has {self.number_of_layers} layers and {self.number_of_neurons} neurons')

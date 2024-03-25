@@ -2,7 +2,6 @@ import os
 from threading import Thread
 
 from src.DataObjects.Record import LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord, Record, Label
-from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import RawSession
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server

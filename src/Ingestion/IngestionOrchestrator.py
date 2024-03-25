@@ -2,7 +2,6 @@ import os
 from threading import Thread, Event
 
 from src.DataObjects.Record import Record
-from src.DataObjects.RecordOld import RecordOld
 from src.Ingestion.IngestionSystemSender import IngestionSystemSender
 from src.Ingestion.PhaseTracker import PhaseTracker
 from src.Ingestion.PreparationSysReceiver import PreparationSysReceiver
