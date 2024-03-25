@@ -1,5 +1,6 @@
 # log decorator
 import json
+import os
 import time
 from threading import Thread
 
@@ -40,8 +41,11 @@ class Message:
     def to_json(self):
         return self.__dict__
 
+with open(f"{os.path.dirname(__file__)}/Service/config/ServiceConfig.json", 'r') as f:
+    util_config = json.load(f)
+
 def continous_sending():
-    sampler_endpoint = "http://127.0.0.1:6000/performance_sampler"
+    sampler_endpoint = f"http://{util_config['performance_sampler']['ip']}:{util_config['performance_sampler']['port']}{util_config['performance_sampler']['endpoint']}"
     while True:
         performanceSample = message_bus.popTopic("performance_sample")
         requests.post(sampler_endpoint, json=performanceSample.to_json())

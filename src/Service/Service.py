@@ -47,12 +47,14 @@ class Service:
         self.load_data()
         self.setup_client_listener()
         self.setup_messaging_listener()
+        with open(f"{os.path.dirname(__file__)}/config/ServiceConfig.json", 'r') as f:
+            self.config = json.load(f)
 
     def setup_messaging_listener(self):
         self.messaging_system = Server()
-        self.messaging_system.add_resource(JSONEndpoint, '/messaging_system', recv_callback=self.messaging_system_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
+        self.messaging_system.add_resource(JSONEndpoint, self.config['messaging_system']['endpoint'], recv_callback=self.messaging_system_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
         self.message_bus.addTopic('messaging_system')
-        self.messaging_system.add_resource(JSONEndpoint, '/performance_sampler', recv_callback=self.performance_sampler_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
+        self.messaging_system.add_resource(JSONEndpoint, self.config['performance_sampler']['endpoint'], recv_callback=self.performance_sampler_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
         self.message_bus.addTopic('performance_sampler')
 
     def messaging_system_callback(self, json_data):
@@ -67,7 +69,7 @@ class Service:
 
     def setup_client_listener(self):
         self.server = Server()
-        self.server.add_resource(JSONEndpoint, '/client', recv_callback=self.client_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
+        self.server.add_resource(JSONEndpoint, self.config['client']['endpoint'], recv_callback=self.client_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
         self.message_bus.addTopic('client')
 
     def client_callback(self, json_data):
@@ -92,12 +94,12 @@ class Service:
 
     def start_clientside_server(self):
         # start the server on another thread
-        Thread(target=self.server.run, daemon=True, name="self.server.run", kwargs={'port': 6001}).start()
+        Thread(target=self.server.run, daemon=True, name="self.server.run", kwargs={'port':self.config['client']['port']}).start()
         time.sleep(1)
 
     def start_messaging_server(self):
         # start the server on another thread
-        Thread(target=self.messaging_system.run, daemon=True, name="self.messaging_system.run", kwargs={'port': 6000}).start()
+        Thread(target=self.messaging_system.run, daemon=True, name="self.messaging_system.run", kwargs={'port': self.config['messaging_system']['port']}).start()
         time.sleep(1)
 
     def send_data(self):
