@@ -6,7 +6,6 @@ import joblib
 from src.Ingestion.PhaseTracker import PhaseTracker
 from src.MessageBus.MessageBus import MessageBus
 from src.Production.AttackRiskClassifier import AttackRiskClassifier
-from src.Production.ProductionSystemPhaseTracker import ProductionSystemPhaseTracker
 from src.Production.ProductionSystemReceiver import ProductionSystemReceiver
 from src.Production.ProductionSystemSender import ProductionSystemSender
 from src.Production.ProductuinSystemConfig import ProductionSystemConfig
