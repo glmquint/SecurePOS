@@ -54,7 +54,7 @@ class Service:
         self.messaging_system = Server()
         self.messaging_system.add_resource(JSONEndpoint, self.config['messaging_system']['endpoint'], recv_callback=self.messaging_system_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
         self.message_bus.addTopic('messaging_system')
-        self.messaging_system.add_resource(JSONEndpoint, self.config['performance_sampler']['endpoint'], recv_callback=self.performance_sampler_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
+        self.messaging_system.add_resource(JSONEndpoint, self.config['performance_sampler']['endpoint'], request_callback=self.performance_request_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
         self.message_bus.addTopic('performance_sampler')
 
     def messaging_system_callback(self, json_data):
@@ -62,8 +62,10 @@ class Service:
         self.message_bus.pushTopic('messaging_system', json_data)
         return {"status": "ok"}
 
-    def performance_sampler_callback(self, json_data):
-        print(f"Received performance data: {json_data}")
+    def performance_request_callback(self, request):
+        json_data = request.get_json()
+        json_data.update({'remote_ip': request.remote_addr})
+        print(f"Received performance metric: {json_data}")
         self.message_bus.pushTopic('performance_sampler', json_data)
         return {"status": "ok"}
 
@@ -117,6 +119,8 @@ class Service:
             requests.post("http://127.0.0.1:5005/record", json=df_row_cleaned.to_dict())
             print(f"Sent row in {time.time() - start} seconds")
             i += 1
+            if i == 10:
+                break
 
     def run(self):
         self.start_clientside_server()
@@ -126,10 +130,10 @@ class Service:
 
     def start_factory(self):
         self.start_ingestion_system()
-        #self.start_segregation_system()
-        #self.start_development_system()
-        #self.start_production_system()
-        #self.start_evaluation_system()
+        self.start_segregation_system()
+        self.start_development_system()
+        self.start_production_system()
+        self.start_evaluation_system()
 
     def start_ingestion_system(self):
         print("starting ingestion system...")
@@ -204,13 +208,11 @@ def test_production():
 if __name__ == '__main__':
     service = None
     test_development()
-    '''
     while True:
         time.sleep(2)
         if os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav"):
             print("development finished, production requirements met")
             break
-    '''
     test_production()
     pass
 
