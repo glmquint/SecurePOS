@@ -18,6 +18,7 @@ class ProductionSystemConfig:
                 self.client_url = self.config['client_url']
                 self.evaluation_url = self.config['evaluation_url']
                 self.message_url = self.config['message_url']
+                self.phase = self.config['phase']
         except Exception as e:
             print("An error occurred:", e)
 

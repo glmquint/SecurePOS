@@ -20,7 +20,9 @@ class ProductionSystemOrchestrator:
                                                        f'{os.path.dirname(__file__)}/config/configSchema.json')
         #self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
         #                                                 self.productionConfig.evaluation_window)
-        self.phaseTracker = PhaseTracker({"production_phase_duration": self.productionConfig.monitoring_window,"evaluation_phase_duration": self.productionConfig.evaluation_window})
+        self.phaseTracker = PhaseTracker({"production_phase_duration": self.productionConfig.monitoring_window,
+                                          "evaluation_phase_duration": self.productionConfig.evaluation_window,
+                                          "phase": self.productionConfig.phase})
         self.systemBus = MessageBus(["PreparedSession", "Classifier"])
         self.prodSysRec = ProductionSystemReceiver(self.productionConfig.server_port, self.systemBus)
         self.sender = ProductionSystemSender(self.productionConfig.message_url,
@@ -51,9 +53,9 @@ class ProductionSystemOrchestrator:
             # TODO: fix schema for attack_risk_label
 
             if self.phaseTracker.isEvalPhase():
-                self.sender.sendToEvaluation(attackRiskLabel)
+                #self.sender.sendToEvaluation(attack_risk_label)
                 print("Send to evaluation")
-            self.sender.sendToClient(attackRiskLabel)
+            #self.sender.sendToClient(attack_risk_label)
             self.phaseTracker.increment()
             print("Send to client")
 
