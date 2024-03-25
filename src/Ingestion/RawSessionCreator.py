@@ -1,28 +1,29 @@
+import os
+
 from src.DataObjects.Record import Record, Label
 from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import RawSession
+from src.Ingestion.IngestionSystemSender import IngestionSystemSender
 from src.Ingestion.PhaseTracker import PhaseTracker
 from src.JsonIO.JSONSender import JSONSender
 from src.Storage.StorageController import StorageController
 from src.util import log
 
-DATAOBJ_PATH = "../DataObjects/Schema"
-
 class RawSessionCreator:
 
-    def __init__(self, config, storage_controller:StorageController, phase_tracker:PhaseTracker) -> None:
-        self.label              = None
-        self.number_of_systems  = config['number_of_systems']
-        self.label_sender       = JSONSender(f"{DATAOBJ_PATH}/AttackRiskLabelSchema.json", config['label_receiver']['url'])
-        self.raw_session_sender = JSONSender(f"{DATAOBJ_PATH}/RawSessionSchema.json", config['raw_session_receiver']['url'])
-        self.storage_controller = storage_controller
-        self.phase_tracker      = phase_tracker
+    def __init__(self, config, storage_controller: StorageController, phase_tracker: PhaseTracker,
+                 sender : IngestionSystemSender) -> None:
+        self.label                  = None
+        self.number_of_systems      = config['number_of_systems']
+        self.storage_controller     = storage_controller
+        self.phase_tracker          = phase_tracker
+        self.ingestion_sys_sender   = sender
 
     def retrieveRecords(self) -> [RecordOld]:
         pass
 
     def isNumberOfRecordsSufficient(self) -> bool:
-        uuid_with_max_count = self.storage_controller.executeQuery("select uuid, count(distinct(objtype)) as different_systems from record group by uuid order by different_systems desc limit 1;")
+        uuid_with_max_count = self.storage_controller.isNumberOfRecordsSufficient()
         if len(uuid_with_max_count) == 0:
             return False
         self.max_uuid = uuid_with_max_count[0][0]
@@ -52,15 +53,17 @@ class RawSessionCreator:
 
     def run(self):
         while True:
+            print(f"[{self.__class__.__name__}] Waiting for records")
             while not self.isNumberOfRecordsSufficient():
                 pass
+            print(f"[{self.__class__.__name__}] Found enough records")
             self.createRawSession()
             self.storage_controller.remove_by_column('uuid', self.max_uuid)
             self.markMissingSamples()
             if not self.isRawSessionValid():
                 continue
             if self.phase_tracker.isEvalPhase():
-                self.label_sender.send(self.label)
-            self.raw_session_sender.send(self.raw_session)
+                self.ingestion_sys_sender.send_label(self.label)
+            self.ingestion_sys_sender.send_raw_session(self.raw_session)
             self.phase_tracker.increment()
 

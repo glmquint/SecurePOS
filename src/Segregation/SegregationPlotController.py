@@ -4,7 +4,8 @@ from src.Segregation.CheckDataBalancingView import *
 
 class SegregationPlotController:
 
-    def __init__(self, storageController, checkDataBalanceTolerance):
+    def __init__(self, storageController, checkDataBalanceTolerance, limitPreparedSession):
+        self.__limit_prepared_session = limitPreparedSession
         self.__storage_controller = storageController
         self.__check_data_balancing_model = CheckDataBalancingModel(storageController)
         self.__check_data_balancing_view = CheckDataBalanceView(checkDataBalanceTolerance, self.__check_data_balancing_model)
@@ -13,7 +14,7 @@ class SegregationPlotController:
 
     def plot_data_balance(self):
         # retrieve data from the model
-        self.__check_data_balancing_model.retrive_prepared_session()
+        self.__check_data_balancing_model.retrive_prepared_session(self.__limit_prepared_session)
         # pass data to the view to plot
         self.__check_data_balancing_view.plot_check_data_balance()
 
@@ -38,7 +39,7 @@ class SegregationPlotController:
     @staticmethod
     def set_evaluation_check_data_balance(state):
         try:
-            with open('Data/checkDataBalanceReport.json', 'w') as f:
+            with open(f'{os.path.dirname(__file__)}/Data/checkDataBalanceReport.json', 'w') as f:
                 json.dump({"evaluation": state}, f)
                 f.close()
         except Exception as e:
@@ -47,7 +48,7 @@ class SegregationPlotController:
     @staticmethod
     def set_evaluation_check_input_coverage(state):
         try:
-            with open('Data/checkInputCoverageReport.json', 'w') as f:
+            with open(f'{os.path.dirname(__file__)}/Data/checkInputCoverageReport.json', 'w') as f:
                 json.dump({"evaluation": state}, f)
                 f.close()
         except Exception as e:

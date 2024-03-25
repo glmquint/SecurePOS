@@ -8,8 +8,8 @@ class CheckDataBalancingModel:
         self.__storage_controller : StorageController = storageController
         self.__prepared_session_list : [PreparedSession] = None
 
-    def retrive_prepared_session(self):
-        self.__prepared_session_list = self.__storage_controller.retrieve_all(False)
+    def retrive_prepared_session(self, limit_prepared_session):
+        self.__prepared_session_list = self.__storage_controller.retrieve_n(limit_prepared_session, True)
 
     def get_prepared_session_list(self) -> [PreparedSession]:
         return self.__prepared_session_list

@@ -1,4 +1,5 @@
 import json
+import os
 import random
 
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
@@ -26,16 +27,16 @@ class TestingOrchestrator:
     def check_test_result(self) -> int:
         ret_val = -1
         try:
-            with open('Testing/test_result.json', 'r') as json_file:
+            with open(f'{os.path.dirname(__file__)}/test_result.json', 'r') as json_file:
                 ret_val = 0
                 data = json.load(json_file)
-                JSONValidator("schema/result_schema.json").validate_data(data)
+                JSONValidator(f"{os.path.dirname(__file__)}/../schema/result_schema.json").validate_data(data)
                 if data['result'] in [""]:
                     ret_val = -1
                 elif data['result'] in ["ok", "OK", "Ok"]:
                     ret_val = 1
         except FileNotFoundError as e:  # create file so that AI expert can fill it
-            with open('Testing/test_result.json', 'w') as json_file:
+            with open(f'{os.path.dirname(__file__)}/test_result.json', 'w') as json_file:
                 json.dump({"result": ""}, json_file)
         finally:
             return ret_val
@@ -56,10 +57,14 @@ class TestingOrchestrator:
                 elif response == 0:
                     self.status.status = "send_config"
                     # TODO: maybe remove classifier if not needed
-                    self.training_process.remove_precedent_response('Validation/validation_result')
-                    self.training_process.remove_precedent_response('Training/learning_result')
-                    self.training_process.remove_precedent_response('Training/number_of_iterations')
-                    self.training_process.remove_precedent_response('Testing/test_result')
+                    self.training_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/../Validation/validation_result')
+                    self.training_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/../Training/learning_result')
+                    self.training_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/../Training/number_of_iterations')
+                    self.training_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/../Testing/test_result')
                 elif response == 1:
                     self.status.status = "send_classifier"
                 break

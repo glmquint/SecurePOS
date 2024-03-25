@@ -7,16 +7,19 @@ from src.DataObjects.Session import PreparedSession
 
 class LearningSetGenerator:
 
-    def __init__(self, trainPercentage, testPercentage, validationPercentage, storageController):
+    def __init__(self, trainPercentage, testPercentage, validationPercentage, storageController, limitPreparedSession):
         self.__trainPercentage = trainPercentage
         self.__testPercentage = testPercentage
         self.__validationPercentage = validationPercentage
         self.__storageController = storageController
+        self.__limitPreparedSession = limitPreparedSession
         self.leaning_set = None
 
     def generate_learning_set(self):
-        preparedSessionArray : [PreparedSession] = self.__storageController.retrieve_all(False)
-        cardinalityPreparedSession = self.__storageController.count(False)
+        preparedSessionArray : [PreparedSession] = self.__storageController.retrieve_n(self.__limitPreparedSession, True)
+        # cardinalityPreparedSession = self.__storageController.count(False)
+        # HACK: we should consider the eventuality that we receive new prepared sessions while we are processing the current ones
+        cardinalityPreparedSession = len(preparedSessionArray)
         assert len(preparedSessionArray) == cardinalityPreparedSession, f"got unexpected cardinality for prepared session: {cardinalityPreparedSession} instead of {len(preparedSessionArray)}"
 
         # calculate train, test and validation splits

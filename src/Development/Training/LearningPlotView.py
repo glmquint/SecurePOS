@@ -1,5 +1,7 @@
 import os
 
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from src.Development.Training.LearningPlotModel import LearningPlotModel
@@ -10,7 +12,7 @@ class LearningPlotView:
     model: LearningPlotModel = None
 
     def __init__(self, filename: str, learning_plot_model: LearningPlotModel):
-        self.path_to_save = f'Training/{filename}.png'
+        self.path_to_save = f'{os.path.dirname(__file__)}/{filename}.png'
         self.model = learning_plot_model
 
     def update(self):

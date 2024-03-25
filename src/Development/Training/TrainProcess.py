@@ -4,7 +4,7 @@ import math
 import os
 
 import pandas as pd
-from sklearn.metrics import mean_squared_error, accuracy_score
+from sklearn.metrics import accuracy_score
 from src.DataObjects.Classifier import Classifier
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
@@ -13,7 +13,6 @@ from src.Development.Training.Scoreboard import Scoreboard
 from src.Development.Training.HyperParameterLimit import HyperParameterLimit
 from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
-from src.util import log
 
 
 class TrainProcess:
@@ -60,14 +59,14 @@ class TrainProcess:
         print(f'[{self.__class__.__name__}]: getting number of iterations')
         ret_val = -1
         try:
-            with open('Training/number_of_iterations.json', 'r') as json_file:
+            with open(f'{os.path.dirname(__file__)}/number_of_iterations.json', 'r') as json_file:
                 data = json.load(json_file)
-                JSONValidator("schema/iteration_schema.json").validate_data(data)
+                JSONValidator(f"{os.path.dirname(__file__)}/../schema/iteration_schema.json").validate_data(data)
                 ret_val = data['number_of_iterations']
                 self.number_of_iterations = ret_val
                 print(f'[{self.__class__.__name__}]: number of iterations read: {ret_val}')
         except FileNotFoundError as e:  # create file so that AI expert can fill it
-            with open('Training/number_of_iterations.json', 'w') as json_file:
+            with open(f'{os.path.dirname(__file__)}/number_of_iterations.json', 'w') as json_file:
                 json.dump({"number_of_iterations": 0}, json_file)
         finally:
             return ret_val
@@ -124,7 +123,6 @@ class TrainProcess:
             neurons.append(i)
         self.grid_search = list(itertools.product(layers, neurons))
 
-    @log
     def select_best_classifier(self):
         best_models = []
         error_difference = []
@@ -151,8 +149,11 @@ class TrainProcess:
         elif 0 in error_difference:  # check if one of the error difference is 0 , select that in case
             self.classifier = best_models[error_difference.index(0)]
             self.status.best_validation_error = self.grid_space.validation_error[error_difference.index(0)]
-        elif int(math.floor(math.log10(abs(error_difference[0])))) - int(math.floor(abs(math.log10(error_difference[
-                                                                                                       1])))) <= 1:  # if there is no significant difference (one order of magnitude) between the two best models
+        # if there is no significant difference (one order of magnitude) between the two best models
+        elif (int(
+                math.floor(math.log10
+                               (abs(error_difference[0])))) -
+              int(math.floor(abs(math.log10(error_difference[1])))) <= 1):
             complexity = []
             for i in range(len(best_models)):
                 complexity.append(number_of_layers[i] * number_of_neurons[i])
@@ -162,7 +163,7 @@ class TrainProcess:
             self.classifier = best_models[0]
             self.status.best_validation_error = self.grid_space.validation_error[0]
         self.status.best_classifier_name = self.classifier.name
-        self.classifier.save_model('classifiers')
+        self.classifier.save_model(f'{os.path.dirname(__file__)}/../classifiers')
 
     def perform_grid_search(self):
         print(f'[{self.__class__.__name__}]: starting grid search')
@@ -180,11 +181,12 @@ class TrainProcess:
     def test_classifier(self):
         print(f'[{self.__class__.__name__}]: testing classifier')
         self.classifier = Classifier()
-        self.classifier.load_model(f'classifiers/{self.status.best_classifier_name}')
+        self.classifier.load_model(f'{os.path.dirname(__file__)}/../classifiers/{self.status.best_classifier_name}')
         y_test_predicted = self.classifier.model.predict(self.status.learning_set.testSet)
         test_error = 1.0 - accuracy_score(self.status.learning_set.testSetLabel, y_test_predicted)
-        self.message_bus.pushTopic("test_report", [self.classifier.name, self.status.best_validation_error, test_error,
-                                                   self.configurations.generalization_tolerance])
+        self.message_bus.pushTopic("test_report",
+                                   [self.classifier.name, self.status.best_validation_error, test_error,
+                                    self.configurations.generalization_tolerance])
 
     def remove_classifiers(self, path: str):
         print(f'[{self.__class__.__name__}]: removing classifiers')

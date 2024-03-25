@@ -1,4 +1,4 @@
-import os.path
+import os
 from threading import Thread
 
 import joblib
@@ -9,17 +9,21 @@ from src.Production.ProductionSystemPhaseTracker import ProductionSystemPhaseTra
 from src.Production.ProductionSystemReceiver import ProductionSystemReceiver
 from src.Production.ProductionSystemSender import ProductionSystemSender
 from src.Production.ProductuinSystemConfig import ProductionSystemConfig
+from src.util import Message
+
 
 class ProductionSystemOrchestrator:
 
     def __init__(self):
-        self.productionConfig = ProductionSystemConfig('./config/config.json',
-                                                       './config/configSchema.json')
+        self.productionConfig = ProductionSystemConfig(f'{os.path.dirname(__file__)}/config/config.json',
+                                                       f'{os.path.dirname(__file__)}/config/configSchema.json')
         self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
                                                          self.productionConfig.evaluation_window)
         self.systemBus = MessageBus(["PreparedSession", "Classifier"])
         self.prodSysRec = ProductionSystemReceiver(self.productionConfig.server_port, self.systemBus)
-        self.sender = ProductionSystemSender()
+        self.sender = ProductionSystemSender(self.productionConfig.message_url,
+                                             self.productionConfig.evaluation_url,
+                                             self.productionConfig.client_url)
         try:
             self.classifier = joblib.load(f"{os.path.dirname(__file__)}/classifier.sav") # The absence of this file means we are in development phase
             print(f"Classifier loaded {self.classifier}")
@@ -36,18 +40,19 @@ class ProductionSystemOrchestrator:
             if self.classifier is None:
                 self.classifier = self.systemBus.popTopic("Classifier")
                 print(f"Classifier {self.classifier}")
+                self.sender.sendToMessaging(Message(msg="Classifier received"))
                 quit()
             #print(f"Fake classifier classifier pre {fakeClassifier.attackRiskClassifier}")
             attackRiskLabel = attackRiskClassifier.provideAttackRiskLabel()
             print(type(attackRiskLabel))
             #print(f"Fake classifier classifier post {fakeClassifier.attackRiskClassifier}")
-            self.phaseTracker.increseCounter()
             # TODO: fix schema for attackRiskLabel
 
             if not (self.phaseTracker.isProduction()):
-                self.sender.send(self.productionConfig.evaluation_url, attackRiskLabel)
+                self.sender.sendToEvaluation(attackRiskLabel)
                 print("Send to evaluation")
-            self.sender.send(self.productionConfig.client_url, attackRiskLabel)
+            self.sender.sendToClient(attackRiskLabel)
+            self.phaseTracker.increseCounter()
             print("Send to client")
 
     def run(self):

@@ -9,7 +9,7 @@ class TestReportView:
     model: TestReportModel = None
 
     def __init__(self, filename: str, test_report_model: TestReportModel):
-        self.path_to_save = f'Testing/{filename}.csv'
+        self.path_to_save = f'{os.path.dirname(__file__)}/{filename}.csv'
         self.model = test_report_model
 
     def update(self):

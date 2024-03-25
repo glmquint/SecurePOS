@@ -1,3 +1,4 @@
+import os
 from random import random, randint, choice
 from threading import Thread
 from time import sleep
@@ -14,7 +15,7 @@ from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
 
-DATAOBJ_PATH = "../DataObjects/Schema"
+DATAOBJ_PATH = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
 
 TEST_PORT = 4000
 SELF_PORT = 5002
@@ -40,7 +41,7 @@ def listener_setup(prepared_session_creator, message_bus=None):
                     message_bus.pushTopic(url, json_data)
             return callback
         schema = {'segregationSystem':'PreparedSessionSchema', 'PreparedSession':'PreparedSessionSchema', 'label': 'RecordSchema'}.get(url, None)
-        server.add_resource(JSONEndpoint, f"/{url}", recv_callback=builder(url), json_schema_path=f"../DataObjects/Schema/{schema}.json")
+        server.add_resource(JSONEndpoint, f"/{url}", recv_callback=builder(url), json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/{schema}.json")
     Thread(target=server.run, daemon=True, kwargs={'debug':True, 'port':TEST_PORT}).start()
 
 class TestPreparationSystemOrchestrator:
@@ -76,7 +77,7 @@ class TestPreparationSystemOrchestrator:
     def test_run(self):
         global message_bus
         config = PreparationSystemConfig(f"{DATAOBJ_PATH}/PreparationSystemConfigSchema.json")
-        config.init_from_file("PreparationSystemConfig.json")
+        config.init_from_file(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json")
         c:dict = config.prepared_session_creator
         c.update({'label_receiver': config.raw_session_creator['label_receiver']})
         listener_setup(c, message_bus)

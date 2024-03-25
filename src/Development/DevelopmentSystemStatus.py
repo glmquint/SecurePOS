@@ -50,5 +50,5 @@ class DevelopmentSystemStatus:
 
     def save_status(self):
         with open(self.status_path, 'w') as json_file:
-            json.dump(self.to_dict(), json_file)
+            json.dump(self.to_dict(), json_file, indent=4)
             exit(0)

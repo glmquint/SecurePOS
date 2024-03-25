@@ -10,12 +10,13 @@ class JSONSender:
         self.url = url
         self.validator = JSONValidator(json_schema_path)
 
-    @log
     def send(self, obj):
         try:
             self.validator.validate_data(obj.to_json())
             requests.post(self.url, json=obj.to_json())
         except Exception as e:
             print(e, f"({__file__})")
-            return False
+            with open("error.log", "a") as f:
+                f.write(f"{e} ({__file__})\n")
+            raise e
         return True

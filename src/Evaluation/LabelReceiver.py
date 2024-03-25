@@ -1,3 +1,4 @@
+import os
 from threading import Thread
 
 
@@ -7,6 +8,7 @@ from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
 from src.Storage.StorageController import StorageController
 from src.Storage.dbConfig import DBConfig
+from src.util import monitorPerformance
 
 
 class LabelReceiver:
@@ -24,9 +26,9 @@ class LabelReceiver:
 
     def receive(self):
         self.server.add_resource(JSONEndpoint, "/evaluation_label", recv_callback=self.callback_f,
-                                 json_schema_path="../DataObjects/Schema/Label.json")
+                                 json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json")
         self.server.add_resource(JSONEndpoint, "/evaluation_security_label", recv_callback=self.callback_s,
-                                 json_schema_path="../DataObjects/Schema/Label.json")
+                                 json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json")
         if self.port == 0:
             thread = Thread(target=self.server.run)
         else:
@@ -34,6 +36,7 @@ class LabelReceiver:
         thread.daemon = True
         thread.start()
 
+    @monitorPerformance(should_sample_after=False)
     def callback_s(self, json_data):
         #print(f"Received from security {json_data}")
         #???
@@ -46,6 +49,7 @@ class LabelReceiver:
         self.mbus.pushTopic("sec_label", data)
 
 
+    @monitorPerformance(should_sample_after=False)
     def callback_f(self, json_data):
         #print(f"Received {json_data}")
         #???

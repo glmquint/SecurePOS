@@ -2,6 +2,7 @@
     "server_port": 5003,
     "monitoring_window": 2,
     "evaluation_window": 1,
-    "client_url": "http://localhost:5003/client",
-    "evaluation_url": "http://192.168.157.170:5002/evaluation_label"
+    "client_url": "http://127.0.0.1:6001/client",
+    "evaluation_url": "http://127.0.0.1:5004/evaluation_label",
+    "message_url": "http://127.0.0.1:6000/messaging_system"
 }

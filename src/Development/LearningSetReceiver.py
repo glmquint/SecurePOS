@@ -1,9 +1,11 @@
 import json
+import os
 
 from src.DataObjects.LearningSet import LearningSet
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
 from src.JsonIO.JSONEndpoint import JSONEndpoint
+from src.util import monitorPerformance
 
 
 class LearningSetReceiver:
@@ -14,10 +16,13 @@ class LearningSetReceiver:
     def __init__(self, message_bus: MessageBus, endpoint_url: str):
         self.message_bus_ref = message_bus
         self.server = Server()
-        self.server.add_resource(JSONEndpoint, endpoint_url,
-                                 recv_callback=self.receive_learning_set,
-                                 json_schema_path="../DataObjects/Schema/learning_set_schema.json")
+        self.server.add_resource(
+            JSONEndpoint,
+            endpoint_url,
+            recv_callback=self.receive_learning_set,
+            json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/learning_set_schema.json")
 
+    @monitorPerformance(should_sample_after=False)
     def receive_learning_set(self, json_data):
         self.learning_set = LearningSet(json_data,True)
         self.message_bus_ref.pushTopic("LearningSet", self.learning_set)

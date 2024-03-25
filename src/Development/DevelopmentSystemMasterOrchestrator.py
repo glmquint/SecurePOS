@@ -1,3 +1,5 @@
+import os.path
+
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemSender import DevelopmentSystemSender
@@ -23,12 +25,17 @@ class DevelopmentSystemMasterOrchestrator:
 
     def __init__(self, status: DevelopmentSystemStatus = None):
         if status is None:
-            self.status = DevelopmentSystemStatus("development_system_status.json", "schema/status_schema.json")
+            self.status = DevelopmentSystemStatus(
+                f"{os.path.dirname(__file__)}/development_system_status.json",
+                f"{os.path.dirname(__file__)}/schema/status_schema.json")
             self.status.load_status()
         else:
             self.status = status
-        self.development_system_configurations = DevelopmentSystemConfigurations('schema/config_schema.json')
-        self.development_system_configurations.load_config('config/config.json', True)
+        self.development_system_configurations = DevelopmentSystemConfigurations(
+            f'{os.path.dirname(__file__)}/schema/config_schema.json')
+        self.development_system_configurations.load_config(
+            f'{os.path.dirname(__file__)}/config/config.json',
+            True)
         self.message_bus = MessageBus(self.development_system_configurations.topics)
         self.report_controller = ReportController(self.message_bus)
         self.train_orchestrator = TrainingOrchestrator(self.status, self.report_controller, self.message_bus,
