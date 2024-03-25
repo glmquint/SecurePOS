@@ -52,7 +52,7 @@ def continous_sending():
 
 
 message_bus = MessageBus(['performance_sample'])
-thread = Thread(target=continous_sending)
+thread = Thread(target=continous_sending, daemon=True)
 
 def monitorPerformance(should_sample_after: bool):
     # TODO: make it configurable from a config file
