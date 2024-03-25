@@ -5,7 +5,7 @@ from src.Evaluation.EvaluationReportController import EvaluationReportController
 from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 from src.Evaluation.EvaluationSystemSender import EvaluationSystemSender
 from src.Evaluation.LabelReceiver import LabelReceiver
-from src.util import log
+from src.util import log, Message
 
 
 class EvaluationSystemOrchestrator:
@@ -17,6 +17,7 @@ class EvaluationSystemOrchestrator:
         self.sender = EvaluationSystemSender()
         self.receiver = LabelReceiver(self.config.port)
         self.evaluation = EvaluationReportController(self.config)
+        self.sender = EvaluationSystemSender()
 
     def isnumberoflabelssufficient(self):
         return self.label_counter >= self.config.sufficient_label_number \
@@ -56,6 +57,7 @@ class EvaluationSystemOrchestrator:
                     return
             else:
                 self.evaluation.getresult()
+                self.sender.sendtomessaging(Message(msg="Evaluation complete."))
                 self.config.write_state(0)
         return
 
