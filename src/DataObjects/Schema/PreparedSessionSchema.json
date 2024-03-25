@@ -1,31 +1,40 @@
 {
-    "type": "object",
-    "properties": {
-      "uuid": {
-            "type": "string"
-        },
-        "mean_abs_diff_transaction": {
-            "type": "number"
-        },
-      "mean_abs_diff_transaction_amount": {
-            "type": "number"
-        },
-      "median_longitude": {
-            "type": "number"
-        },
-      "median_latitude": {
-            "type": "number"
-        },
-      "median_target_ip": {
-            "type": "number"
-        },
-      "median_dest_ip": {
-            "type": "number"
-        },
-      "label": {
-         "type": ["string", "null"],
-         "enum": ["normal", "moderate", "high", null]
-      }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "uuid": {
+      "type": "string"
     },
-    "required": ["mean_abs_diff_transaction", "mean_abs_diff_transaction_amount","median_longitude", "median_latitude", "median_target_ip", "median_dest_ip"]
+    "mean_abs_diff_transaction": {
+      "type": "number"
+    },
+    "mean_abs_diff_transaction_amount": {
+      "type": "number"
+    },
+    "median_longitude": {
+      "type": "number"
+    },
+    "median_latitude": {
+      "type": "number"
+    },
+    "median_target_ip": {
+      "type": "integer"
+    },
+    "median_dest_ip": {
+      "type": "integer"
+    },
+    "label": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "uuid",
+    "mean_abs_diff_transaction",
+    "mean_abs_diff_transaction_amount",
+    "median_longitude",
+    "median_latitude",
+    "median_target_ip",
+    "median_dest_ip",
+    "label"
+  ]
 }

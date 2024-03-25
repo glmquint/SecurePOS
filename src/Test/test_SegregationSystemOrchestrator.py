@@ -47,7 +47,7 @@ def send_label():
                 print("user non attivo")
             else:
                 i += 1
-                if i == 10:
+                if i == 200:
                     break
         except Exception:
             pass
