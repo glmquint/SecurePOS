@@ -3,6 +3,7 @@ from threading import Thread
 
 import joblib
 
+from src.Ingestion.PhaseTracker import PhaseTracker
 from src.MessageBus.MessageBus import MessageBus
 from src.Production.AttackRiskClassifier import AttackRiskClassifier
 from src.Production.ProductionSystemPhaseTracker import ProductionSystemPhaseTracker
@@ -17,8 +18,9 @@ class ProductionSystemOrchestrator:
     def __init__(self):
         self.productionConfig = ProductionSystemConfig(f'{os.path.dirname(__file__)}/config/config.json',
                                                        f'{os.path.dirname(__file__)}/config/configSchema.json')
-        self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
-                                                         self.productionConfig.evaluation_window)
+        #self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
+        #                                                 self.productionConfig.evaluation_window)
+        self.phaseTracker = PhaseTracker({"production_phase_duration": self.productionConfig.monitoring_window,"evaluation_phase_duration": self.productionConfig.evaluation_window})
         self.systemBus = MessageBus(["PreparedSession", "Classifier"])
         self.prodSysRec = ProductionSystemReceiver(self.productionConfig.server_port, self.systemBus)
         self.sender = ProductionSystemSender(self.productionConfig.message_url,
@@ -48,11 +50,11 @@ class ProductionSystemOrchestrator:
             print(type(attack_risk_label))
             # TODO: fix schema for attack_risk_label
 
-            if not (self.phaseTracker.isProduction()):
-                self.sender.sendToEvaluation(attack_risk_label)
+            if self.phaseTracker.isEvalPhase():
+                self.sender.sendToEvaluation(attackRiskLabel)
                 print("Send to evaluation")
-            self.sender.sendToClient(attack_risk_label)
-            self.phaseTracker.increseCounter()
+            self.sender.sendToClient(attackRiskLabel)
+            self.phaseTracker.increment()
             print("Send to client")
 
     def run(self):

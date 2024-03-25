@@ -1,7 +1,6 @@
 import os
 
 from src.DataObjects.Record import Record, Label
-from src.DataObjects.RecordOld import RecordOld
 from src.DataObjects.Session import RawSession
 from src.Ingestion.IngestionSystemSender import IngestionSystemSender
 from src.Ingestion.PhaseTracker import PhaseTracker
@@ -18,9 +17,6 @@ class RawSessionCreator:
         self.storage_controller     = storage_controller
         self.phase_tracker          = phase_tracker
         self.ingestion_sys_sender   = sender
-
-    def retrieveRecords(self) -> [RecordOld]:
-        pass
 
     def isNumberOfRecordsSufficient(self) -> bool:
         uuid_with_max_count = self.storage_controller.isNumberOfRecordsSufficient()
