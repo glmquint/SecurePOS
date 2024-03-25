@@ -6,6 +6,7 @@ from src.Segregation.SegregationSystemSender import SegregationSystemSender
 from src.Storage.StorageController import StorageController
 from src.DataObjects.Session import PreparedSession
 
+
 class SegregationSystemOrchestrator:
 
     def __init__(self):
@@ -43,7 +44,8 @@ class SegregationSystemOrchestrator:
 
             evaluation_check_data_balance = ""
             evaluation_check_input_coverage = ""
-            print(f"[{self.__class__.__name__}]: Server started")  # the serviceFlag is false if the simplified stop and go interaction is not active
+            print(
+                f"[{self.__class__.__name__}]: Server started")  # the serviceFlag is false if the simplified stop and go interaction is not active
 
             if not self.service_flag:
                 # the value that can be assigned to the following two variable is ( checking | ok | not balanced )
@@ -76,6 +78,7 @@ class SegregationSystemOrchestrator:
                     evaluationDataBalanceCheck = self.segregation_plot_controller.get_simulated_check_data_balance()
                     if evaluationDataBalanceCheck == "not performed":  # the test will not pass with a probability of 90%
                         # "data not balanced"
+                        self.sender.send_to_messaging()
                         continue
 
             if self.service_flag or (evaluation_check_data_balance == "ok" and evaluation_check_input_coverage != "ok"):
@@ -92,6 +95,7 @@ class SegregationSystemOrchestrator:
                     evaluationCheckinputCoverage = self.segregation_plot_controller.get_simulated_check_input_coverage()
                     # "input not covered"
                     if evaluationCheckinputCoverage == "no":
+                        self.sender.send_to_messaging()
                         continue
 
             if self.service_flag or (evaluation_check_data_balance == "ok" and evaluation_check_input_coverage == "ok"):
@@ -104,7 +108,6 @@ class SegregationSystemOrchestrator:
                 print("Learning set generated")
 
                 self.sender.send_to_development()
-
 
                 self.storage_controller.remove_all()  # remove the sessions
 
