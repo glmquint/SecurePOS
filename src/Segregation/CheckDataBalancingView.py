@@ -64,6 +64,7 @@ class CheckDataBalanceView:
                  horizontalalignment='center', transform=plt.gca().transAxes)
 
         plt.savefig(f'{os.path.dirname(__file__)}/Data/Plot/PlotCheckDataBalancePlot.png')
+        plt.close()
 
     @staticmethod
     def get_simulated_check_data_balance():
