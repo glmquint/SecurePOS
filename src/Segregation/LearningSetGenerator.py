@@ -1,9 +1,7 @@
 import pandas as pd
 from src.DataObjects.LearningSet import LearningSet
 import math
-
 from src.DataObjects.Session import PreparedSession
-
 
 class LearningSetGenerator:
 
@@ -61,16 +59,5 @@ class LearningSetGenerator:
         dic['testSetLabel'] = testSetLabel
 
         learningSet = LearningSet(dic, False)
-
-        ''' TODO: after cleaning the constructor, this will be possible
-        learningSet = LearningSet(
-            trainingSetArray = trainingSetArray,
-            validationSetArray = validationSetArray,
-            testSetArray = testSetArray,
-            trainingSetLabel = trainingSetLabel,
-            validationSetLabel = validationSetLabel,
-            testSetLabel = testSetLabel
-        )
-        '''
 
         self.leaning_set = learningSet

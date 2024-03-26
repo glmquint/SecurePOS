@@ -36,7 +36,6 @@ class SegregationSystemOrchestrator:
         self.sender = SegregationSystemSender(self.learning_set_generator)
 
     def run(self):
-        self.storage_controller.remove_all()
         # the server starts to run
         self.preparedSessionReceiver.run()
 
@@ -109,7 +108,7 @@ class SegregationSystemOrchestrator:
 
                 self.sender.send_to_development()
 
-                #self.storage_controller.remove_all()  # remove the sessions
+                self.storage_controller.remove_all()  # remove the sessions
 
                 # reset the evaluation in report files
                 self.segregation_plot_controller.set_evaluation_check_data_balance("checking")
