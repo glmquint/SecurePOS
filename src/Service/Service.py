@@ -17,7 +17,7 @@ from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
 from src.Production.ProductionSystemOrchestrator import ProductionSystemOrchestrator
-from src.Production.ProductuinSystemConfig import ProductionSystemConfig
+from src.Production.ProductionSystemConfig import ProductionSystemConfig
 from src.Segregation.SegregationSystemConfig import SegregationSystemConfig
 from src.Segregation.SegregationSystemOrchestrator import SegregationSystemOrchestrator
 
@@ -209,15 +209,18 @@ def test_development():
         json.dump(config, f, indent=4)
     service = Service()
     service.run()
-    print("Done with development, now switching to production...")
-
-def test_production():
-    global service
     while True:
         time.sleep(2)
         if os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav"):
             print("development finished, production requirements met")
             break
+    print("Done with development, now switching to production...")
+
+def test_production():
+    global service
+    for f in os.listdir(os.path.dirname(f"{os.path.dirname(__file__)}/../Evaluation/data")):
+        if f.endswith('.png'):
+            os.remove(os.path.dirname(f"{os.path.dirname(__file__)}/../Evaluation/data/{f}"))
     with open(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json", 'r') as f:
         config = json.load(f)
     config['phase_tracker']['phase'] = 'Production'
@@ -225,6 +228,13 @@ def test_production():
         json.dump(config, f, indent=4)
     service = Service()
     service.run()
+    # check that there is a png file in the evaluation folder
+    while True:
+        time.sleep(2)
+        for f in os.listdir(os.path.dirname(f"{os.path.dirname(__file__)}/../Evaluation/data")):
+            if f.endswith('.png'):
+                break
+
 
 if __name__ == '__main__':
     service = None
