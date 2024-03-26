@@ -199,6 +199,9 @@ class Service:
 
 def test_development():
     global service
+    for f in os.listdir(os.path.dirname(__file__)):
+        if f.endswith('.log'):
+            os.remove(f)
     with open(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json", 'r') as f:
         config = json.load(f)
     config['phase_tracker']['phase'] = 'Development'
@@ -210,6 +213,11 @@ def test_development():
 
 def test_production():
     global service
+    while True:
+        time.sleep(2)
+        if os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav"):
+            print("development finished, production requirements met")
+            break
     with open(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json", 'r') as f:
         config = json.load(f)
     config['phase_tracker']['phase'] = 'Production'
@@ -219,16 +227,8 @@ def test_production():
     service.run()
 
 if __name__ == '__main__':
-    for f in os.listdir(os.path.dirname(__file__)):
-        if f.endswith('.log'):
-            os.remove(f)
     service = None
-    test_development()
-    while True:
-        time.sleep(2)
-        if os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav"):
-            print("development finished, production requirements met")
-            break
+    #test_development()
     test_production()
     pass
 
