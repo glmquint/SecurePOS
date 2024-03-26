@@ -14,9 +14,10 @@ from src.util import Message
 
 class ProductionSystemOrchestrator:
 
-    def __init__(self):
-        self.productionConfig = ProductionSystemConfig(f'{os.path.dirname(__file__)}/config/config.json',
-                                                       f'{os.path.dirname(__file__)}/config/configSchema.json')
+    def __init__(self, config : ProductionSystemConfig = None):
+        if not config:
+            config = ProductionSystemConfig(f'{os.path.dirname(__file__)}/config/config.json')
+        self.productionConfig = config
         self.phaseTracker = ProductionSystemPhaseTracker(self.productionConfig.monitoring_window,
                                                          self.productionConfig.evaluation_window)
         self.systemBus = MessageBus(["PreparedSession", "Classifier"])

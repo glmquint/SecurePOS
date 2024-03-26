@@ -47,8 +47,7 @@ def listener_setup(prepared_session_creator, message_bus=None):
 class TestPreparationSystemOrchestrator:
     def test_components(self):
         global message_bus
-        config = PreparationSystemConfig(f"{DATAOBJ_PATH}/PreparationSystemConfigSchema.json")
-        config.init_from_file("PreparationSystemConfig.json")
+        config = PreparationSystemConfig("PreparationSystemConfig.json")
         c: dict = config.prepared_session_creator
         c.update({'label_receiver': config.raw_session_creator['label_receiver']})
         listener_setup(c, message_bus)
@@ -76,8 +75,7 @@ class TestPreparationSystemOrchestrator:
 
     def test_run(self):
         global message_bus
-        config = PreparationSystemConfig(f"{DATAOBJ_PATH}/PreparationSystemConfigSchema.json")
-        config.init_from_file(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json")
+        config = PreparationSystemConfig("PreparationSystemConfig.json")
         c:dict = config.prepared_session_creator
         c.update({'label_receiver': config.raw_session_creator['label_receiver']})
         listener_setup(c, message_bus)

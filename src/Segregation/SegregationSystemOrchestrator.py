@@ -9,9 +9,11 @@ from src.DataObjects.Session import PreparedSession
 
 class SegregationSystemOrchestrator:
 
-    def __init__(self):
+    def __init__(self, config: SegregationSystemConfig = None):
         # get config parameter
-        self.config_parameter = SegregationSystemConfig()
+        if not config:
+            config = SegregationSystemConfig()
+        self.config_parameter = config
         self.service_flag = self.config_parameter.get_service_flag()
         self.limit_prepared_session = self.config_parameter.get_sufficient_session_number()
 
@@ -33,7 +35,7 @@ class SegregationSystemOrchestrator:
                                                            self.storage_controller,
                                                            self.limit_prepared_session)
 
-        self.sender = SegregationSystemSender(self.learning_set_generator)
+        self.sender = SegregationSystemSender(self.config_parameter, self.learning_set_generator)
 
     def run(self):
         self.storage_controller.remove_all()

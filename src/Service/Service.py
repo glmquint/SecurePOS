@@ -7,13 +7,18 @@ from threading import Thread
 import pandas as pd
 import requests
 
+from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemMasterOrchestrator import DevelopmentSystemMasterOrchestrator
+from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 from src.Evaluation.EvaluationSystemOrchestrator import EvaluationSystemOrchestrator
 from src.Ingestion.IngestionOrchestrator import PreparationSystemOrchestrator
+from src.Ingestion.PreparationSystemConfig import PreparationSystemConfig
 from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
 from src.Production.ProductionSystemOrchestrator import ProductionSystemOrchestrator
+from src.Production.ProductuinSystemConfig import ProductionSystemConfig
+from src.Segregation.SegregationSystemConfig import SegregationSystemConfig
 from src.Segregation.SegregationSystemOrchestrator import SegregationSystemOrchestrator
 
 ''' factory map
@@ -119,8 +124,6 @@ class Service:
             requests.post("http://127.0.0.1:5005/record", json=df_row_cleaned.to_dict())
             print(f"Sent row in {time.time() - start} seconds")
             i += 1
-            if i == 10:
-                break
 
     def run(self):
         self.start_clientside_server()
@@ -137,14 +140,18 @@ class Service:
 
     def start_ingestion_system(self):
         print("starting ingestion system...")
-        self.ingestion_system = PreparationSystemOrchestrator()
+        self.ingestion_system = PreparationSystemOrchestrator(
+            config=PreparationSystemConfig(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json")
+        )
         self.ingestion_system.storage_controller.remove_all() # reset db
         Thread(target=self.ingestion_system.run, name="self.ingestion_system.run", daemon=True).start()
         time.sleep(1) # wait for the server to start
 
     def start_segregation_system(self):
         print("starting segregation system...")
-        self.segregation_system = SegregationSystemOrchestrator()
+        self.segregation_system = SegregationSystemOrchestrator(
+            config=SegregationSystemConfig(f"{os.path.dirname(__file__)}/config/SegregationSystemConfig.json")
+        )
         self.segregation_system.storage_controller.remove_all() # reset db
         Thread(target=self.segregation_system.run, name="self.segregation_system.run", daemon=True).start()
         time.sleep(1) # wait for the server to start
@@ -154,13 +161,15 @@ class Service:
         # delete all files inside the classifiers folder
         for f in os.listdir(f"{os.path.dirname(__file__)}/../Development/classifiers"):
             os.remove(f"{os.path.dirname(__file__)}/../Development/classifiers/{f}")
-        self.development_system = DevelopmentSystemMasterOrchestrator()
+        self.development_system = DevelopmentSystemMasterOrchestrator(
+            config=DevelopmentSystemConfigurations(f"{os.path.dirname(__file__)}/config/DevelopmentSystemConfig.json")
+        )
         Thread(target=self.development_system.start, name="self.development_system.start", daemon=True).start()
         time.sleep(1) # wait for the server to start
 
     def start_production_system(self):
         print("starting production system...")
-        with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
+        with open(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json", 'r') as f:
             config = json.load(f)
         if config['phase_tracker']['phase'] == 'Development':
             try:
@@ -171,13 +180,17 @@ class Service:
             assert os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav"), "last development phase did not finish correctly"
         else:
             raise Exception("Invalid phase")
-        self.production_system = ProductionSystemOrchestrator()
+        self.production_system = ProductionSystemOrchestrator(
+            config=ProductionSystemConfig(f'{os.path.dirname(__file__)}/config/ProductionSystemConfig.json')
+        )
         Thread(target=self.production_system.run, name="self.production_system.run", daemon=True).start()
         time.sleep(1) # wait for the server to start
 
     def start_evaluation_system(self):
         print("starting evaluation system...")
-        self.evaluation_system = EvaluationSystemOrchestrator()
+        self.evaluation_system = EvaluationSystemOrchestrator(
+            config=EvaluationSystemConfig(f"{os.path.dirname(__file__)}/config/EvaluationSystemConfig.json")
+        )
         self.evaluation_system.evaluation.evaluationmodel.scontroller_label.remove_all() # reset db
         self.evaluation_system.evaluation.evaluationmodel.scontroller_security.remove_all() # reset db
         Thread(target=self.evaluation_system.main, name="self.evaluation_system.main", daemon=True).start()
@@ -186,10 +199,10 @@ class Service:
 
 def test_development():
     global service
-    with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
+    with open(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json", 'r') as f:
         config = json.load(f)
     config['phase_tracker']['phase'] = 'Development'
-    with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'w') as f:
+    with open(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json", 'w') as f:
         json.dump(config, f, indent=4)
     service = Service()
     service.run()
@@ -197,15 +210,18 @@ def test_development():
 
 def test_production():
     global service
-    with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'r') as f:
+    with open(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json", 'r') as f:
         config = json.load(f)
     config['phase_tracker']['phase'] = 'Production'
-    with open(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json", 'w') as f:
+    with open(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json", 'w') as f:
         json.dump(config, f, indent=4)
     service = Service()
     service.run()
 
 if __name__ == '__main__':
+    for f in os.listdir(os.path.dirname(__file__)):
+        if f.endswith('.log'):
+            os.remove(f)
     service = None
     test_development()
     while True:

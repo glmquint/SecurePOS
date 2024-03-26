@@ -23,7 +23,7 @@ class DevelopmentSystemMasterOrchestrator:
     report_controller: ReportController = None
     status: DevelopmentSystemStatus = None
 
-    def __init__(self, status: DevelopmentSystemStatus = None):
+    def __init__(self, status: DevelopmentSystemStatus = None, config : DevelopmentSystemConfigurations = None):
         if status is None:
             self.status = DevelopmentSystemStatus(
                 f"{os.path.dirname(__file__)}/development_system_status.json",
@@ -31,8 +31,9 @@ class DevelopmentSystemMasterOrchestrator:
             self.status.load_status()
         else:
             self.status = status
-        self.development_system_configurations = DevelopmentSystemConfigurations(
-            f'{os.path.dirname(__file__)}/schema/config_schema.json')
+        if config is None:
+            config = DevelopmentSystemConfigurations(f'{os.path.dirname(__file__)}/schema/config_schema.json')
+        self.development_system_configurations = config
         self.development_system_configurations.load_config(
             f'{os.path.dirname(__file__)}/config/config.json',
             True)

@@ -16,8 +16,7 @@ from src.Storage.StorageController import StorageController
 class PreparationSystemOrchestrator:
     def __init__(self, config:PreparationSystemConfig = None) -> None:
         if not config:
-            config = PreparationSystemConfig(f"{os.path.dirname(__file__)}/../DataObjects/Schema/PreparationSystemConfigSchema.json")
-            config.init_from_file(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json")
+            config = PreparationSystemConfig(config_path=f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json")
         self.config = config
         self.config.db.update({'buffer_size': 5})
         self.storage_controller = StorageController(

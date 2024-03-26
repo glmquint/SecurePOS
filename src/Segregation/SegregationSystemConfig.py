@@ -3,9 +3,9 @@ import os
 
 
 class SegregationSystemConfig:
-    def __init__(self):
+    def __init__(self, config_path: str = f'{os.path.dirname(__file__)}/Configurations/segregationConfiguration.json'):
 
-        with open(f'{os.path.dirname(__file__)}/Configurations/segregationConfiguration.json', 'r') as file:
+        with open(config_path, 'r') as file:
             jsonParameter = json.load(file)
 
         self.__sufficient_session_number = jsonParameter.get("sufficientSessionNumber")
