@@ -10,7 +10,7 @@ class ProductionSystemSender:
         self.evaluation_url = evaluation_url
         self.client_url = client_url
         #TODO: fix schema for message
-        self.messaging_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/AttackRiskLabelSchema.json",
+        self.messaging_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/MessageSchema.json",
                                            self.message_url)
         self.eval_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/AttackRiskLabelSchema.json",
                                       self.evaluation_url)
