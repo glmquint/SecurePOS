@@ -34,7 +34,6 @@
     "median_longitude",
     "median_latitude",
     "median_target_ip",
-    "median_dest_ip",
-    "label"
+    "median_dest_ip"
   ]
 }
