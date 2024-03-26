@@ -8,7 +8,7 @@ from src.MessageBus.MessageBus import MessageBus
 from src.Production.AttackRiskClassifier import AttackRiskClassifier
 from src.Production.ProductionSystemReceiver import ProductionSystemReceiver
 from src.Production.ProductionSystemSender import ProductionSystemSender
-from src.Production.ProductuinSystemConfig import ProductionSystemConfig
+from src.Production.ProductionSystemConfig import ProductionSystemConfig
 from src.util import Message
 
 
