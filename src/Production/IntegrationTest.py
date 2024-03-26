@@ -1,18 +1,11 @@
 import ipaddress
 import os
-from socket import inet_aton
-
 from threading import Thread
 from time import sleep
 from unittest import TestCase
-
-import joblib
 import requests
-from sklearn.neural_network import MLPClassifier
-from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 
-
-from src.DataObjects.ClassifierTest import ClassifierTest
+from src.DataObjects.Classifier import Classifier
 from src.DataObjects.Record import Label
 from src.DataObjects.Session import PreparedSession
 from src.JsonIO.JSONEndpoint import JSONEndpoint
@@ -59,7 +52,7 @@ class IntegrationTest(TestCase):
                                           median_dest_ip= int(ipaddress.ip_address("192.168.255.0")),
                                           attack_risk_label=None)
 
-        classifierTest = ClassifierTest("test")
+        classifierTest = Classifier()
 
         req = requests.post("http://127.0.0.1:5002/PreparedSession", json=preparedSession.to_json())  # correct key
         assert req.status_code == 200
@@ -90,7 +83,7 @@ class IntegrationTest(TestCase):
                                           median_target_ip=0,
                                           median_dest_ip=0,
                                           attack_risk_label=None)
-        classifierTest = ClassifierTest("test")
+        classifierTest = Classifier()
         req = requests.post("http://127.0.0.1:5002/PreparedSession", json=preparedSession.to_json())
         assert req.status_code == 200   # correct key
         with open('AverageClassifier.sav', 'rb') as f:

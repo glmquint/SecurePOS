@@ -10,14 +10,15 @@ class ProductionSystemConfig:
         try:
             with open(path_to_config, 'r') as file:
                 self.config = json.load(file)
-                jsonValidator = JSONValidator(path_to_schema)
-                jsonValidator.validate_data(self.config)
+                json_validator = JSONValidator(path_to_schema)
+                json_validator.validate_data(self.config)
                 self.server_port = self.config['server_port']
                 self.monitoring_window = self.config['monitoring_window']
                 self.evaluation_window = self.config['evaluation_window']
                 self.client_url = self.config['client_url']
                 self.evaluation_url = self.config['evaluation_url']
                 self.message_url = self.config['message_url']
+                self.phase = self.config['phase']
         except Exception as e:
             print("An error occurred:", e)
 

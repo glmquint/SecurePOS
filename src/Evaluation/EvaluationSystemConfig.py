@@ -25,7 +25,7 @@ class EvaluationSystemConfig:
         data["state"] = state
 
         with open(self.path_config, "w") as jsonFile:
-            json.dump(data, jsonFile)
+            json.dump(data, jsonFile, indent=4)
 
         self.state = state
 
