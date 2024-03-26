@@ -1,14 +1,15 @@
 import os
 
+from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 from src.JsonIO.JSONSender import JSONSender, JSONValidator
 from src.util import monitorPerformance, Message
 
 
 class EvaluationSystemSender:
-    def __init__(self):
+    def __init__(self,config: EvaluationSystemConfig):
         #sender = JSONSender(f"{os.path.dirname(__file__)}/../MessagingSystem/Schema/Label.json", "http://127.0.0.1:6000/messaging_system")
-        #todo fix to be loaded from config
-        self.message_url = "http://127.0.0.1:6000/messaging_system"
+
+        self.message_url = f"http://{config.messaging_ip}:{config.messaging_port}/messaging_system"
 
         self.messaging_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/MessageSchema.json",
                                            self.message_url)

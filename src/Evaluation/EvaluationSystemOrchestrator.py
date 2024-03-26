@@ -16,10 +16,9 @@ class EvaluationSystemOrchestrator:
         if not config:
             config = EvaluationSystemConfig()
         self.config = config
-        self.sender = EvaluationSystemSender()
+        self.sender = EvaluationSystemSender(self.config)
         self.receiver = LabelReceiver(self.config.port)
         self.evaluation = EvaluationReportController(self.config)
-        self.sender = EvaluationSystemSender()
 
     def isnumberoflabelssufficient(self):
         return self.label_counter >= self.config.sufficient_label_number \

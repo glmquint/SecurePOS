@@ -16,6 +16,8 @@ class EvaluationSystemConfig:
         self.tollerated_error = 0
         self.tollerated_consecutive_error = 0
         self.port = 0
+        self.messaging_ip = ""
+        self.messaging_port = 0
         self.load()
 
     def write_state(self,state=0):
@@ -42,6 +44,8 @@ class EvaluationSystemConfig:
         self.tollerated_error = data["tollerated_error"]
         self.tollerated_consecutive_error = data["tollerated_consecutive_error"]
         self.port = data["port"]
+        self.messaging_ip = data["messaging_ip"]
+        self.messaging_port = data["messaging_port"]
         if data["simulate_human_task"] == "True":
             self.simulate_human_task = True
         else:
