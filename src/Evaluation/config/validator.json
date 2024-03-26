@@ -1,27 +1,40 @@
 {
-    "type": "object",
-    "properties": {
-        "sufficient_label_number": {
-            "type": "integer"
-        },
-        "simulate_human_task": {
-            "type": "string",
-          "enum": ["False","True"]
-        },
-        "port": {
-           "type":"integer"
-        },
-        "state": {
-            "type": "integer",
-            "enum": [0,1]
-        },
-        "tollerated_error":{
-            "type": "integer"
-        }       ,
-        "tollerated_consecutive_error":{
-            "type": "integer"
-        }
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "sufficient_label_number": {
+      "type": "integer"
     },
-    "required": ["sufficient_label_number","simulate_human_task","state","tollerated_error","tollerated_consecutive_error"]
+    "simulate_human_task": {
+      "type": "string"
+    },
+    "port": {
+      "type": "integer"
+    },
+    "state": {
+      "type": "integer"
+    },
+    "tollerated_error": {
+      "type": "integer"
+    },
+    "tollerated_consecutive_error": {
+      "type": "integer"
+    },
+    "messaging_ip": {
+      "type": "string"
+    },
+    "messaging_port": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "sufficient_label_number",
+    "simulate_human_task",
+    "port",
+    "state",
+    "tollerated_error",
+    "tollerated_consecutive_error",
+    "messaging_ip",
+    "messaging_port"
+  ]
 }
-
