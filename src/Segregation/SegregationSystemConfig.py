@@ -65,3 +65,6 @@ class SegregationSystemConfig:
 
     def get_messaging_system_endpoint(self):
         return self.__messaging__system_endpoint
+
+    def to_json(self):
+        return self.__dict__

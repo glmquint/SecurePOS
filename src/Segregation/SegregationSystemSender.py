@@ -43,4 +43,4 @@ class SegregationSystemSender:
 
     @monitorPerformance(should_sample_after=True)
     def send_to_messaging(self):
-        self.__messaging_system.send(self.__config_parameter.__dict__)
+        self.__messaging_system.send(self.__config_parameter)
