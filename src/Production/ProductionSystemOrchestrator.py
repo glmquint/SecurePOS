@@ -44,9 +44,12 @@ class ProductionSystemOrchestrator:
                 print(f"Classifier {self.classifier}")
                 self.sender.sendToMessaging(Message(msg="Classifier received"))
                 quit()
-
-            attack_risk_label = attackRiskClassifier.provideAttackRiskLabel()
-            print(type(attack_risk_label))
+            try:
+                attack_risk_label = attackRiskClassifier.provideAttackRiskLabel()
+                print(type(attack_risk_label))
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                continue
             # TODO: fix schema for attack_risk_label
 
             if self.phaseTracker.isEvalPhase():

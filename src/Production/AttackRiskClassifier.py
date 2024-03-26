@@ -18,18 +18,23 @@ class AttackRiskClassifier:
         self.attackRiskClassifier = classifier
 
     def provideAttackRiskLabel(self):
-        prepared_session = self.systemBus.popTopic("PreparedSession")
-        print(f"Prepared session {prepared_session}")
-        print(f"Classifier prepared session {prepared_session.to_json()}")
-        prepared_session_features = [
-            prepared_session.mean_abs_diff_transaction,
-            prepared_session.mean_abs_diff_transaction_amount,
-            prepared_session.median_longitude,
-            prepared_session.median_latitude,
-            prepared_session.median_target_ip,
-            prepared_session.median_dest_ip
-        ]
-        attack_risk_label = self.attackRiskClassifier.predict([prepared_session_features])[0]
-        print(f"Attack risk label: {attack_risk_label}")
-        return Label(label=attack_risk_label, uuid=prepared_session.uuid)
-
+        try:
+            prepared_session = self.systemBus.popTopic("PreparedSession")
+            print(f"Prepared session {prepared_session}")
+            print(f"Classifier prepared session {prepared_session.to_json()}")
+            prepared_session_features = [
+                prepared_session.mean_abs_diff_transaction,
+                prepared_session.mean_abs_diff_transaction_amount,
+                prepared_session.median_longitude,
+                prepared_session.median_latitude,
+                prepared_session.median_target_ip,
+                prepared_session.median_dest_ip
+            ]
+        except Exception as e:
+            raise Exception(f"An error occurred, wrong data received: {e}")
+        try:
+            attack_risk_label = self.attackRiskClassifier.predict([prepared_session_features])[0]
+            print(f"Attack risk label: {attack_risk_label}")
+            return Label(label=attack_risk_label, uuid=prepared_session.uuid)
+        except Exception as e:
+            raise Exception(f"An error occurred, cannot classify session: {e}")
