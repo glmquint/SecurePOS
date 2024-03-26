@@ -11,8 +11,8 @@ class SegregationSystemSender:
     __messageBus = None
     __config_parameter = None
 
-    def __init__(self, learningSetGenerator):
-        self.__config_parameter = SegregationSystemConfig()
+    def __init__(self, config : SegregationSystemConfig, learningSetGenerator):
+        self.__config_parameter = config
 
         development_system_ip = self.__config_parameter.get_development_system_ip()
         development_system_port = self.__config_parameter.get_development_system_port()
@@ -40,4 +40,4 @@ class SegregationSystemSender:
 
     @monitorPerformance(should_sample_after=True)
     def send_to_messaging(self):
-        self.__messaging_system.send(self.__config_parameter.__dict__)
+        self.__messaging_system.send(self.__config_parameter)

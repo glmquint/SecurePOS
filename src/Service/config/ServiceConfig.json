@@ -1,16 +1,16 @@
 {
   "messaging_system" : {
-    "ip" : "192.168.140.166",
+    "ip" : "127.0.0.1",
     "port" : 6000,
     "endpoint": "/messaging_system"
   },
   "performance_sampler" : {
-    "ip": "192.168.140.166",
+    "ip": "127.0.0.1",
     "port": 6000,
     "endpoint": "/performance_sampler"
   },
   "client" : {
-    "ip": "192.168.140.166",
+    "ip": "127.0.0.1",
     "port": 6001,
     "endpoint": "/client"
   }

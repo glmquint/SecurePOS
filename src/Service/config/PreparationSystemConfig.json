@@ -1,0 +1,45 @@
+{
+    "raw_session_topic": "RawSessionTopic",
+    "phase_tracker": {
+        "phase": "Development",
+        "production_phase_duration": 2,
+        "evaluation_phase_duration": 1
+    },
+    "db": {
+        "name": "record",
+        "table_name": "record"
+    },
+    "preparation_sys_receiver": {
+        "port": 5005,
+        "endpoints": [
+            {
+                "endpoint": "/record",
+                "callback": "receiveRecord",
+                "schema": "RecordSchema.json"
+            },
+            {
+                "endpoint": "/raw_session",
+                "callback": "receiveRawSession",
+                "schema": "RawSessionSchema.json"
+            }
+        ]
+    },
+    "raw_session_creator": {
+        "number_of_systems": 4
+    },
+    "prepared_session_creator": {},
+    "ingestion_sys_sender": {
+        "raw_session_receiver": {
+            "url": "http://127.0.0.1:5005/raw_session"
+        },
+        "label_receiver": {
+            "url": "http://127.0.0.1:5004/evaluation_security_label"
+        },
+        "segregation_system_receiver": {
+            "url": "http://127.0.0.1:5001/segregationSystem"
+        },
+        "production_system_receiver": {
+            "url": "http://127.0.0.1:5003/PreparedSession"
+        }
+    }
+}

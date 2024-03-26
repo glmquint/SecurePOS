@@ -1,0 +1,25 @@
+{
+  "topics" : ["LearningSet","learning_plot","Scoreboard","test_report"],
+  "messaging_system_receiver" : "http://127.0.0.1:6000/messaging_system",
+  "production_system_receiver" :  "http://127.0.0.1:5003/Classifier",
+  "hyperparameters": {
+    "number_of_layers": {
+      "min":10,
+      "max":20,
+      "step":2
+    },
+    "number_of_neurons": {
+      "min":10,
+      "max":20,
+      "step":2
+    }
+  },
+  "loss_threshold" : 0.1,
+  "overfitting_tolerance" : 25.0,
+  "generalization_tolerance" : 0.1,
+  "port": 5002,
+  "endpoint_url" : "/learning_set",
+  "classifiers_limit" : 5,
+  "stop&go" : false
+
+}

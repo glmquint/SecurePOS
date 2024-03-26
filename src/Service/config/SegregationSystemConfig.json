@@ -1,0 +1,19 @@
+{
+  "sufficientSessionNumber" : 20,
+  "segregationSystemPort" : 5001,
+  "segregationSystemEndpoint": "segregationSystem",
+  "developmentSystemIp" : "127.0.0.1",
+  "developmentSystemPort" : 5002,
+  "developmentSystemEndpoint": "learning_set",
+
+  "messagingSystemIp" : 6000,
+  "messagingSystemPort" : "127.0.0.1",
+  "messagingSystemEndpoint" : "messaging_system",
+
+  "toleranceDataBalancing" : 10,
+  "serviceFlag": true,
+  "percentageTrainingSplit" : 0.7,
+  "percentageTestSplit" : 0.15,
+  "percentageValidationSplit" : 0.15
+}
+

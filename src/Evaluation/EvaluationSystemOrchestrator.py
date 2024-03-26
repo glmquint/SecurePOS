@@ -9,11 +9,13 @@ from src.util import log, Message
 
 
 class EvaluationSystemOrchestrator:
-    def __init__(self):
+    def __init__(self, config: EvaluationSystemConfig = None):
         self.label_counter = 0
         self.security_label_counter = 0
         self.simulateHumanTasks = False
-        self.config = EvaluationSystemConfig()
+        if not config:
+            config = EvaluationSystemConfig()
+        self.config = config
         self.sender = EvaluationSystemSender()
         self.receiver = LabelReceiver(self.config.port)
         self.evaluation = EvaluationReportController(self.config)

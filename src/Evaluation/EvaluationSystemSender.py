@@ -8,7 +8,7 @@ class EvaluationSystemSender:
     def __init__(self):
         #sender = JSONSender(f"{os.path.dirname(__file__)}/../MessagingSystem/Schema/Label.json", "http://127.0.0.1:6000/messaging_system")
         #todo fix to be loaded from config
-        self.message_url = "http://192.168.144.104:6000/messaging_system"
+        self.message_url = "http://127.0.0.1:6000/messaging_system"
 
         self.messaging_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/MessageSchema.json",
                                            self.message_url)

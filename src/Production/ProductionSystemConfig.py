@@ -1,11 +1,12 @@
 # A class for storing the configuration of the production system
 import json
+import os
 
 from src.JsonIO.JsonValidator import JSONValidator
 
 
 class ProductionSystemConfig:
-    def __init__(self, path_to_config, path_to_schema):
+    def __init__(self, path_to_config, path_to_schema : str = f'{os.path.dirname(__file__)}/config/configSchema.json'):
         # Open the configuration file and read the values
         try:
             with open(path_to_config, 'r') as file:
