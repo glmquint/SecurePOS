@@ -54,9 +54,9 @@ class ProductionSystemOrchestrator:
             # TODO: fix schema for attack_risk_label
 
             if self.phaseTracker.isEvalPhase():
-                #self.sender.sendToEvaluation(attack_risk_label)
+                self.sender.sendToEvaluation(attack_risk_label)
                 print("Send to evaluation")
-            #self.sender.sendToClient(attack_risk_label)
+            self.sender.sendToClient(attack_risk_label)
             self.phaseTracker.increment()
             print("Send to client")
 
