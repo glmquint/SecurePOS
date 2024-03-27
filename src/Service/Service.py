@@ -70,6 +70,7 @@ class Service:
         return {"status": "ok"}
 
     def performance_request_callback(self, request):
+        global performance_timer
         json_data = request.get_json()
         json_data.update({'remote_ip': request.remote_addr})
         print(f"Received performance metric: {json_data}")
@@ -214,7 +215,7 @@ def test_development():
     service.run()
     while True:
         time.sleep(2)
-        if os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav"):
+        if os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifierOld2.sav"):
             print("development finished, production requirements met")
             break
     print("Done with development, now switching to production...")
@@ -241,9 +242,12 @@ def test_production():
 def wait_and_dump_perf_metrics():
     import pandas as pd
     global service
+    global performance_timer
     while performance_timer > 0:
-        performance_timer - 1
+        performance_timer -= 1
+        print("Remaining time to dump performance metrics: ", performance_timer)
         time.sleep(1)
+    print("Exporting performance metrics to perf_metrics.csv")
     perf_metrics = service.message_bus.messageQueues['performance_sampler'].queue
     df : pd.Dataframe = pd.DataFrame(perf_metrics)
     df.to_csv("perf_metrics.csv")
@@ -253,6 +257,6 @@ if __name__ == '__main__':
     service = None
     test_development()
     wait_and_dump_perf_metrics()
-    test_production()
+    #test_production()
     pass
 
