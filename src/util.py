@@ -57,6 +57,7 @@ def continous_sending():
     while True:
         performanceSample = message_bus.popTopic("performance_sample")
         requests.post(sampler_endpoint, json=performanceSample.to_json())
+        #print(f"not sending performance sample: {performanceSample.to_json()}")
 
 
 message_bus = MessageBus(['performance_sample'])
@@ -76,6 +77,7 @@ def monitorPerformance(should_sample_after: bool):
             else:
                 timestamp = time.time()
                 result = func(*args, **kwargs)
+            timestamp = int(timestamp * 10000000)
             sample = {"timestamp": timestamp,
                       "function_name": func.__name__,
                       "class_name": str(args[0].__class__).split("'>", maxsplit=1)[0].split('.')[-1]}

@@ -46,6 +46,8 @@ clientside		- 6001
 	
 '''
 
+performance_timer = 10
+
 class Service:
     def __init__(self):
         with open(f"{os.path.dirname(__file__)}/config/ServiceConfig.json", 'r') as f:
@@ -68,10 +70,12 @@ class Service:
         return {"status": "ok"}
 
     def performance_request_callback(self, request):
+        global performance_timer
         json_data = request.get_json()
         json_data.update({'remote_ip': request.remote_addr})
         print(f"Received performance metric: {json_data}")
         self.message_bus.pushTopic('performance_sampler', json_data)
+        performance_timer = 10
         return {"status": "ok"}
 
     def setup_client_listener(self):
@@ -236,10 +240,24 @@ def test_production():
             break
 
 
+def wait_and_dump_perf_metrics():
+    import pandas as pd
+    global service
+    global performance_timer
+    while performance_timer > 0:
+        performance_timer -= 1
+        print("Remaining time to dump performance metrics: ", performance_timer)
+        time.sleep(1)
+    print("Exporting performance metrics to perf_metrics.csv")
+    perf_metrics = service.message_bus.messageQueues['performance_sampler'].queue
+    df : pd.Dataframe = pd.DataFrame(perf_metrics)
+    df.to_csv("perf_metrics.csv")
+
 
 if __name__ == '__main__':
     service = None
-    #test_development()
-    test_production()
+    test_development()
+    wait_and_dump_perf_metrics()
+    #test_production()
     pass
 

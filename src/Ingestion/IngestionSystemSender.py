@@ -19,6 +19,7 @@ class IngestionSystemSender:
     @monitorPerformance(should_sample_after=True)
     def send_raw_session(self, raw_session):
         self.raw_session_sender.send(raw_session)
+        assert len(raw_session.records) > 0, f"empty records in {raw_session.records}"
 
     @monitorPerformance(should_sample_after=True)
     def send_prepared_session(self, prepared_session):

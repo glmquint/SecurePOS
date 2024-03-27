@@ -21,7 +21,7 @@ class StorageController:
         self.timeout_flush_thread.start()
 
 
-    @monitorPerformance(should_sample_after=False)
+    @log
     def save(self, obj) -> bool:
         if not issubclass(type(obj), self.obj_type):
             raise Exception(f'Invalid type, expected {self.obj_type} got {type(obj)}')

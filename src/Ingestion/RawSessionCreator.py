@@ -28,6 +28,8 @@ class RawSessionCreator:
     def createRawSession(self) -> None:
         rows_with_max_count = self.storage_controller.retrieve_by_column('uuid', self.max_uuid)
         self.raw_session = RawSession(records = [Record.from_row(**x) for x in rows_with_max_count])
+        assert self.raw_session is not None
+        assert len(self.raw_session.records) > 0
         label_records = [x for x in self.raw_session.records if type(x) == Label]
         self.label = label_records[-1] if len(label_records) > 0 else None
 

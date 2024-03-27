@@ -20,7 +20,8 @@ class DBConnector:
             cursor.execute(f"PRAGMA table_info({self.tableName})")
             self.columns = [column[1] for column in cursor.fetchall()][1:]  # [1:] to remove the id column
         except sqlite3.Error as e:
-            print(e)
+            print(e, __file__)
+            raise Exception(e)
 
     def insert(self, row: list):
         with self.lock:
