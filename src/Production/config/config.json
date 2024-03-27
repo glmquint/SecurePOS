@@ -5,5 +5,5 @@
     "client_url": "http://127.0.0.1:6001/client",
     "evaluation_url": "http://127.0.0.1:5004/evaluation_label",
     "message_url": "http://127.0.0.1:6000/messaging_system",
-    "phase": "Production"
+    "phase": "Development"
 }
