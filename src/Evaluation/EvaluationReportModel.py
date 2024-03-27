@@ -13,13 +13,9 @@ class EvaluationReportModel:
         self.ConsecutiveError = 0
         self.tick_array = []
         self.scontroller_label = StorageController({'name': 'evaluation', 'table_name': 'labels'},type(Label()))
-        #self.scontroller_label = StorageController(DBConfig("evaluation", "labels"),
-                                                   #type(Label()))
         self.scontroller_security = StorageController({'name': 'evaluation', 'table_name': 'security_labels'},type(Label()))
-        #self.scontroller_security = StorageController(DBConfig("evaluation", "security_labels"),
         self.sufficient_label_number = config.sufficient_label_number
         self.labels = []
-        #self.labels = self.retrieve()
 
 
 
@@ -36,11 +32,6 @@ class EvaluationReportModel:
     def check_valid_labels(self):
         x = {x.uuid for x in self.labels[0]}
         y = {x.uuid for x in self.labels[1]}
-        #print(x.difference(y))
-        #print([(x.label,x.uuid) for x in a])
-        #print([(x.label,x.uuid) for x in b])
-        #difference = [value.uuid for value in [x for x in a] if value.uuid not in [y.uuid for y in [x for x in b]]]
-        #print(difference)
         difference = ([uid for uid in x.difference(y)],[uid for uid in y.difference(x)])
         if len(difference[0]) != 0 or len(difference[1]) != 0:
             print(difference)

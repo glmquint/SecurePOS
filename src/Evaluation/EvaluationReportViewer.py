@@ -1,7 +1,6 @@
 import os
 import uuid
 from datetime import datetime
-from random import randint
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -46,9 +45,6 @@ class EvaluationReportViewer:
         img = Image.new('RGB', (self.width, self.height), color='white')
         imgDraw = ImageDraw.Draw(img)
         imgDraw.text((10, 5), self.title, font=font, fill=self.black)
-        # for x in range(0,len(labels)):
-        # imgDraw.text((15, 10+30*x), str(x)+") "+labels[0].attackRiskLabel[1], font=font, fill=(255, 255, 0))
-        # imgDraw.text((95, 10+30*x), security_labels[0].attackRiskLabel[1], font=font, fill=(255, 255, 0))
         for x in range(1, modelcontroller.sufficient_label_number + 1):
             # first row
             if x <= self.row_offset:
@@ -108,10 +104,15 @@ class EvaluationReportViewer:
         report_third_row = 510
         report_forth_row = 550
 
-        imgDraw.text((report_x, report_first_row), "Errors: ", font=font, fill=(0, 0, 0))
-        imgDraw.text((report_y, report_first_row), str(modelcontroller.TotalError), font=font, fill=self.red)
+        if modelcontroller.TotalError < modelcontroller.TotalErrorTollerated:
+            color = self.green
+        else:
+            color = self.red
+        imgDraw.text((report_x, report_first_row), "Errors: ", font=font, fill=self.black)
+        imgDraw.text((report_y, report_first_row), str(modelcontroller.TotalError), font=font, fill=color)
 
-        imgDraw.text((report_x, report_second_row), "Max Toll. Error: ", font=font, fill=(0, 0, 0))
+
+        imgDraw.text((report_x, report_second_row), "Max Toll. Error: ", font=font, fill=self.black)
         imgDraw.text((report_y, report_second_row), str(modelcontroller.TotalErrorTollerated), font=font,
                      fill=self.black)
 
@@ -119,8 +120,12 @@ class EvaluationReportViewer:
         imgDraw.text((report_y, report_forth_row), str(modelcontroller.ConsecutiveErrorTollerated), font=font,
                      fill=self.black)
 
-        imgDraw.text((report_x, report_third_row), "Max Consec. Error: ", font=font, fill=(0, 0, 0))
-        imgDraw.text((report_y, report_third_row), str(modelcontroller.ConsecutiveError), font=font, fill=self.red)
+        if modelcontroller.ConsecutiveError < modelcontroller.ConsecutiveErrorTollerated:
+            color = self.green
+        else:
+            color = self.red
+        imgDraw.text((report_x, report_third_row), "Max Consec. Error: ", font=font, fill=self.black)
+        imgDraw.text((report_y, report_third_row), str(modelcontroller.ConsecutiveError), font=font, fill=color)
 
         self.widthline = 4
         self.firstcorner = 560
@@ -133,34 +138,3 @@ class EvaluationReportViewer:
         img.save(
             f'{os.path.dirname(__file__)}/data/result_' + str(datetime.now().strftime(self.format_timestamp)) + '.png')
         pass
-
-# e = EvaluationReportViewer()
-# eva = EvaluationReportModel(EvaluationSystemConfig())
-# a = [""]*50
-# b = [""]*50
-# for x in range(0,50):
-# a[x] = AttackRiskLabel("ciao"+str(randint(1,2)))
-#   uid= str(uuid.uuid4())
-#   a[x] = Label(label="moderate",uuid=uid)
-# for x in range(0,50):
-#   b[x] = Label(label="high",uuid=a[x].uuid)
-# b[49].uuid = 0
-# eva.labels=[a,b]
-# x = {x.uuid for x in a}
-# y = {x.uuid for x in b}
-# print(x.difference(y))
-# exit()
-##
-# print([value.uuid for value in [x for x in a] if value.label not in [y.label for y in [x for x in b]]])
-
-
-# print([x.label for x in a])
-# print(list(set([x.label for x in a]) & set([x.label] for x in b)))
-# print(a.keys() & b.keys())
-# eva.labels=list(set(a) & set(b))
-# tick = ["V"]*50
-# e.print(eva,tick)
-
-# def intersection(lst1, lst2):
-# lst3 = [value for value in lst1 if value in lst2]
-# return lst3

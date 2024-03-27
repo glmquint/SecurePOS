@@ -29,14 +29,7 @@ class EvaluationReportController:
             action = json.load(action_json)
             validator.validate_data(action)
             self.result = action["action"]
-            # while True:
-            #     self.result = input("Please write Yes to confirm, No to decline, esc to leave:")
-            #     self.result = self.result.lower()
-            #     if self.result == "esc":
-            #         print("Closing...")
-            #         self.evaluationmodel.sufficient_label_number = -1
-            #         self.evaluationmodel.removelabels()
-            #         exit()
+
             if self.result == "confirm":
                 print("Classifier accepted.")
             else:
