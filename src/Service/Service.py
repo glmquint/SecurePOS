@@ -46,6 +46,8 @@ clientside		- 6001
 	
 '''
 
+performance_timer = 10
+
 class Service:
     def __init__(self):
         with open(f"{os.path.dirname(__file__)}/config/ServiceConfig.json", 'r') as f:
@@ -72,6 +74,7 @@ class Service:
         json_data.update({'remote_ip': request.remote_addr})
         print(f"Received performance metric: {json_data}")
         self.message_bus.pushTopic('performance_sampler', json_data)
+        performance_timer = 10
         return {"status": "ok"}
 
     def setup_client_listener(self):
@@ -235,11 +238,21 @@ def test_production():
             if f.endswith('.png'):
                 break
 
+def wait_and_dump_perf_metrics():
+    import pandas as pd
+    global service
+    while performance_timer > 0:
+        performance_timer - 1
+        time.sleep(1)
+    perf_metrics = service.message_bus.messageQueues['performance_sampler'].queue
+    df : pd.Dataframe = pd.DataFrame(perf_metrics)
+    df.to_csv("perf_metrics.csv")
+
 
 if __name__ == '__main__':
     service = None
     test_development()
-    service.message_bus
+    wait_and_dump_perf_metrics()
     test_production()
     pass
 
