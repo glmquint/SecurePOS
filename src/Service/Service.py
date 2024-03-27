@@ -259,5 +259,6 @@ if __name__ == '__main__':
     test_development()
     wait_and_dump_perf_metrics()
     #test_production()
+    #wait_and_dump_perf_metrics()
     pass
 
