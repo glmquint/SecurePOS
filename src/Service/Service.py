@@ -238,7 +238,8 @@ def test_production():
 
 if __name__ == '__main__':
     service = None
-    #test_development()
+    test_development()
+    service.message_bus
     test_production()
     pass
 

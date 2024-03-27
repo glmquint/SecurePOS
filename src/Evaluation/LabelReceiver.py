@@ -16,10 +16,10 @@ class LabelReceiver:
         self.port = port
         self.server = Server()
         self.mbus = MessageBus(["label", "sec_label"])
-        self.scontroller_label = StorageController({'name': 'evaluation', 'table_name': 'labels'},type(Label()))
+        self.scontroller_label = StorageController({'name': 'evaluation', 'table_name': 'labels'},Label)
         #self.scontroller_label = StorageController(DBConfig("evaluation", "labels"),
             #type(Label()))
-        self.scontroller_security = StorageController({'name': 'evaluation', 'table_name': 'security_labels'},type(Label()))
+        self.scontroller_security = StorageController({'name': 'evaluation', 'table_name': 'security_labels'},Label)
         #self.scontroller_security = StorageController(DBConfig("evaluation", "security_labels"),
             #type(Label()))
         return
