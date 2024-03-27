@@ -159,8 +159,8 @@ class Service:
     def start_development_system(self):
         print("starting development system...")
         # delete all files inside the classifiers folder
-        for f in os.listdir(f"{os.path.dirname(__file__)}/../Development/classifiers"):
-            os.remove(f"{os.path.dirname(__file__)}/../Development/classifiers/{f}")
+        for f in os.listdir(f"{os.path.dirname(__file__)}/../Development/classifiers/"):
+            os.remove(os.path.join(f"{os.path.dirname(__file__)}/../Development/classifiers/",f))
         self.development_system = DevelopmentSystemMasterOrchestrator(
             config=DevelopmentSystemConfigurations(f"{os.path.dirname(__file__)}/config/DevelopmentSystemConfig.json")
         )
