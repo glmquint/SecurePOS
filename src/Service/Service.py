@@ -218,9 +218,9 @@ def test_development():
 
 def test_production():
     global service
-    for f in os.listdir(os.path.dirname(f"{os.path.dirname(__file__)}/../Evaluation/data")):
+    for f in os.listdir(os.path.dirname(f"{os.path.dirname(__file__)}/../Evaluation/data/")):
         if f.endswith('.png'):
-            os.remove(os.path.dirname(f"{os.path.dirname(__file__)}/../Evaluation/data/{f}"))
+            os.remove(os.path.join(os.path.dirname(f"{os.path.dirname(__file__)}/../Evaluation/data/"),f))
     with open(f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json", 'r') as f:
         config = json.load(f)
     config['phase_tracker']['phase'] = 'Production'
@@ -230,10 +230,11 @@ def test_production():
     service.run()
     # check that there is a png file in the evaluation folder
     while True:
-        time.sleep(2)
-        for f in os.listdir(os.path.dirname(f"{os.path.dirname(__file__)}/../Evaluation/data")):
-            if f.endswith('.png'):
-                break
+        time.sleep(1)
+        if any(f.endswith('.png') for f in os.listdir(os.path.dirname(f"{os.path.dirname(__file__)}/../Evaluation/data/"))):
+            print("production finished, evaluation requirements met")
+            break
+
 
 
 if __name__ == '__main__':
