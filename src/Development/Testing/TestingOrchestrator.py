@@ -56,7 +56,6 @@ class TestingOrchestrator:
                     self.status.save_status()
                 elif response == 0:
                     self.status.status = "send_config"
-                    # TODO: maybe remove classifier if not needed
                     self.training_process.remove_precedent_response(
                         f'{os.path.dirname(__file__)}/../Validation/validation_result')
                     self.training_process.remove_precedent_response(
