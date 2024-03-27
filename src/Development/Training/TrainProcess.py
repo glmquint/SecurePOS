@@ -4,7 +4,8 @@ import math
 import os
 
 import pandas as pd
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, mean_squared_error
+
 from src.DataObjects.Classifier import Classifier
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
@@ -100,8 +101,15 @@ class TrainProcess:
         self.classifier.number_of_iterations = len(self.classifier.get_loss_curve()) + 1
         y_train_pred = self.classifier.model.predict(self.status.learning_set.trainingSet)
         y_val_predicted = self.classifier.model.predict(self.status.learning_set.validationSet)
-        # TODO: maybe change to minimum
-        mse = self.classifier.model.best_loss_
+        label_one_hot_encoder = {
+            'moderate': [0, 0, 1],
+            'normal': [0, 1, 0],
+            'high': [1, 0, 0]
+        }
+        mse = mean_squared_error(
+            [label_one_hot_encoder[i] for i in self.status.learning_set.validationSetLabel],
+            [label_one_hot_encoder[i] for i in y_val_predicted])
+
         train_error = 1.0 - accuracy_score(self.status.learning_set.trainingSetLabel, y_train_pred)
         val_error = 1.0 - accuracy_score(self.status.learning_set.validationSetLabel, y_val_predicted)
         self.grid_space.insert_classifier(self.classifier, mse, train_error, val_error)
