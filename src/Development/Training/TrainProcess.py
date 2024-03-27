@@ -18,7 +18,7 @@ from src.MessageBus.MessageBus import MessageBus
 class TrainProcess:
     number_of_iterations: int = None
     classifier: Classifier = None
-    grid_search = None
+    grid_search: list = None
     hyperparameters: HyperParameterLimit = None
     avg_hyperparameters: dict = None
     status: DevelopmentSystemStatus = None

@@ -16,7 +16,6 @@ class ValidationOrchestrator:
     message_bus: MessageBus = None
     status: DevelopmentSystemStatus = None
     configurations: DevelopmentSystemConfigurations = None
-    grid_search = None
     training_process: TrainProcess = None
 
     def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus,
