@@ -215,7 +215,7 @@ def test_development():
     service.run()
     while True:
         time.sleep(2)
-        if os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifierOld2.sav"):
+        if os.path.isfile(f"{os.path.dirname(__file__)}/../Production/classifier.sav"):
             print("development finished, production requirements met")
             break
     print("Done with development, now switching to production...")
