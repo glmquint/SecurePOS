@@ -52,10 +52,3 @@ class EvaluationSystemConfig:
             self.simulate_human_task = False
         f.close()
         return
-
-
-#conf = EvaluationSystemConfig()
-#conf.load()
-#conf.write_state(0)
-#conf.load()
-#print(conf.tollerated_error)
