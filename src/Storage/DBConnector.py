@@ -85,14 +85,11 @@ class DBConnector:
     def retrieve_joined_labels(self,number):
         with self.lock:
             cursor = self.connection.cursor()
-            cursor.execute("select* from labels as l  inner join security_labels as sl  on l.uuid == sl.uuid;")
+            cursor.execute("select* from labels as l  inner join security_labels as sl  on l.uuid == sl.uuid limit "+str(number)+";")
             return cursor.fetchall()
 
     def remove_joined_labels(self, number):
         with self.lock:
             cursor = self.connection.cursor()
-            #delete
-            #from labels where
-            #uuid in (select l.uuid from labels as l inner join security_labels as sl on l.uuid=sl.uuid);
-            cursor.execute("delete from labels where uuid in (select l.uuid from labels as l inner join security_labels as sl on l.uuid=sl.uuid);")
+            cursor.execute("delete from labels where uuid in (select l.uuid from labels as l inner join security_labels as sl on l.uuid=sl.uuid limit "+str(number)+");")
             self.connection.commit()
