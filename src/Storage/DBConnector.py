@@ -48,14 +48,7 @@ class DBConnector:
     def retrieve_n(self,number:int):
         with self.lock:
             cursor = self.connection.cursor()
-            #select *
-            #from labels as l
-            #inner
-            #join
-            #security_labels as sl
-            #on
-            #l.uuid == sl.uuid;
-            cursor.execute('SELECT ' + ' ,'.join(self.columns) + ' FROM ' + self.tableName + ' as l inner join '+ self.tableName + ' as sl on l.uuid == sl.uuid order by rowid limit ' + str(number))
+            cursor.execute('SELECT ' + ' ,'.join(self.columns) + ' FROM '+ self.tableName + ' order by rowid limit ' + str(number))
             return [dict(zip(self.columns, x)) for x in cursor.fetchall()]
 
     def retrieve(self):
@@ -86,4 +79,11 @@ class DBConnector:
         with self.lock:
             cursor = self.connection.cursor()
             cursor.execute("select uuid, count(distinct(objtype)) as different_systems from record group by uuid order by different_systems desc limit 1;")
+            return cursor.fetchall()
+
+
+    def retrieve_n_labels(self,number):
+        with self.lock:
+            cursor = self.connection.cursor()
+            cursor.execute("select* from labels as l  inner join security_labels as sl  on l.uuid == sl.uuid;")
             return cursor.fetchall()
