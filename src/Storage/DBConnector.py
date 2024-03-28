@@ -48,7 +48,14 @@ class DBConnector:
     def retrieve_n(self,number:int):
         with self.lock:
             cursor = self.connection.cursor()
-            cursor.execute('SELECT ' + ' ,'.join(self.columns) + ' FROM ' + self.tableName + ' order by rowid limit ' + str(number))
+            #select *
+            #from labels as l
+            #inner
+            #join
+            #security_labels as sl
+            #on
+            #l.uuid == sl.uuid;
+            cursor.execute('SELECT ' + ' ,'.join(self.columns) + ' FROM ' + self.tableName + ' as l inner join '+ self.tableName + ' as sl on l.uuid == sl.uuid order by rowid limit ' + str(number))
             return [dict(zip(self.columns, x)) for x in cursor.fetchall()]
 
     def retrieve(self):
