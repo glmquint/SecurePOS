@@ -18,14 +18,13 @@ class EvaluationReportModel:
 
 
     def retrieve(self):
-        labels = self.scontroller_label.retrieve_n(self.sufficient_label_number)
-        slabels = self.scontroller_security.retrieve_n(self.sufficient_label_number)
-        return [labels, slabels]
+        retrieve = self.scontroller_label.retrieve_n_labels(self.sufficient_label_number)
+        return [retrieve[0], retrieve[1]]
 
 
     def removelabels(self):
-        self.scontroller_security.remove_n(self.sufficient_label_number)
-        self.scontroller_label.remove_n(self.sufficient_label_number)
+        #SQLITE has a trigger to delete the security labels.
+        self.scontroller_label.remove_joined_labels(self.sufficient_label_number)
 
     def check_valid_labels(self):
         x = {x.uuid for x in self.labels[0]}

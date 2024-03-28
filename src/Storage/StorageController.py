@@ -1,6 +1,7 @@
 from threading import Event, Thread
 from time import sleep
 
+from src.DataObjects.Record import Label
 from src.Storage.DBConnector import DBConnector
 from src.DataObjects.Session import PreparedSession
 from src.util import log, monitorPerformance
@@ -62,6 +63,35 @@ class StorageController:
             print(e)
             return False
         return True
+
+    def remove_joined_labels(self,number:int) -> [type]:
+        try:
+            self.DBConnector.remove_joined_labels(number)
+            self.count_updated.set()
+        except Exception as e:
+            print(e)
+            return False
+        return True
+
+    def retrieve_n_labels(self,number:int,blocking=True) -> [type]:
+        if blocking:
+            self.wait_count_updated()
+        try:
+            joined_result = self.DBConnector.retrieve_joined_labels(number)
+            labels = []
+            security_labels = []
+            for x in joined_result:
+                l1 = Label(label=x[1],uuid=x[2])
+                l2 = Label(label=x[4], uuid=x[5])
+                labels.append(l1)
+                security_labels.append(l2)
+            result = [labels,security_labels]
+        except Exception as e:
+            print(e)
+            with open("error.log", "a") as f:
+                f.write(f"{e} ({__file__})\n")
+            return []
+        return result
 
     def retrieve_n(self, number:int,blocking=True) -> [type]:
         if blocking:
