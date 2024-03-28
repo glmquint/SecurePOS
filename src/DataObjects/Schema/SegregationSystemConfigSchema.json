@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "sufficientSessionNumber": {
+      "type": "integer"
+    },
+    "segregationSystemPort": {
+      "type": "integer"
+    },
+    "segregationSystemEndpoint": {
+      "type": "string"
+    },
+    "developmentSystemIp": {
+      "type": "string"
+    },
+    "developmentSystemPort": {
+      "type": "integer"
+    },
+    "developmentSystemEndpoint": {
+      "type": "string"
+    },
+    "messagingSystemIp": {
+      "type": "integer"
+    },
+    "messagingSystemPort": {
+      "type": "string"
+    },
+    "messagingSystemEndpoint": {
+      "type": "string"
+    },
+    "toleranceDataBalancing": {
+      "type": "integer"
+    },
+    "serviceFlag": {
+      "type": "boolean"
+    },
+    "percentageTrainingSplit": {
+      "type": "number"
+    },
+    "percentageTestSplit": {
+      "type": "number"
+    },
+    "percentageValidationSplit": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "sufficientSessionNumber",
+    "segregationSystemPort",
+    "segregationSystemEndpoint",
+    "developmentSystemIp",
+    "developmentSystemPort",
+    "developmentSystemEndpoint",
+    "messagingSystemIp",
+    "messagingSystemPort",
+    "messagingSystemEndpoint",
+    "toleranceDataBalancing",
+    "serviceFlag",
+    "percentageTrainingSplit",
+    "percentageTestSplit",
+    "percentageValidationSplit"
+  ]
+}
