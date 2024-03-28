@@ -13,6 +13,7 @@ class DBConnector:
     def __init__(self, **kwargs):
         self.name = kwargs.get('name', '')
         self.tableName = kwargs.get('table_name', '')
+        self.estimated_count = 0
 
         try:
             self.connection = sqlite3.connect(f'{os.path.dirname(__file__)}/../../db/{self.name}.db', check_same_thread=False)
@@ -32,18 +33,21 @@ class DBConnector:
                     insert_query,
                     row)
             self.connection.commit()
+            self.estimated_count += cursor.rowcount
 
     def remove(self):
         with self.lock:
             cursor = self.connection.cursor()
             cursor.execute('DELETE FROM ' + self.tableName)
             self.connection.commit()
+            self.estimated_count = 0
 
     def remove_n(self,number:int):
         with self.lock:
             cursor = self.connection.cursor()
             cursor.execute('DELETE FROM ' + self.tableName + ' WHERE rowid IN ( select rowid from ' + self.tableName + ' order by rowid limit '+str(number)+')')
             self.connection.commit()
+            self.estimated_count -= cursor.rowcount
 
     def retrieve_n(self,number:int):
         with self.lock:
@@ -61,13 +65,18 @@ class DBConnector:
         with self.lock:
             cursor = self.connection.cursor()
             cursor.execute('SELECT COUNT(*) FROM ' + self.tableName)
-            return cursor.fetchall()[0][0]
+            number = cursor.fetchall()[0][0]
+            if number != self.estimated_count:
+                print(f'Estimated count: {self.estimated_count}, actual count: {number}')
+            self.estimated_count = number
+            return number
 
     def delete_by_column(self, column, value):
         with self.lock:
             cursor = self.connection.cursor()
             cursor.execute(f'DELETE FROM {self.tableName} WHERE {column} = ?', (value,))
             self.connection.commit()
+            self.estimated_count -= cursor.rowcount
 
     def retrieve_by_column(self, param, value):
         with self.lock:
