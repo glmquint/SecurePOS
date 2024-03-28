@@ -21,7 +21,7 @@ def log(func):
             arg = args
         with open(f"{func.__name__}.log", 'a') as f:
             f.write(f"[{time.time()}]: Calling {func.__name__} with args {arg} and kwargs {kwargs}\n")
-        # print(" " * nesting_level + f"[{time.time():.7f}]: Calling {func.__name__} with args {arg} and kwargs {kwargs}")
+        print(" " * nesting_level + f"[{time.time():.7f}]: Calling {func.__name__} with args {arg} and kwargs {kwargs}")
         nesting_level += 1
         result = func(*args, **kwargs)
         nesting_level -= 1
@@ -82,6 +82,8 @@ def monitorPerformance(should_sample_after: bool):
                       "function_name": func.__name__,
                       "class_name": str(args[0].__class__).split("'>", maxsplit=1)[0].split('.')[-1]}
             performance_sample = PerformanceSample(**sample)
+            # We push on a queue instead of sending directly to the endpoint to avoid blocking the executing thread
+            # A separate thread will continuously send the performance samples to the endpoint
             message_bus.pushTopic("performance_sample", performance_sample)
             return result
 

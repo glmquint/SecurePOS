@@ -46,7 +46,7 @@ clientside		- 6001
 	
 '''
 
-performance_timer = 10
+performance_timer = WAIT_FOR_PERFORMANCE = 3
 
 class Service:
     def __init__(self):
@@ -59,9 +59,9 @@ class Service:
 
     def setup_messaging_listener(self):
         self.messaging_system = Server()
-        self.messaging_system.add_resource(JSONEndpoint, self.config['messaging_system']['endpoint'], recv_callback=self.messaging_system_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
+        self.messaging_system.add_resource(JSONEndpoint, self.config['messaging_system']['endpoint'], recv_callback=self.messaging_system_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/MessageSchema.json')
         self.message_bus.addTopic('messaging_system')
-        self.messaging_system.add_resource(JSONEndpoint, self.config['performance_sampler']['endpoint'], request_callback=self.performance_request_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
+        self.messaging_system.add_resource(JSONEndpoint, self.config['performance_sampler']['endpoint'], request_callback=self.performance_request_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/PerformanceSampleSchema.json')
         self.message_bus.addTopic('performance_sampler')
 
     def messaging_system_callback(self, json_data):
@@ -75,12 +75,12 @@ class Service:
         json_data.update({'remote_ip': request.remote_addr})
         print(f"Received performance metric: {json_data}")
         self.message_bus.pushTopic('performance_sampler', json_data)
-        performance_timer = 10
+        performance_timer = WAIT_FOR_PERFORMANCE
         return {"status": "ok"}
 
     def setup_client_listener(self):
         self.server = Server()
-        self.server.add_resource(JSONEndpoint, self.config['client']['endpoint'], recv_callback=self.client_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/empty.json')
+        self.server.add_resource(JSONEndpoint, self.config['client']['endpoint'], recv_callback=self.client_callback, json_schema_path=f'{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json')
         self.message_bus.addTopic('client')
 
     def client_callback(self, json_data):
@@ -250,15 +250,15 @@ def wait_and_dump_perf_metrics():
         time.sleep(1)
     print("Exporting performance metrics to perf_metrics.csv")
     perf_metrics = service.message_bus.messageQueues['performance_sampler'].queue
-    df : pd.Dataframe = pd.DataFrame(perf_metrics)
+    df = pd.DataFrame(perf_metrics)
     df.to_csv("perf_metrics.csv")
 
 
 if __name__ == '__main__':
-    service = None
-    test_development()
+    service : Service = None
+    # test_development()
+    # wait_and_dump_perf_metrics()
+    test_production()
     wait_and_dump_perf_metrics()
-    #test_production()
-    #wait_and_dump_perf_metrics()
     pass
 

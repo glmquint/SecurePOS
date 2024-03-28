@@ -37,8 +37,8 @@ class PreparedSession(Session):
         self.mean_abs_diff_transaction_amount  : int    = kwargs.get("mean_abs_diff_transaction_amount", None)
         self.median_longitude                  : float  = kwargs.get("median_longitude", None)
         self.median_latitude                   : float  = kwargs.get("median_latitude", None)
-        self.median_target_ip                  : int    = kwargs.get("median_target_ip", None)
-        self.median_dest_ip                    : int    = kwargs.get("median_dest_ip", None)
+        self.median_target_ip                  : int    = int(kwargs.get("median_target_ip", None))
+        self.median_dest_ip                    : int    = int(kwargs.get("median_dest_ip", None))
         self.label                             : str    = kwargs.get("label", None)
 
     def to_json(self):

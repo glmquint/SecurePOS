@@ -1,0 +1,20 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "timestamp": {
+      "type": "number"
+    },
+    "function_name": {
+      "type": "string"
+    },
+    "class_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "timestamp",
+    "function_name",
+    "class_name"
+  ]
+}

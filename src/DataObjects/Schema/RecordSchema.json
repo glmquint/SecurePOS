@@ -1,1 +1,48 @@
-{}
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v4.json",
+  "type" : "object",
+  "properties" : {
+    "UUID" : {
+      "type" : "string"
+    },
+    "uuid" : {
+      "type" : "string"
+    },
+    "location_latitude" : {
+      "type" : "number"
+    },
+    "location_longitude" : {
+      "type" : "number"
+    },
+    "targetIP" : {
+      "type" : "string"
+    },
+    "target_ip" : {
+      "type" : "string"
+    },
+    "destIP" : {
+        "type" : "string"
+    },
+    "dest_ip" : {
+      "type" : "string"
+    },
+    "timestamp" : {
+      "type" : "array",
+        "items" : {
+            "type" : "number"
+        }
+    },
+    "amount" : {
+      "type" : "array",
+        "items" : {
+            "type" : "number"
+        }
+    },
+    "label" : {
+      "type" : "string"
+    }
+  },
+  "reuired" : [
+    "uuid"
+  ]
+}

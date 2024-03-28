@@ -2,10 +2,11 @@ import json
 import jsonschema
 from jsonschema import validate, ValidationError, Draft7Validator
 
-actually_validate = False #TODO: change me
+actually_validate = True
 
 class JSONValidator:
     def __init__(self, schema_file):
+        self.schema_file = schema_file # used for debugging
         with open(schema_file, 'r') as f:
             self.schema = json.load(f)
 

@@ -12,9 +12,9 @@ class ProductionSystemSender:
         #TODO: fix schema for message
         self.messaging_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/MessageSchema.json",
                                            self.message_url)
-        self.eval_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/AttackRiskLabelSchema.json",
+        self.eval_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json",
                                       self.evaluation_url)
-        self.client_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/AttackRiskLabelSchema.json",
+        self.client_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json",
                                         self.client_url)
 
     @monitorPerformance(should_sample_after=True)
