@@ -4,12 +4,12 @@ from src.Segregation.CheckDataBalancingView import *
 
 class SegregationPlotController:
 
-    def __init__(self, storageController, checkDataBalanceTolerance, limitPreparedSession):
-        self.__limit_prepared_session = limitPreparedSession
-        self.__storage_controller = storageController
-        self.__check_data_balancing_model = CheckDataBalancingModel(storageController)
-        self.__check_data_balancing_view = CheckDataBalanceView(checkDataBalanceTolerance, self.__check_data_balancing_model)
-        self.__check_input_coverage_model = CheckInputCoverageModel(storageController)
+    def __init__(self, storage_controller, check_data_balance_tolerance, limit_prepared_session):
+        self.__limit_prepared_session = limit_prepared_session
+        self.__storage_controller = storage_controller
+        self.__check_data_balancing_model = CheckDataBalancingModel(storage_controller)
+        self.__check_data_balancing_view = CheckDataBalanceView(check_data_balance_tolerance, self.__check_data_balancing_model)
+        self.__check_input_coverage_model = CheckInputCoverageModel(storage_controller)
         self.__check_input_coverage_view = CheckInputCoverageView(self.__check_input_coverage_model)
 
     def plot_data_balance(self):
