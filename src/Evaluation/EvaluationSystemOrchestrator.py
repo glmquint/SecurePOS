@@ -40,8 +40,6 @@ class EvaluationSystemOrchestrator:
     def main(self):
         self.config.load()
         self.receiver.receive()
-        #while True:
-        #self.config.load()
         print("=====================================")
         while True:
             if self.config.state == 0:
