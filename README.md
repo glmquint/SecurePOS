@@ -14,11 +14,9 @@ pip3 install -r requirements.txt
 python3 -m unittest src/Service/Service.py
 ```
 
-```console
-Usage:
-    (input 'y' for testing the development phase
-    and 'n' for testing the production phase)
-```
+### Usage:
+> (input 'y' for testing the development phase
+> and 'n' for testing the production phase)
 
 ## Unit tests of systems
 
