@@ -309,8 +309,7 @@ def wait_and_dump_perf_metrics():
 
 if __name__ == '__main__':
     service: Service = None
-    i = 1
-    if i == 1:
+    if input("Run in development mode? (y/n): ").lower() == 'y':
         test_development()
     else:
         test_production()

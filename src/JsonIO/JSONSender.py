@@ -5,7 +5,7 @@ from src.util import log
 
 
 class JSONSender:
-    def __init__(self, json_schema_path: str, url: str):
+    def __init__(self, json_schema_path: str, url: str) -> None:
         self.json_schema_path = json_schema_path
         self.url = url
         self.validator = JSONValidator(json_schema_path)
