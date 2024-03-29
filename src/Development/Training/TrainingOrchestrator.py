@@ -67,7 +67,7 @@ class TrainingOrchestrator:
                 if self.configurations.stop_and_go:
                     number_of_iterations = self.train_process.get_number_of_iterations()
                 else:  # stop & go is simulated
-                    number_of_iterations = random.randint(10, 50)
+                    number_of_iterations = random.randint(200, 250)
                 if number_of_iterations > 0:
                     self.status.number_of_iterations = number_of_iterations
                     self.train_process.number_of_iterations = number_of_iterations
