@@ -5,6 +5,18 @@ from src.util import monitorPerformance
 
 
 class ProductionSystemSender:
+    """
+    This class is responsible for sending messages, labels to the messaging, evaluation, and client URLs respectively.
+    It uses JSONSender to send the data.
+
+    Attributes:
+        message_url: The URL for sending messages.
+        evaluation_url: The URL for sending evaluation labels.
+        client_url: The URL for sending labels to the client.
+        messaging_sender: An object that sends messages to the message_url.
+        eval_sender: An object that sends labels to the evaluation_url.
+        client_sender: An object that sends labels to the client_url.
+    """
     def __init__(self, message_url, evaluation_url, client_url):
         self.message_url = message_url
         self.evaluation_url = evaluation_url

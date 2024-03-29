@@ -1,11 +1,31 @@
-"""This module is used to display the result in a png."""
 from src.DataObjects.Record import Label
 from src.Storage.StorageController import StorageController
 
 
 class EvaluationReportModel:
-    """this is the main class of the report model."""
+    """
+        This class is responsible for managing the evaluation report model. It initializes the model with a configuration,
+        retrieves and removes labels from the database, checks the validity of the labels, sorts them, and generates a report
+        based on the labels.
 
+        Attributes:
+            total_error_tollerated: The total error tolerated in the evaluation.
+            total_error: The total error in the evaluation.
+            consecutive_error_tollerated: The consecutive error tolerated in the evaluation.
+            consecutive_error: The consecutive error in the evaluation.
+            tick_array: An array to store the ticks of the evaluation.
+            scontroller_label: A StorageController object for labels.
+            scontroller_security: A StorageController object for security labels.
+            sufficient_label_number: The sufficient number of labels for the evaluation.
+            labels: A list to store the labels.
+
+        Methods:
+            retrieve: Retrieves n labels from the database.
+            remove_labels: Removes joined labels from the database.
+            check_valid_labels: Checks that the retrieved labels are matching.
+            sort_labels: Sorts the labels.
+            generate_report: Evaluates the error and generates the report.
+    """
     def __init__(self, config):
         self.total_error_tollerated = config.tollerated_error
         self.total_error = 0

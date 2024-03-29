@@ -1,4 +1,3 @@
-# A class for storing the configuration of the production system
 import json
 import os
 
@@ -6,6 +5,20 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 
 class ProductionSystemConfig:
+    """
+       This class is responsible for storing and managing the configuration of the production system.
+       It reads the configuration from a JSON file and validates it against a schema.
+
+       Attributes:
+           config: A dictionary that stores the configuration values.
+           server_port: The port on which the server is running.
+           monitoring_window: The time window for monitoring the system.
+           evaluation_window: The time window for evaluating the system.
+           client_url: The URL of the client.
+           evaluation_url: The URL for evaluation.
+           message_url: The URL for sending messages.
+           phase: The current phase of the system.
+       """
     def __init__(
             self,
             path_to_config,

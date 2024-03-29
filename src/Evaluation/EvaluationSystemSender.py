@@ -1,4 +1,3 @@
-"""sender of the evaluation process"""
 import os
 
 from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
@@ -7,7 +6,17 @@ from src.util import monitorPerformance
 
 
 class EvaluationSystemSender:
-    """main class"""
+    """
+        This class is responsible for sending messages to the messaging system. It initializes the sender with a configuration
+        and sends messages to the messaging system.
+
+        Attributes:
+            message_url: The URL of the messaging system.
+            messaging_sender: An object of JSONSender that handles the sending of messages.
+
+        Methods:
+            sendtomessaging: Sends a message to the messaging system.
+    """
     def __init__(self, config: EvaluationSystemConfig):
 
         self.message_url = f"http://{config.messaging_ip}:{config.messaging_port}/messaging_system"

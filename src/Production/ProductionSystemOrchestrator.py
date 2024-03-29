@@ -13,7 +13,18 @@ from src.util import Message
 
 
 class ProductionSystemOrchestrator:
+    """
+        This class is responsible for orchestrating the production system. It initializes the system configuration,
+        phase tracker, message bus, production system receiver, and sender. It also loads the classifier model if available.
 
+        Attributes:
+            production_config: An object that stores and manages the configuration of the production system.
+            phase_tracker: An object that tracks the current phase of the system.
+            system_bus: An object that provides access to the system's bus for inter-process communication.
+            prod_sys_receiver: An object that receives messages from the system bus.
+            sender: An object that sends messages to the client, evaluation, and messaging URLs.
+            classifier: A classifier object used to predict the attack risk label.
+        """
     def __init__(self, config: ProductionSystemConfig = None):
         if not config:
             config = ProductionSystemConfig(

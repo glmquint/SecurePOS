@@ -1,4 +1,4 @@
-"""label receiver module"""
+
 import os
 from threading import Thread
 
@@ -12,7 +12,22 @@ from src.util import monitorPerformance
 
 
 class LabelReceiver:
-    """main class"""
+    """
+        This class is responsible for receiving labels from the messaging system. It initializes the server, message bus,
+        storage controllers, and receives labels from the messaging system.
+
+        Attributes:
+            port: The port number.
+            server: An object of Server that handles the server.
+            mbus: An object of MessageBus that handles the message bus.
+            scontroller_label: A StorageController object for labels.
+            scontroller_security: A StorageController object for security labels.
+
+        Methods:
+            receive: Receives labels from the messaging system.
+            callback_s: A callback function for security labels.
+            callback_f: A callback function for labels.
+    """
     def __init__(self, port=0):
         self.port = port
         self.server = Server()

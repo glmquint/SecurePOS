@@ -1,4 +1,3 @@
-"""this module contain the configuration info"""
 import json
 import os
 
@@ -6,7 +5,26 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 
 class EvaluationSystemConfig:
-    """main class"""
+    """
+        This class is responsible for managing the configuration of the evaluation system. It loads the configuration from a
+        JSON file, validates the data, and provides access to the configuration values.
+
+        Attributes:
+            sufficient_label_number: The sufficient number of labels for the evaluation.
+            simulate_human_task: A boolean value that indicates whether to simulate a human task.
+            state: The current state of the system.
+            path_config_validator: The path to the JSON validator.
+            path_config: The path to the configuration file.
+            tollerated_error: The tolerated error in the evaluation.
+            tollerated_consecutive_error: The tolerated consecutive error in the evaluation.
+            port: The port number.
+            messaging_ip: The IP address for messaging.
+            messaging_port: The port number for messaging.
+
+        Methods:
+            write_state: Writes the state to the JSON file.
+            load: Loads the configuration from the JSON file and validates the data.
+    """
     def __init__(
             self,
             path_config: str = f"{os.path.dirname(__file__)}/config/config.json"):

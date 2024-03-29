@@ -8,6 +8,15 @@ from src.util import monitorPerformance
 
 
 class ProductionSystemReceiver:
+    """
+        This class is responsible for receiving prepared sessions and classifier models from a server.
+        It uses a system bus to communicate with other components of the system.
+
+        Attributes:
+            port: The port on which the server is running.
+            system_bus: An object that provides access to the system's bus for inter-process communication.
+            server: An object that represents the server.
+    """
     def __init__(self, port, systemBus):
         self.port = port
         self.system_bus = systemBus

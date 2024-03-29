@@ -1,4 +1,3 @@
-"""This module handles the ReportModel and ReportViewer"""
 import json
 import os
 from random import randint
@@ -9,7 +8,19 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 
 class EvaluationReportController:
-    """This is the main class of the report controller"""
+    """
+    This class is responsible for controlling the evaluation report. It initializes the EvaluationReportModel and
+    EvaluationReportViewer, and manages the evaluation process.
+
+    Attributes:
+        evaluation_model: An object of EvaluationReportModel that handles the report generation.
+        report_viewer: An object of EvaluationReportViewer that handles the visualization of the report.
+        result: A boolean value that represents the result of the evaluation.
+
+    Methods:
+        update: Generates the report, saves the result, and removes the labels.
+        getresult: Retrieves the human choice from a JSON file or simulates a human operator.
+    """
 
     def __init__(self, config):
         self.evaluation_model = EvaluationReportModel(config)

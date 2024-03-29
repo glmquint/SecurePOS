@@ -1,18 +1,14 @@
-import ipaddress
-from uuid import uuid1
-
-import sklearn.neural_network as skl
-
-
-from sklearn.neural_network import MLPClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
-
 from src.DataObjects.Record import Label
 
-
 class AttackRiskClassifier:
+    """
+    This class is responsible for classifying the risk of an attack based on certain features of a session.
+    It uses a classifier to predict the risk label of a session.
 
+    Attributes:
+        system_bus: An object that provides access to the system's bus for inter-process communication.
+        attack_risk_classifier: A classifier object used to predict the attack risk label.
+    """
     def __init__(self, system_bus, classifier=None):
         self.system_bus = system_bus
         self.attack_risk_classifier = classifier

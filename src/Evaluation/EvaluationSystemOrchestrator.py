@@ -1,6 +1,3 @@
-"""main class of the process"""
-
-
 from src.Evaluation.EvaluationReportController import EvaluationReportController
 from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 from src.Evaluation.EvaluationSystemSender import EvaluationSystemSender
@@ -9,7 +6,24 @@ from src.util import Message
 
 
 class EvaluationSystemOrchestrator:
-    """main class"""
+    """
+        This class is responsible for orchestrating the evaluation system. It initializes the system with a configuration,
+        manages the label counters, and controls the main loop of the system.
+
+        Attributes:
+            label_counter: A counter for the labels.
+            security_label_counter: A counter for the security labels.
+            simulate_human_task: A boolean value that indicates whether to simulate a human task.
+            config: An object of EvaluationSystemConfig that handles the configuration of the system.
+            sender: An object of EvaluationSystemSender that handles the sending of messages.
+            receiver: An object of LabelReceiver that handles the receiving of labels.
+            evaluation: An object of EvaluationReportController that handles the evaluation report.
+
+        Methods:
+            isnumberoflabelssufficient: Checks if the number of labels is sufficient.
+            run: Runs the main loop of the system.
+            main: The main function of the system.
+    """
     def __init__(self, config: EvaluationSystemConfig = None):
         self.label_counter = 0
         self.security_label_counter = 0
