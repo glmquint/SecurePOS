@@ -14,12 +14,12 @@ from src.DataObjects.Record import Label
 class AttackRiskClassifier:
 
     def __init__(self, system_bus, classifier=None):
-        self.systemBus = system_bus
-        self.attackRiskClassifier = classifier
+        self.system_bus = system_bus
+        self.attack_risk_classifier = classifier
 
     def provideAttackRiskLabel(self):
         try:
-            prepared_session = self.systemBus.popTopic("PreparedSession")
+            prepared_session = self.system_bus.popTopic("PreparedSession")
             print(f"Prepared session {prepared_session}")
             print(f"Classifier prepared session {prepared_session.to_json()}")
             prepared_session_features = [
@@ -33,7 +33,7 @@ class AttackRiskClassifier:
         except Exception as e:
             raise Exception(f"An error occurred, wrong data received: {e}")
         try:
-            attack_risk_label = self.attackRiskClassifier.predict([prepared_session_features])[0]
+            attack_risk_label = self.attack_risk_classifier.predict([prepared_session_features])[0]
             print(f"Attack risk label: {attack_risk_label}")
             return Label(label=attack_risk_label, uuid=prepared_session.uuid)
         except Exception as e:

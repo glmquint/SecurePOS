@@ -10,7 +10,7 @@ from src.util import monitorPerformance
 class ProductionSystemReceiver:
     def __init__(self, port, systemBus):
         self.port = port
-        self.systemBus = systemBus
+        self.system_bus = systemBus
         self.server = Server()
         self.server.add_resource(JSONEndpoint, "/PreparedSession",
                                  recv_callback=self.session_callback,
@@ -23,7 +23,7 @@ class ProductionSystemReceiver:
         prepared_session = PreparedSession(**json_data)
         print("PreparedSession created")
         # push the prepared_session into the Messegebus
-        self.systemBus.pushTopic("PreparedSession", prepared_session)
+        self.system_bus.pushTopic("PreparedSession", prepared_session)
         print("Received PreparedSession")
         return 200
 
@@ -33,7 +33,7 @@ class ProductionSystemReceiver:
         # Save in a file called classifier.sav
         joblib.dump(classifier, f"{os.path.dirname(__file__)}/classifier.sav")
         print("Classifier received and saved")
-        self.systemBus.pushTopic("Classifier", classifier)
+        self.system_bus.pushTopic("Classifier", classifier)
         return 200
 
     def run(self):
