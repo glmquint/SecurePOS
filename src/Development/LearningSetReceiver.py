@@ -1,4 +1,3 @@
-import json
 import os
 
 from src.DataObjects.LearningSet import LearningSet
@@ -9,6 +8,28 @@ from src.util import monitorPerformance
 
 
 class LearningSetReceiver:
+    """
+    A class used to handle the receiving operations of the learning set in the development system from segregation.
+
+    Attributes
+    ----------
+    learning_set : LearningSet
+        The learning set received.
+    message_bus_ref : MessageBus
+        The reference to the message bus.
+    server : Server
+        The server that receives the learning set.
+
+    Methods
+    -------
+    __init__(self, message_bus: MessageBus, endpoint_url: str)
+        Initializes the LearningSetReceiver class.
+    receive_learning_set(self, json_data)
+        Receives the learning set and pushes it to the message bus.
+    run(self, port: int)
+        Runs the server on the specified port.
+    """
+    # class implementation...class LearningSetReceiver:
     learning_set: LearningSet = None
     message_bus_ref: MessageBus = None
     server: Server = None

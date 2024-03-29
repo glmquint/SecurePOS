@@ -4,6 +4,31 @@ from threading import RLock
 
 
 class DBConnector:
+    """
+        This class is responsible for managing the connection to a SQLite database.
+        It initializes the connection with a database name and a table name, and provides methods
+        for various database operations such as insert, remove, retrieve, and count.
+
+        Attributes:
+            name: The name of the database.
+            connection: The SQLite connection object.
+            tableName: The name of the table.
+            columns: A list of column names in the table.
+            lock: A reentrant lock to ensure thread safety during database operations.
+
+        Methods:
+            insert: Inserts a row into the table.
+            remove: Removes all rows from the table.
+            remove_n: Removes a specified number of rows from the table.
+            retrieve_n: Retrieves a specified number of rows from the table.
+            retrieve: Retrieves all rows from the table.
+            count: Counts the number of rows in the table.
+            delete_by_column: Deletes rows where a specified column has a specified value.
+            retrieve_by_column: Retrieves rows where a specified column has a specified value.
+            isNumberOfRecordsSufficient: Checks if the number of distinct systems in the records is sufficient.
+            retrieve_joined_labels: Retrieves a specified number of rows from a join of the labels and security_labels.
+            remove_joined_labels: Removes a specified number of rows from a join of the labels and security_labels.
+    """
     name: str = None
     connection: sqlite3.Connection = None
     tableName: str = None

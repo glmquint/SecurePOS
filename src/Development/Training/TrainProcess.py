@@ -17,6 +17,62 @@ from src.MessageBus.MessageBus import MessageBus
 
 
 class TrainProcess:
+    """
+    A class used to manage the training process in the development system.
+
+    Attributes
+    ----------
+    number_of_iterations : int
+        The number of iterations for the training process.
+    classifier : Classifier
+        The classifier being trained.
+    grid_search : list
+        The list of hyperparameters to be used in the grid search.
+    hyperparameters : HyperParameterLimit
+        The limits for the hyperparameters used in the training process.
+    avg_hyperparameters : dict
+        The average values of the hyperparameters.
+    status : DevelopmentSystemStatus
+        The current status of the development system.
+    learning_set : LearningSet
+        The learning set used in the training process.
+    configurations : DevelopmentSystemConfigurations
+        The configurations for the development system.
+    current_hyperparameter : tuple
+        The current hyperparameters being used in the training process.
+    grid_space : Scoreboard
+        The scoreboard used to keep track of the classifiers.
+
+    Methods
+    -------
+    __init__(self, status: DevelopmentSystemStatus, message_bus: MessageBus, configurations: DevelopmentSystemConfigurations)
+        Initializes the TrainProcess class with the status, message bus, and configurations.
+    set_average_hyperparameters(self)
+        Sets the average hyperparameters for the training process.
+    receive_learning_set(self)
+        Receives the learning set from the message bus.
+    get_number_of_iterations(self) -> int
+        Gets the number of iterations for the training process.
+    remove_precedent_response(self, path: str)
+        Removes the previous response from the specified path.
+    train(self, current_iteration: int = 0)
+        Trains the classifier.
+    validate(self)
+        Validates the classifier.
+    set_next_hyperparamter(self, next_hyperparam: tuple)
+        Sets the next hyperparameters for the grid search process.
+    set_hyperparams(self)
+        Sets the hyperparameters for the training process.
+    select_best_classifier(self)
+        Selects the best classifier from the grid search.
+    perform_grid_search(self)
+        Performs a grid search to find the best hyperparameters.
+    test_classifier(self)
+        Tests the classifier.
+    remove_classifiers(self, path: str)
+        Removes the classifiers from the specified path.
+    """
+    # class implementation...class TrainProcess:
     number_of_iterations: int = None
     classifier: Classifier = None
     grid_search: list = None
@@ -63,7 +119,7 @@ class TrainProcess:
         print(f'[{self.__class__.__name__}]: getting number of iterations')
         ret_val = -1
         try:
-            with open(f'{os.path.dirname(__file__)}/number_of_iterations.json', 'r') as json_file:
+            with open(f'{os.path.dirname(__file__)}/number_of_iterations.json', 'r', encoding='utf-8') as json_file:
                 data = json.load(json_file)
                 JSONValidator(
                     f"{os.path.dirname(__file__)}/../schema/iteration_schema.json").validate_data(data)
@@ -71,8 +127,8 @@ class TrainProcess:
                 self.number_of_iterations = ret_val
                 print(
                     f'[{self.__class__.__name__}]: number of iterations read: {ret_val}')
-        except FileNotFoundError as e:  # create file so that AI expert can fill it
-            with open(f'{os.path.dirname(__file__)}/number_of_iterations.json', 'w') as json_file:
+        except FileNotFoundError:  # create file so that AI expert can fill it
+            with open(f'{os.path.dirname(__file__)}/number_of_iterations.json', 'w', encoding='utf-8') as json_file:
                 json.dump({"number_of_iterations": 0}, json_file)
         finally:
             return ret_val

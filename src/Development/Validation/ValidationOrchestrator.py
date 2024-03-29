@@ -8,10 +8,35 @@ from src.Development.ReportController import ReportController
 from src.Development.Training.TrainProcess import TrainProcess
 from src.JsonIO.JsonValidator import JSONValidator
 from src.MessageBus.MessageBus import MessageBus
-from src.util import log
 
 
 class ValidationOrchestrator:
+    """
+    A class used to orchestrate the validation process in the development system.
+
+    Attributes
+    ----------
+    report_controller : ReportController
+        The controller for the reports.
+    message_bus : MessageBus
+        The message bus for the system.
+    status : DevelopmentSystemStatus
+        The status of the development system.
+    configurations : DevelopmentSystemConfigurations
+        The configurations for the development system.
+    training_process : TrainProcess
+        The process for training.
+
+    Methods
+    -------
+    __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus, configurations: DevelopmentSystemConfigurations)
+        Initializes the ValidationOrchestrator class.
+    check_validation_result(self) -> int
+        Checks the validation result and returns an integer based on the result.
+    start(self)
+        Starts the orchestrator and manages the operations based on the system status.
+    """
+    # class implementation...class ValidationOrchestrator:
     report_controller: ReportController = None
     message_bus: MessageBus = None
     status: DevelopmentSystemStatus = None
@@ -66,7 +91,7 @@ class ValidationOrchestrator:
                 if self.configurations.stop_and_go:
                     response = self.check_validation_result()
                 else:
-                    response = random.randint(1, 1)  # TODO: change me
+                    response = random.randint(1, 1)  # response is always good
                 if self.status.best_classifier_name == "Invalid":  # if no best classifier repeat the process
                     response = 0
                     print(

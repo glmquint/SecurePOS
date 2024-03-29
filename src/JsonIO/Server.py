@@ -1,14 +1,19 @@
-import os
-import signal
-import sys
-
 from flask import Flask, request
 from flask_restful import Resource, Api
 
-from src.JsonIO.JSONEndpoint import JSONEndpoint
-
-
 class Server:
+    """
+        This class is responsible for creating a Flask server that listens for POST requests.
+
+        Attributes:
+            app: A Flask object that represents the server.
+            api: A Flask-RESTful Api object that is used to add resources to the server.
+            timeout: An integer representing the timeout for the server.
+
+        Methods:
+            run: Starts the server.
+            add_resource: Adds a resource to the server.
+    """
     def __init__(self, timeout=None):
         self.app = Flask(__name__)
         self.api = Api(self.app)

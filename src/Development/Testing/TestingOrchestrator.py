@@ -11,6 +11,29 @@ from src.MessageBus.MessageBus import MessageBus
 
 
 class TestingOrchestrator:
+    """
+        A class used to orchestrate the testing process in the development system.
+
+        Attributes
+        ----------
+        training_process : TrainProcess
+            The process responsible for the training of the classifiers.
+        report_controller : ReportController
+            The controller responsible for generating reports.
+        message_bus : MessageBus
+            The message bus used for inter-process communication.
+        configurations : DevelopmentSystemConfigurations
+            The configurations for the development system.
+
+        Methods
+        -------
+        __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus, configurations: DevelopmentSystemConfigurations)
+            Initializes the TestingOrchestrator class with the status, report controller, message bus, and configurations.
+        check_test_result(self) -> int
+            Checks the test result and returns an integer indicating the result.
+        start(self)
+            Starts the testing process.
+    """
     training_process: TrainProcess = None
     report_controller: ReportController = None
     message_bus: MessageBus = None
@@ -32,7 +55,7 @@ class TestingOrchestrator:
     def check_test_result(self) -> int:
         ret_val = -1
         try:
-            with open(f'{os.path.dirname(__file__)}/test_result.json', 'r') as json_file:
+            with open(f'{os.path.dirname(__file__)}/test_result.json', 'r', encoding='utf-8') as json_file:
                 ret_val = 0
                 data = json.load(json_file)
                 JSONValidator(
@@ -41,8 +64,8 @@ class TestingOrchestrator:
                     ret_val = -1
                 elif data['result'] in ["ok", "OK", "Ok"]:
                     ret_val = 1
-        except FileNotFoundError as e:  # create file so that AI expert can fill it
-            with open(f'{os.path.dirname(__file__)}/test_result.json', 'w') as json_file:
+        except FileNotFoundError:  # create file so that AI expert can fill it
+            with open(f'{os.path.dirname(__file__)}/test_result.json', 'w', encoding='utf-8') as json_file:
                 json.dump({"result": ""}, json_file)
         finally:
             return ret_val
@@ -57,7 +80,7 @@ class TestingOrchestrator:
                 if self.configurations.stop_and_go:
                     response = self.check_test_result()
                 else:
-                    response = random.randint(1, 1)  # TODO: change to 0
+                    response = random.randint(1, 1)  # response is always good
                 if response < 0:
                     self.status.save_status()
                 elif response == 0:

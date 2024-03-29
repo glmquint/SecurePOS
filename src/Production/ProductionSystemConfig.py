@@ -12,8 +12,8 @@ class ProductionSystemConfig:
        Attributes:
            config: A dictionary that stores the configuration values.
            server_port: The port on which the server is running.
-           monitoring_window: The time window for monitoring the system.
-           evaluation_window: The time window for evaluating the system.
+           monitoring_window: The time window for monitoring phase.
+           evaluation_window: The time window for evaluating phase.
            client_url: The URL of the client.
            evaluation_url: The URL for evaluation.
            message_url: The URL for sending messages.

@@ -10,6 +10,26 @@ from src.MessageBus.MessageBus import MessageBus
 
 
 class ReportController:
+    """
+    A class used to control the reports in the development system.
+
+    Attributes
+    ----------
+    message_bus : MessageBus
+        The message bus for the system.
+
+    Methods
+    -------
+    __init__(self, message_bus: MessageBus)
+        Initializes the ReportController class.
+    create_learning_plot(self)
+        Creates a learning plot and updates the view.
+    create_validation_report(self)
+        Creates a validation report and updates the view.
+    create_test_report(self)
+        Creates a test report and updates the view.
+    """
+    # class implementation...class ReportController:
     message_bus: MessageBus = None
 
     def __init__(self, message_bus: MessageBus) -> None:

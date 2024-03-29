@@ -1,5 +1,5 @@
 import os.path
-
+from threading import Thread
 from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 from src.Development.DevelopmentSystemConfigurations import DevelopmentSystemConfigurations
 from src.Development.DevelopmentSystemSender import DevelopmentSystemSender
@@ -9,10 +9,41 @@ from src.Development.Testing.TestingOrchestrator import TestingOrchestrator
 from src.Development.Training.TrainingOrchestrator import TrainingOrchestrator
 from src.Development.Validation.ValidationOrchestrator import ValidationOrchestrator
 from src.MessageBus.MessageBus import MessageBus
-from threading import Thread
 
 
 class DevelopmentSystemMasterOrchestrator:
+    """
+    A class used to orchestrate the operations of the development system.
+
+    Attributes
+    ----------
+    train_orchestrator : TrainingOrchestrator
+        The orchestrator for the training process.
+    validation_orchestrator : ValidationOrchestrator
+        The orchestrator for the validation process.
+    test_orchestrator : TestingOrchestrator
+        The orchestrator for the testing process.
+    development_system_sender : DevelopmentSystemSender
+        The sender for the development system.
+    development_system_configurations : DevelopmentSystemConfigurations
+        The configurations for the development system.
+    learning_set_receiver : LearningSetReceiver
+        The receiver for the learning set.
+    message_bus : MessageBus
+        The message bus for the system.
+    report_controller : ReportController
+        The controller for the reports.
+    status : DevelopmentSystemStatus
+        The status of the development system.
+
+    Methods
+    -------
+    __init__(self, status: DevelopmentSystemStatus = None, config: DevelopmentSystemConfigurations = None)
+        Initializes the DevelopmentSystemMasterOrchestrator class.
+    start(self)
+        Starts the orchestrator and manages the operations based on the system status.
+    """
+    # class implementation...
     train_orchestrator: TrainingOrchestrator = None
     validation_orchestrator: ValidationOrchestrator = None
     test_orchestrator: TestingOrchestrator = None

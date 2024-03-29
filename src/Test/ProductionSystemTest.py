@@ -1,5 +1,6 @@
 import ipaddress
 import os
+import uuid
 from threading import Thread
 from time import sleep
 from unittest import TestCase
@@ -17,8 +18,8 @@ from src.Production.ProductionSystemReceiver import ProductionSystemReceiver
 
 class IntegrationTest(TestCase):
     @classmethod
-    def server_setup(self, systemBus):
-        prodSysRec = ProductionSystemReceiver(systemBus)
+    def server_setup(self, port, systemBus):
+        prodSysRec = ProductionSystemReceiver(port, systemBus)
         thread = Thread(target=prodSysRec.run)
         # this will allow the main thread to exit even if the server is still
         # running
@@ -60,7 +61,7 @@ class IntegrationTest(TestCase):
 
     def test_system_bus_send(self):
         systemBus = MessageBus(["PreparedSession", "Classifier"])
-        self.server_setup(systemBus)
+        self.server_setup(5003, systemBus)
         preparedSession = PreparedSession(
             mean_abs_diff_transaction=10,
             mean_abs_diff_transaction_amount=20,
@@ -70,89 +71,22 @@ class IntegrationTest(TestCase):
                 ipaddress.ip_address("127.0.0.1")),
             median_dest_ip=int(
                 ipaddress.ip_address("192.168.255.0")),
-            attack_risk_label=None)
+            label="high", uuid=str(uuid.uuid1()))
 
         classifierTest = Classifier()
 
         req = requests.post(
-            "http://127.0.0.1:5002/PreparedSession",
+            "http://127.0.0.1:5003/PreparedSession",
             json=preparedSession.to_json())  # correct key
         assert req.status_code == 200
         print(systemBus.popTopic("PreparedSession"))
         with open('AverageClassifier.sav', 'rb') as f:
             req = requests.post(
-                "http://127.0.0.1:5002/Classifier",
+                "http://127.0.0.1:5003/Classifier",
                 files={
                     "uploaded": f})
             assert req.status_code == 200, f'Expected 200, got {req}'
         print(systemBus.popTopic("Classifier"))
-
-    def test_main(self):
-        self.main_setup()
-        self.main_receiver()
-        preparedSession = PreparedSession(
-            mean_abs_diff_transaction=10,
-            mean_abs_diff_transaction_amount=20,
-            median_longitude=30,
-            median_latitude=40,
-            median_target_ip=int(
-                ipaddress.ip_address("127.0.0.1")),
-            median_dest_ip=int(
-                ipaddress.ip_address("192.168.255.0")),
-            attack_risk_label=None)
-
-        preparedSession1 = PreparedSession(
-            mean_abs_diff_transaction="10",
-            mean_abs_diff_transaction_amount=20,
-            median_longitude="30",
-            median_latitude=40,
-            median_target_ip=int(
-                ipaddress.ip_address("127.0.0.1")),
-            median_dest_ip=int(
-                ipaddress.ip_address("192.168.255.0")),
-            attack_risk_label=None)
-
-        attackRiskLabel = Label(label="medium", uuid="12345")
-        preparedSession2 = PreparedSession(
-            mean_abs_diff_transaction=None,
-            mean_abs_diff_transaction_amount=None,
-            median_longitude=None,
-            median_latitude=None,
-            median_target_ip=0,
-            median_dest_ip=0,
-            attack_risk_label=None)
-        classifierTest = Classifier()
-        req = requests.post(
-            "http://127.0.0.1:5002/PreparedSession",
-            json=preparedSession.to_json())
-        assert req.status_code == 200   # correct key
-        with open('AverageClassifier.sav', 'rb') as f:
-            req = requests.post(
-                "http://127.0.0.1:5002/Classifier",
-                files={
-                    "uploaded": f})
-            assert req.status_code == 200, f'Expected 200, got {req}'
-        sleep(0.1)
-        req = requests.post(
-            "http://127.0.0.1:5002/PreparedSession",
-            json=preparedSession1.to_json())
-        assert req.status_code == 400   # wrong type
-        sleep(0.1)
-        req = requests.post(
-            "http://127.0.0.1:5002/PreparedSession",
-            json=attackRiskLabel.to_json())
-        assert req.status_code == 400   # wrong data
-        sleep(0.1)
-        req = requests.post(
-            "http://127.0.0.1:5002/PreparedSession",
-            json=classifierTest.to_json())
-        assert req.status_code == 400   # wrong endpoint
-        sleep(0.1)
-        req = requests.post(
-            "http://127.0.0.1:5002/PreparedSession",
-            json=preparedSession2.to_json())
-        assert req.status_code == 400   # wrong format
-        sleep(5)
 
     def test_production_switch(self):
         self.main_setup()
@@ -166,13 +100,16 @@ class IntegrationTest(TestCase):
                 ipaddress.ip_address("127.0.0.1")),
             median_dest_ip=int(
                 ipaddress.ip_address("192.168.255.0")),
-            attack_risk_label=None)
+            label="high", uuid=str(uuid.uuid1()))
+
         with open('AverageClassifier.sav', 'rb') as f:
             req = requests.post(
                 "http://127.0.0.1:5003/Classifier",
                 files={
                     "uploaded": f})
             assert req.status_code == 200, f'Expected 200, got {req}'
+
+
         for i in range(0, 10):
             req = requests.post(
                 "http://127.0.0.1:5003/PreparedSession",

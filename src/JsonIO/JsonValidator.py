@@ -1,11 +1,20 @@
 import json
 import jsonschema
-from jsonschema import validate, ValidationError, Draft7Validator
 
 actually_validate = True
 
-
 class JSONValidator:
+    """
+        This class is responsible for validating JSON objects against a JSON schema.
+
+        Attributes:
+            schema_file: A string containing the path to the JSON schema file.
+            schema: A dictionary containing the JSON schema.
+
+        Methods:
+            validate_json_string: Validates a JSON string against the JSON schema.
+            validate_data: Validates a JSON object against the JSON schema.
+    """
     def __init__(self, schema_file):
         self.schema_file = schema_file  # used for debugging
         with open(schema_file, 'r') as f:

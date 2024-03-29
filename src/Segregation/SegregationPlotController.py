@@ -3,6 +3,26 @@ from src.Segregation.CheckDataBalancingView import *
 
 
 class SegregationPlotController:
+    """
+        Controller class responsible for managing the plotting of data balance
+        and input coverage checks.
+
+        Attributes:
+        __limit_prepared_session (int): The limit of prepared session data to retrieve.
+        __storage_controller (StorageController): An instance of the storage controller
+                                                  used for data retrieval.
+        __check_data_balancing_model (CheckDataBalancingModel): An instance of the data balancing
+                                                               model to retrieve and process
+                                                               data balance information.
+        __check_data_balancing_view (CheckDataBalanceView): An instance of the view class to
+                                                           visualize data balance information.
+        __check_input_coverage_model (CheckInputCoverageModel): An instance of the input coverage
+                                                                model to retrieve and process
+                                                                input coverage information.
+        __check_input_coverage_view (CheckInputCoverageView): An instance of the view class to
+                                                             visualize input coverage information.
+
+        """
 
     def __init__(
             self,
@@ -22,7 +42,7 @@ class SegregationPlotController:
 
     def plot_data_balance(self):
         # retrieve data from the model
-        self.__check_data_balancing_model.retrive_prepared_session(
+        self.__check_data_balancing_model.retrieve_prepared_session(
             self.__limit_prepared_session)
         # pass data to the view to plot
         self.__check_data_balancing_view.plot_check_data_balance()
