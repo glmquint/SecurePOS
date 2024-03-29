@@ -1,14 +1,16 @@
-
+"""This module is used to display the result in a png."""
 from src.DataObjects.Record import Label
 from src.Storage.StorageController import StorageController
 
 
 class EvaluationReportModel:
+    """this is the main class of the report model."""
+
     def __init__(self, config):
-        self.TotalErrorTollerated = config.tollerated_error
-        self.TotalError = 0
-        self.ConsecutiveErrorTollerated = config.tollerated_consecutive_error
-        self.ConsecutiveError = 0
+        self.total_error_tollerated = config.tollerated_error
+        self.total_error = 0
+        self.consecutive_error_tollerated = config.tollerated_consecutive_error
+        self.consecutive_error = 0
         self.tick_array = []
         self.scontroller_label = StorageController(
             {'name': 'evaluation', 'table_name': 'labels'}, type(Label()))
@@ -18,55 +20,57 @@ class EvaluationReportModel:
         self.labels = []
 
     def retrieve(self):
+        """this function retrieve n labels from db"""
         retrieve = self.scontroller_label.retrieve_n_labels(
             self.sufficient_label_number)
         return [retrieve[0], retrieve[1]]
 
-    def removelabels(self):
-        # SQLITE has a trigger to delete the security labels.
+    def remove_labels(self):
+        """SQLITE has a trigger to delete the security labels."""
         self.scontroller_label.remove_joined_labels(
             self.sufficient_label_number)
 
     def check_valid_labels(self):
-        x = {x.uuid for x in self.labels[0]}
-        y = {x.uuid for x in self.labels[1]}
-        difference = ([uid for uid in x.difference(y)],
-                      [uid for uid in y.difference(x)])
+        """this function checks that the labels retrieve are matching"""
+        x_label = {x_label.uuid for x_label in self.labels[0]}
+        y_label = {x_label.uuid for x_label in self.labels[1]}
+        difference = ([uid for uid in x_label.difference(y_label)],
+                          [uid for uid in y_label.difference(x_label)])
         if len(difference[0]) != 0 or len(difference[1]) != 0:
             print(difference)
             print("Labels and Security Labels are not matching.Aborting.")
-            self.removelabels()
+            self.remove_labels()
             raise Exception("Labels and Security Labels are not matching.")
-        return
 
     def sort_labels(self):
+        """this function just sort labels"""
         self.labels[0].sort(key=lambda x: x.uuid)
         self.labels[1].sort(key=lambda x: x.uuid)
 
-    def generatereport(self):
+    def generate_report(self):
+        """this function evaluate the error"""
         self.labels = self.retrieve()
         self.tick_array.clear()
         self.check_valid_labels()
         self.sort_labels()
         labels = self.labels[0]
         security_labels = self.labels[1]
-        consecutiverror = 0
-        totalerror = 0
+        consecutive_error = 0
+        total_error = 0
         consecutive = False
-        maxconsecutive = 0
-        for x in range(0, len(labels)):
-            if labels[x].label != security_labels[x].label:
-                totalerror = totalerror + 1
+        max_consecutive = 0
+        for x_iterator in range(0, len(labels)):
+            if labels[x_iterator].label != security_labels[x_iterator].label:
+                total_error = total_error + 1
                 self.tick_array.append("X")
                 if not consecutive:
                     consecutive = True
-                consecutiverror = consecutiverror + 1
-                maxconsecutive = max(consecutiverror, maxconsecutive)
+                consecutive_error = consecutive_error + 1
+                max_consecutive = max(consecutive_error, max_consecutive)
             else:
                 self.tick_array.append("V")
                 consecutive = False
-                maxconsecutive = max(consecutiverror, maxconsecutive)
-                consecutiverror = 0
-        self.TotalError = totalerror
-        self.ConsecutiveError = maxconsecutive
-        return
+                max_consecutive = max(consecutive_error, max_consecutive)
+                consecutive_error = 0
+        self.total_error = total_error
+        self.consecutive_error = max_consecutive

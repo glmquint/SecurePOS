@@ -1,6 +1,7 @@
 import ipaddress
 import random
 from threading import Thread
+from time import sleep
 
 import numpy as np
 import requests
@@ -58,14 +59,14 @@ def test_run():
     thread2 = Thread(target=send_label)
     # this will allow the main thread to exit even if the server is still
     # running
-
+    print("Sender ON")
     thread2.daemon = True
     thread2.start()
 
+    print("Orchestator ON")
     segregation_system_orchestrator = SegregationSystemOrchestrator()
     segregation_system_orchestrator.run()
-
-    assert True
-
+    sleep(5) # let the computaion ends
+    print("Orchestator ENDs")
 
 test_run()

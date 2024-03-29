@@ -10,11 +10,11 @@ from src.Segregation.CheckInputCoverageModel import CheckInputCoverageModel
 class CheckInputCoverageView:
 
     def __init__(self, model):
-        self.__checkInputCoverageModel: CheckInputCoverageModel = model
+        self.__check_input_coverage_model: CheckInputCoverageModel = model
 
     def plot_check_input_coverage_view(self):
 
-        pandas_dataset: pd.DataFrame = self.__checkInputCoverageModel.get_prepared_session_df()
+        pandas_dataset: pd.DataFrame = self.__check_input_coverage_model.get_prepared_session_df()
 
         # we rename attributes for better readability on the plot
         labels = ['MeanAbsoluteDifferencingTransactionTimestamps',
@@ -64,8 +64,8 @@ class CheckInputCoverageView:
 
     @staticmethod
     def get_check_input_coverage():
-        with open(f'{os.path.dirname(__file__)}/Data/checkInputCoverageReport.json', 'r') as checkInputCoverageFile:
-            jsonData = json.load(checkInputCoverageFile)
-            evaluationCheckInputCoverage = jsonData.get("evaluation")
-            checkInputCoverageFile.close()
-            return evaluationCheckInputCoverage
+        with open(f'{os.path.dirname(__file__)}/Data/checkInputCoverageReport.json', 'r') as check_input_coverage_file:
+            json_data = json.load(check_input_coverage_file)
+            evaluation_check_input_coverage = json_data.get("evaluation")
+            check_input_coverage_file.close()
+            return evaluation_check_input_coverage

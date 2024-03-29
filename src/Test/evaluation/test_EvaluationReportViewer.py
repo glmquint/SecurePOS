@@ -1,3 +1,4 @@
+"""simple test for the report viewer"""
 import uuid
 
 from src.DataObjects.Record import Label

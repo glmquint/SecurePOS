@@ -1,3 +1,4 @@
+"""this module contain the configuration info"""
 import json
 import os
 
@@ -5,7 +6,7 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 
 class EvaluationSystemConfig:
-
+    """main class"""
     def __init__(
             self,
             path_config: str = f"{os.path.dirname(__file__)}/config/config.json"):
@@ -22,21 +23,23 @@ class EvaluationSystemConfig:
         self.load()
 
     def write_state(self, state=0):
-        with open(self.path_config, "r") as jsonFile:
-            data = json.load(jsonFile)
+        """this function write on json file"""
+        with open(self.path_config, "r") as json_file:
+            data = json.load(json_file)
 
         data["state"] = state
 
-        with open(self.path_config, "w") as jsonFile:
-            json.dump(data, jsonFile, indent=4)
+        with open(self.path_config, "w") as json_file:
+            json.dump(data, json_file, indent=4)
 
         self.state = state
 
     def load(self):
+        """load from a json file the configuration"""
         validator = JSONValidator(self.path_config_validator)
-        f = open(self.path_config)
-        data = json.load(f)
-        f.close()
+        file = open(self.path_config)
+        data = json.load(file)
+        file.close()
         validator.validate_data(data)
 
         self.sufficient_label_number = data["sufficient_label_number"]
@@ -50,5 +53,4 @@ class EvaluationSystemConfig:
             self.simulate_human_task = True
         else:
             self.simulate_human_task = False
-        f.close()
-        return
+        file.close()

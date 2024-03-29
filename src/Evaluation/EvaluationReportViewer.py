@@ -1,15 +1,12 @@
+"""report viewer module"""
 import os
-import uuid
 from datetime import datetime
-
 from PIL import Image, ImageDraw, ImageFont
-
-from src.DataObjects.Record import Label
-from src.Evaluation.EvaluationReportModel import EvaluationReportModel
-from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 
 
 class EvaluationReportViewer:
+    """this is the main class"""
+
     def __init__(self):
         self.width = 842
         self.height = 612
@@ -34,104 +31,115 @@ class EvaluationReportViewer:
         else:  # for case sensitive systems
             self.font = ImageFont.truetype("Arial.ttf", 20)
 
-    def y_offset(self, y: int):
-        return 10 + 30 * y
+    def y_offset(self, y_off: int):
+        """simple class for the offset"""
+        return 10 + 30 * y_off
 
-    def save_evaluation_result(self, modelcontroller, tick_array):
+    def save_evaluation_result(self, model_controller, tick_array):
+        """function that save .png with the result"""
         print("Printing .png evaluation report.")
         self.title = "Evaluation report, " + \
             str(datetime.now().strftime(self.format_date))
-        labels = modelcontroller.labels[0]
-        security_labels = modelcontroller.labels[1]
+        labels = model_controller.labels[0]
+        security_labels = model_controller.labels[1]
         font = self.font
         img = Image.new('RGB', (self.width, self.height), color='white')
-        imgDraw = ImageDraw.Draw(img)
-        imgDraw.text((10, 5), self.title, font=font, fill=self.black)
-        for x in range(1, modelcontroller.sufficient_label_number + 1):
+        img_draw = ImageDraw.Draw(img)
+        img_draw.text((10, 5), self.title, font=font, fill=self.black)
+        for x_iterator in range(1, model_controller.sufficient_label_number + 1):
             # first row
-            if x <= self.row_offset:
-                imgDraw.text(
+            if x_iterator <= self.row_offset:
+                img_draw.text(
                     (self.row_id_x_offset,
-                     self.y_offset(x)),
-                    str(x) + ")",
+                     self.y_offset(x_iterator)),
+                    str(x_iterator) + ")",
                     font=font,
                     fill=self.black)
-                imgDraw.text((self.first_label_x_offset, self.y_offset(x)), str(
-                    labels[x - 1].label), font=font, fill=self.black)
-                imgDraw.text((self.second_label_x_offset, self.y_offset(
-                    x)), security_labels[x - 1].label, font=font, fill=self.black)
-                imgDraw.rectangle([(self.x0_rect,
-                                    self.y_offset(x)),
+                img_draw.text((self.first_label_x_offset, self.y_offset(x_iterator)), str(
+                    labels[x_iterator - 1].label), font=font, fill=self.black)
+                img_draw.text((self.second_label_x_offset, self.y_offset(
+                    x_iterator)), security_labels[x_iterator - 1].label, font=font, fill=self.black)
+                img_draw.rectangle([(self.x0_rect,
+                                    self.y_offset(x_iterator)),
                                    (self.x0_rect + self.x1_rect_offset,
-                                    self.y_offset(x) + self.x1_rect_offset)],
+                                    self.y_offset(x_iterator) + self.x1_rect_offset)],
                                   None,
                                   "black")
-                if tick_array[x - 1] == "V":
+                if tick_array[x_iterator - 1] == "V":
                     tick_color = self.green
                 else:
                     tick_color = self.red
-                imgDraw.text((self.tick_x_offset, self.y_offset(x)),
-                             tick_array[x - 1], font=font, fill=tick_color)
+                img_draw.text((self.tick_x_offset, self.y_offset(x_iterator)),
+                             tick_array[x_iterator - 1], font=font, fill=tick_color)
             # second row
-            elif self.row_offset < x <= self.row_offset * 2:
-                y = x - self.row_offset
-                imgDraw.text(
+            elif self.row_offset < x_iterator <= self.row_offset * 2:
+                y_iterator = x_iterator - self.row_offset
+                img_draw.text(
                     (self.row_id_x_offset +
                      self.second_column_offset,
-                     self.y_offset(y)),
-                    str(x) +
+                     self.y_offset(y_iterator)),
+                    str(x_iterator) +
                     ")",
                     font=font,
                     fill=(
                         0,
                         0,
                         0))
-                imgDraw.text((self.first_label_x_offset +
-                              self.second_column_offset, self.y_offset(y)), labels[x -
-                                                                                   1].label, font=font, fill=(0, 0, 0))
-                imgDraw.text((self.second_label_x_offset +
-                              self.second_column_offset, self.y_offset(y)), security_labels[x -
-                                                                                            1].label, font=font, fill=(0, 0, 0))
-                imgDraw.rectangle([(self.x0_rect +
-                                    self.second_column_offset, self.y_offset(y)), (self.x0_rect +
-                                                                                   self.x1_rect_offset +
-                                                                                   self.second_column_offset, self.y_offset(y) +
-                                                                                   self.x1_rect_offset)], None, "black")
-                if tick_array[x - 1] == "V":
+                img_draw.text((self.first_label_x_offset +
+                        self.second_column_offset, self.y_offset(y_iterator)),
+                              labels[x_iterator -
+                                    1].label, font=font, fill=(0, 0, 0))
+                img_draw.text((self.second_label_x_offset +
+                        self.second_column_offset,
+                        self.y_offset(y_iterator)),
+                        security_labels[x_iterator -
+                            1].label, font=font, fill=(0, 0, 0))
+                img_draw.rectangle([(self.x0_rect +
+                                    self.second_column_offset,
+                                     self.y_offset(y_iterator)), (self.x0_rect +
+                                    self.x1_rect_offset +
+                                    self.second_column_offset, self.y_offset(y_iterator) +
+                                    self.x1_rect_offset)], None, "black")
+                if tick_array[x_iterator - 1] == "V":
                     tick_color = self.green
                 else:
                     tick_color = self.red
-                imgDraw.text((self.tick_x_offset + self.second_column_offset,
-                             self.y_offset(y)), tick_array[x - 1], font=font, fill=tick_color)
+                img_draw.text((self.tick_x_offset + self.second_column_offset,
+                        self.y_offset(y_iterator)),
+                              tick_array[x_iterator - 1], font=font, fill=tick_color)
             # third row
-            elif x <= 50:
-                y = x - self.row_offset * 2
-                imgDraw.text(
+            elif x_iterator <= 50:
+                y_iterator = x_iterator - self.row_offset * 2
+                img_draw.text(
                     (self.row_id_x_offset +
                      self.third_column_offset,
-                     self.y_offset(y)),
-                    str(x) +
+                     self.y_offset(y_iterator)),
+                    str(x_iterator) +
                     ")",
                     font=font,
                     fill=self.black)
-                imgDraw.text((self.first_label_x_offset +
-                              self.third_column_offset, self.y_offset(y)), labels[x -
-                                                                                  1].label, font=font, fill=self.black)
-                imgDraw.text([self.second_label_x_offset +
-                              self.third_column_offset, self.y_offset(y)], " " +
-                             security_labels[x -
+                img_draw.text((self.first_label_x_offset +
+                              self.third_column_offset,
+                               self.y_offset(y_iterator)), labels[x_iterator -
+                                    1].label, font=font, fill=self.black)
+                img_draw.text([self.second_label_x_offset +
+                              self.third_column_offset, self.y_offset(y_iterator)], " " +
+                             security_labels[x_iterator -
                                              1].label, font=font, fill=self.black)
-                imgDraw.rectangle([(self.x0_rect +
-                                    self.third_column_offset, self.y_offset(y)), (self.x0_rect +
-                                                                                  self.x1_rect_offset +
-                                                                                  self.third_column_offset, self.y_offset(y) +
-                                                                                  self.x1_rect_offset)], None, "black")
-                if tick_array[x - 1] == "V":
+                img_draw.rectangle([(self.x0_rect +
+                                    self.third_column_offset,
+                                     self.y_offset(y_iterator)), (self.x0_rect +
+                                                self.x1_rect_offset +
+                                                self.third_column_offset,
+                                                                  self.y_offset(y_iterator) +
+                                                self.x1_rect_offset)], None, "black")
+                if tick_array[x_iterator - 1] == "V":
                     tick_color = self.green
                 else:
                     tick_color = self.red
-                imgDraw.text((self.tick_x_offset + self.third_column_offset,
-                             self.y_offset(y)), tick_array[x - 1], font=font, fill=tick_color)
+                img_draw.text((self.tick_x_offset + self.third_column_offset,
+                        self.y_offset(y_iterator)),
+                              tick_array[x_iterator - 1], font=font, fill=tick_color)
 
         report_x = 600
         report_y = 810
@@ -140,25 +148,25 @@ class EvaluationReportViewer:
         report_third_row = 510
         report_forth_row = 550
 
-        if modelcontroller.TotalError < modelcontroller.TotalErrorTollerated:
+        if model_controller.total_error < model_controller.total_error_tollerated:
             color = self.green
         else:
             color = self.red
-        imgDraw.text((report_x, report_first_row),
+        img_draw.text((report_x, report_first_row),
                      "Errors: ", font=font, fill=self.black)
-        imgDraw.text((report_y, report_first_row), str(
-            modelcontroller.TotalError), font=font, fill=color)
+        img_draw.text((report_y, report_first_row), str(
+            model_controller.total_error), font=font, fill=color)
 
-        imgDraw.text(
+        img_draw.text(
             (report_x,
              report_second_row),
             "Max Toll. Error: ",
             font=font,
             fill=self.black)
-        imgDraw.text((report_y, report_second_row), str(
-            modelcontroller.TotalErrorTollerated), font=font, fill=self.black)
+        img_draw.text((report_y, report_second_row), str(
+            model_controller.total_error_tollerated), font=font, fill=self.black)
 
-        imgDraw.text(
+        img_draw.text(
             (report_x,
              report_forth_row),
             "Consecutive Toll.: ",
@@ -167,38 +175,37 @@ class EvaluationReportViewer:
                 0,
                 0,
                 0))
-        imgDraw.text((report_y, report_forth_row), str(
-            modelcontroller.ConsecutiveErrorTollerated), font=font, fill=self.black)
+        img_draw.text((report_y, report_forth_row), str(
+            model_controller.consecutive_error_tollerated), font=font, fill=self.black)
 
-        if modelcontroller.ConsecutiveError < modelcontroller.ConsecutiveErrorTollerated:
+        if model_controller.consecutive_error < model_controller.consecutive_error_tollerated:
             color = self.green
         else:
             color = self.red
-        imgDraw.text(
+        img_draw.text(
             (report_x,
              report_third_row),
             "Max Consec. Error: ",
             font=font,
             fill=self.black)
-        imgDraw.text((report_y, report_third_row), str(
-            modelcontroller.ConsecutiveError), font=font, fill=color)
+        img_draw.text((report_y, report_third_row), str(
+            model_controller.consecutive_error), font=font, fill=color)
 
-        self.widthline = 4
-        self.firstcorner = 560
-        self.secondcorner = 400
-        imgDraw.line([(self.firstcorner,
-                       self.secondcorner),
-                      (self.firstcorner,
+        width_line = 4
+        first_corner = 560
+        second_corner = 400
+        img_draw.line([(first_corner,
+                       second_corner),
+                      (first_corner,
                        self.height)],
                      fill=(self.black),
-                     width=self.widthline)
-        imgDraw.line([(self.firstcorner,
-                       self.secondcorner),
+                     width= width_line)
+        img_draw.line([(first_corner,
+                       second_corner),
                       (self.width,
-                       self.secondcorner)],
+                       second_corner)],
                      fill=(self.black),
-                     width=self.widthline)
+                     width=width_line)
 
         img.save(f'{os.path.dirname(__file__)}/data/result_' +
                  str(datetime.now().strftime(self.format_timestamp)) + '.png')
-        pass

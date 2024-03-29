@@ -26,7 +26,7 @@ class SegregationSystemOrchestrator:
             self.config_parameter.get_tolerance_data_balancing(),
             self.limit_prepared_session)
         # instantiate and run receiver
-        self.preparedSessionReceiver = PreparedSessionReceiver(
+        self.prepared_session_receiver = PreparedSessionReceiver(
             self.storage_controller,
             self.config_parameter.get_segregation_system_port(),
             self.config_parameter.get_segregation_system_endpoint())
@@ -43,7 +43,7 @@ class SegregationSystemOrchestrator:
 
     def run(self):
         # the server starts to run
-        self.preparedSessionReceiver.run()
+        self.prepared_session_receiver.run()
 
         while True:
 
@@ -86,8 +86,8 @@ class SegregationSystemOrchestrator:
                 if not self.service_flag:
                     break
                 else:  # simulate the decision of the human
-                    evaluationDataBalanceCheck = self.segregation_plot_controller.get_simulated_check_data_balance()
-                    if evaluationDataBalanceCheck == "not performed":  # the test will not pass with a probability of 90%
+                    evaluation_data_balance_check = self.segregation_plot_controller.get_simulated_check_data_balance()
+                    if evaluation_data_balance_check == "not performed":  # the test will not pass with a probability of 90%
                         # "data not balanced"
                         self.sender.send_to_messaging()
                         continue
@@ -105,9 +105,9 @@ class SegregationSystemOrchestrator:
                 if not self.service_flag:
                     break
                 else:
-                    evaluationCheckinputCoverage = self.segregation_plot_controller.get_simulated_check_input_coverage()
+                    evaluation_checkinput_coverage = self.segregation_plot_controller.get_simulated_check_input_coverage()
                     # "input not covered"
-                    if evaluationCheckinputCoverage == "no":
+                    if evaluation_checkinput_coverage == "no":
                         self.sender.send_to_messaging()
                         continue
 

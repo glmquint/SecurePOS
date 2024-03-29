@@ -1,13 +1,14 @@
+"""sender of the evaluation process"""
 import os
 
 from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
-from src.JsonIO.JSONSender import JSONSender, JSONValidator
-from src.util import monitorPerformance, Message
+from src.JsonIO.JSONSender import JSONSender
+from src.util import monitorPerformance
 
 
 class EvaluationSystemSender:
+    """main class"""
     def __init__(self, config: EvaluationSystemConfig):
-        # sender = JSONSender(f"{os.path.dirname(__file__)}/../MessagingSystem/Schema/Label.json", "http://127.0.0.1:6000/messaging_system")
 
         self.message_url = f"http://{config.messaging_ip}:{config.messaging_port}/messaging_system"
 
@@ -17,8 +18,5 @@ class EvaluationSystemSender:
 
     @monitorPerformance(should_sample_after=True)
     def sendtomessaging(self, message):
+        """send message"""
         self.messaging_sender.send(message)
-        return
-
-# s = EvaluationSystemSender()
-# s.sendtomessaging(Message(msg = "BYPASS DI MERDA"))
