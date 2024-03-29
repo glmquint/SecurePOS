@@ -1,13 +1,40 @@
 from threading import Event, Thread
 from time import sleep
-
 from src.DataObjects.Record import Label
 from src.Storage.DBConnector import DBConnector
-from src.DataObjects.Session import PreparedSession
 from src.util import log, monitorPerformance
 
 
 class StorageController:
+    """
+        This class is responsible for managing the storage of data in a database.
+        It initializes the storage controller with a database configuration and an object type,
+        and provides methods for various storage operations such as save, flush, remove, and retrieve.
+
+        Attributes:
+            DBConnector: An instance of the DBConnector class for database operations.
+            obj_type: The type of the object that is being stored.
+            buffer_size: The size of the buffer for storing objects before they are flushed to the database.
+            buffer: A list that stores objects before they are flushed to the database.
+            count_updated: An event that is set when the count of objects in the database is updated.
+            timeout_flush_thread: A thread that flushes the buffer to the database every 5 seconds.
+
+        Methods:
+            save: Saves an object to the buffer and flushes the buffer to the database if it is full.
+            timeout_flush: Flushes the buffer to the database every 5 seconds.
+            flush: Flushes the buffer to the database.
+            wait_count_updated: Waits until the count of objects in the database is updated.
+            remove_all: Removes all objects from the database.
+            remove_joined_labels: Removes a specified number of joined labels from the database.
+            retrieve_n_labels: Retrieves a specified number of labels from the database.
+            retrieve_n: Retrieves a specified number of objects from the database.
+            remove_n: Removes a specified number of objects from the database.
+            retrieve_all: Retrieves all objects from the database.
+            count: Counts the number of objects in the database.
+            remove_by_column: Removes objects from the database where a specified column has a specified value.
+            isNumberOfRecordsSufficient: Checks if the number of records in the database is sufficient.
+            retrieve_by_column: Retrieves objects from the database where a specified column has a specified value.
+    """
     DBConnector = None
     obj_type = None
 
