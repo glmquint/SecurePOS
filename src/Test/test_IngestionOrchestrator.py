@@ -17,13 +17,13 @@ from src.MessageBus.MessageBus import MessageBus
 DATAOBJ_PATH = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
 
 TEST_PORT = 4000
-SELF_PORT = 5002
+SELF_PORT = 5005
 
 message_bus = MessageBus([])
 test_everything = True
 
 server = None
-local_test = False
+local_test = True
 
 
 def listener_setup(prepared_session_creator, message_bus=None):
@@ -44,7 +44,7 @@ def listener_setup(prepared_session_creator, message_bus=None):
         schema = {
             'segregationSystem': 'PreparedSessionSchema',
             'PreparedSession': 'PreparedSessionSchema',
-            'label': 'RecordSchema'}.get(
+            'evaluation_security_label': 'RecordSchema'}.get(
             url,
             None)
         server.add_resource(
@@ -60,6 +60,31 @@ def listener_setup(prepared_session_creator, message_bus=None):
             'port': TEST_PORT}).start()
 
 
+def other_listener_setup(message_bus):
+    server = Server()
+    for url, schema in {
+            'performance_sampler': 'PerformanceSampleSchema',
+            'message': 'MessageSchema'}.items():
+        def builder(url):
+            def callback(json_data):
+                print(f"hello from {url} received {json_data}")
+                if message_bus:
+                    message_bus.pushTopic(url, json_data)
+            return callback
+
+        server.add_resource(
+            JSONEndpoint,
+            f"/{url}",
+            recv_callback=builder(url),
+            json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/{schema}.json")
+    Thread(
+        target=server.run,
+        daemon=True,
+        kwargs={
+            'debug': True,
+            'port': 6000}).start()
+
+
 class TestPreparationSystemOrchestrator:
     def test_components(self):
         global message_bus
@@ -68,6 +93,7 @@ class TestPreparationSystemOrchestrator:
         c.update(
             {'label_receiver': config.raw_session_creator['label_receiver']})
         listener_setup(c, message_bus)
+        other_listener_setup(message_bus)
         for endpoint, val in c.items():
             url = val['url'].split('/')[-1]
             print(f"Sending to {url}")
@@ -101,11 +127,13 @@ class TestPreparationSystemOrchestrator:
 
     def test_run(self):
         global message_bus
-        config = PreparationSystemConfig("PreparationSystemConfig.json")
-        c: dict = config.prepared_session_creator
-        c.update(
-            {'label_receiver': config.raw_session_creator['label_receiver']})
+        config = PreparationSystemConfig(f"{os.path.dirname(__file__)}/../Ingestion/config/PreparationSystemConfig.json")
+        c: dict = config.ingestion_sys_sender.copy()
+        c.pop('raw_session_receiver')
+        #c.update(
+            #{'label_receiver': config.raw_session_creator['label_receiver']})
         listener_setup(c, message_bus)
+        other_listener_setup(message_bus)
 
         # ok, now let's start our system orchestrator
         orchestrator = PreparationSystemOrchestrator(config)
@@ -121,19 +149,31 @@ class TestPreparationSystemOrchestrator:
             uuid = str(uuid1())
             for i in range(sufficient_records):  # simulate client-side systems
                 url = "record"
+                '''
                 record = [LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord, Label][i](**{
-                    "uuid": uuid,
-                    "location_longitude": random() * 360 - 180,
-                    "location_latitude": random() * 180 - 90,
-                    "target_ip": '.'.join([str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255))]),
-                    "dest_ip": '.'.join([str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255))]),
+                    "UUID": uuid,
+                    "longitude": random() * 360 - 180,
+                    "latitude": random() * 180 - 90,
+                    "targetIP": '.'.join([str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255))]),
+                    "destIP": '.'.join([str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255))]),
                     "timestamp": [randint(1, 100) for i in range(10)],
                     "amount": [randint(1, 100) for i in range(10)],
-                    "label": choice(["normal", "moderate", "high"])})
+                    "LABEL": choice(["normal", "moderate", "high"])})
+                '''
+                record = {'UUID': uuid}
+                if i == 0:
+                    record.update({"longitude": random() * 360 - 180,"latitude": random() * 180 - 90})
+                elif i == 1:
+                    record.update({"targetIP": '.'.join([str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255))]),
+                                      "destIP": '.'.join([str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255)), str(randint(0, 255))])})
+                elif i == 2:
+                    record.update({"timestamp": [randint(1, 100) for i in range(10)], "amount": [randint(1, 100) for i in range(10)]})
+                elif i == 3:
+                    record.update({"LABEL": choice(["normal", "moderate", "high"])})
                 # this is intended to be unstructured (like for a client)
                 r = requests.post(
                     f"http://127.0.0.1:{SELF_PORT}/{url}",
-                    json=record.__dict__)
+                    json=record)
                 assert r.status_code == 200, f"got {r.status_code} while sending to {url}"
         # for i in range(num_of_runs):
             if local_test:
