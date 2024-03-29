@@ -34,13 +34,13 @@
       "url" : "http://127.0.0.1:5005/raw_session"
     },
     "label_receiver" : {
-      "url" : "http://127.0.0.1:5004/evaluation_security_label"
+      "url" : "http://127.0.0.1:4000/evaluation_security_label"
     },
     "segregation_system_receiver" : {
-      "url" : "http://127.0.0.1:5001/segregationSystem"
+      "url" : "http://127.0.0.1:4000/segregationSystem"
     },
     "production_system_receiver" : {
-      "url" : "http://127.0.0.1:5003/PreparedSession"
+      "url" : "http://127.0.0.1:4000/PreparedSession"
     }
   }
 }
