@@ -30,7 +30,7 @@ class CheckInputCoverageModel:
                 dataframe_data[column] += 180
             if column == 'median_latitude':
                 dataframe_data[column] += 90
-            dataframe_data[column] = dataframe_data[column] / \
-                dataframe_data[column].abs().max()
+            dataframe_data[column] = (dataframe_data[column] - dataframe_data[column].min()) /\
+                                     (dataframe_data[column].max() - dataframe_data[column].min())
 
         return dataframe_data

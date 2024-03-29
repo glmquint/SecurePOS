@@ -26,7 +26,8 @@ class Classifier:
                 hidden_layer_sizes=tuple(
                     self.number_of_neurons for _ in range(
                         self.number_of_layers)),
-                max_iter=number_of_iterations)
+                max_iter=number_of_iterations,
+                verbose=True)
 
     def load_model(self, path: str):
         self.model = joblib.load(f'{path}.sav')
