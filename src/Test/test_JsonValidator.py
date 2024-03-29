@@ -38,14 +38,17 @@ class TestJSONValidator(unittest.TestCase):
         invalid_data = {
             "attackRiskLabel": "critical"
         }
-        # Ensure that validation fails for the invalid JSON data and ValidationError is raised
+        # Ensure that validation fails for the invalid JSON data and
+        # ValidationError is raised
         with self.assertRaises(ValidationError):
             self.validator.validate_data(invalid_data)
+
     def test_invalid_json_wrong_label_name(self):
         invalid_data = {
             "RiskLabel": "medium"
         }
-        # Ensure that validation fails for the invalid JSON data and ValidationError is raised
+        # Ensure that validation fails for the invalid JSON data and
+        # ValidationError is raised
         with self.assertRaises(ValidationError):
             self.validator.validate_data(invalid_data)
 
@@ -53,6 +56,7 @@ class TestJSONValidator(unittest.TestCase):
     def tearDownClass(cls):
         import os
         os.remove("schema.json")
+
 
 if __name__ == '__main__':
     unittest.main()

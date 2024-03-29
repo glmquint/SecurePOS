@@ -13,44 +13,45 @@ from src.Storage.StorageController import StorageController
 
 
 class PreparationSystemOrchestrator:
-    def __init__(self, config:PreparationSystemConfig = None) -> None:
+    def __init__(self, config: PreparationSystemConfig = None) -> None:
         if not config:
-            config = PreparationSystemConfig(config_path=f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json")
+            config = PreparationSystemConfig(
+                config_path=f"{os.path.dirname(__file__)}/config/PreparationSystemConfig.json")
         self.config = config
         self.config.db.update({'buffer_size': 5})
         self.storage_controller = StorageController(
-            dbConfig           = self.config.db,
-            obj_type           = Record,
-            buffer_size        = 100
+            dbConfig=self.config.db,
+            obj_type=Record,
+            buffer_size=100
         )
         self.message_bus = MessageBus(
-            topics             = [self.config.raw_session_topic]
+            topics=[self.config.raw_session_topic]
         )
         self.phase_tracker = PhaseTracker(
-            config             = self.config.phase_tracker
+            config=self.config.phase_tracker
         )
         self.IngestionSystemSender = IngestionSystemSender(
-            config             = self.config.ingestion_sys_sender,
-            is_dev_phase       = self.phase_tracker.isDevPhase()
+            config=self.config.ingestion_sys_sender,
+            is_dev_phase=self.phase_tracker.isDevPhase()
         )
         self.preparation_sys_receiver = PreparationSysReceiver(
-            config             = self.config.preparation_sys_receiver,
-            raw_session_topic  = self.config.raw_session_topic,
-            storage_controller = self.storage_controller,
-            message_bus        = self.message_bus
+            config=self.config.preparation_sys_receiver,
+            raw_session_topic=self.config.raw_session_topic,
+            storage_controller=self.storage_controller,
+            message_bus=self.message_bus
         )
         self.raw_session_creator = RawSessionCreator(
-            config             = self.config.raw_session_creator,
-            storage_controller = self.storage_controller,
-            phase_tracker      = self.phase_tracker,
-            sender             = self.IngestionSystemSender
+            config=self.config.raw_session_creator,
+            storage_controller=self.storage_controller,
+            phase_tracker=self.phase_tracker,
+            sender=self.IngestionSystemSender
         )
         self.prepared_session_creator = PreparedSessionCreator(
-            config             = self.config.prepared_session_creator,
-            message_bus        = self.message_bus,
-            raw_session_topic  = self.config.raw_session_topic,
-            phase_tracker      = self.phase_tracker,
-            sender             = self.IngestionSystemSender
+            config=self.config.prepared_session_creator,
+            message_bus=self.message_bus,
+            raw_session_topic=self.config.raw_session_topic,
+            phase_tracker=self.phase_tracker,
+            sender=self.IngestionSystemSender
         )
 
     def run(self) -> None:
@@ -63,4 +64,3 @@ class PreparationSystemOrchestrator:
             thread.start()
         for thread in threads:
             thread.join()
-

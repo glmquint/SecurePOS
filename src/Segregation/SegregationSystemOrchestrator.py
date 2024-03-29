@@ -21,21 +21,25 @@ class SegregationSystemOrchestrator:
         self.storage_controller = StorageController(
             {'name': 'PreparedSessionsDataStore', 'table_name': 'PreparedSessions'},
             PreparedSession)
-        self.segregation_plot_controller = SegregationPlotController(self.storage_controller,
-                                                                     self.config_parameter.get_tolerance_data_balancing(),
-                                                                     self.limit_prepared_session)
+        self.segregation_plot_controller = SegregationPlotController(
+            self.storage_controller,
+            self.config_parameter.get_tolerance_data_balancing(),
+            self.limit_prepared_session)
         # instantiate and run receiver
-        self.preparedSessionReceiver = PreparedSessionReceiver(self.storage_controller,
-                                                               self.config_parameter.get_segregation_system_port(),
-                                                               self.config_parameter.get_segregation_system_endpoint())
+        self.preparedSessionReceiver = PreparedSessionReceiver(
+            self.storage_controller,
+            self.config_parameter.get_segregation_system_port(),
+            self.config_parameter.get_segregation_system_endpoint())
 
-        self.learning_set_generator = LearningSetGenerator(self.config_parameter.get_percentage_training_split(),
-                                                           self.config_parameter.get_percentage_test_split(),
-                                                           self.config_parameter.get_percentage_validation_split(),
-                                                           self.storage_controller,
-                                                           self.limit_prepared_session)
+        self.learning_set_generator = LearningSetGenerator(
+            self.config_parameter.get_percentage_training_split(),
+            self.config_parameter.get_percentage_test_split(),
+            self.config_parameter.get_percentage_validation_split(),
+            self.storage_controller,
+            self.limit_prepared_session)
 
-        self.sender = SegregationSystemSender(self.config_parameter, self.learning_set_generator)
+        self.sender = SegregationSystemSender(
+            self.config_parameter, self.learning_set_generator)
 
     def run(self):
         # the server starts to run
@@ -45,17 +49,22 @@ class SegregationSystemOrchestrator:
 
             evaluation_check_data_balance = ""
             evaluation_check_input_coverage = ""
-            print(
-                f"[{self.__class__.__name__}]: Server started")  # the serviceFlag is false if the simplified stop and go interaction is not active
+            # the serviceFlag is false if the simplified stop and go
+            # interaction is not active
+            print(f"[{self.__class__.__name__}]: Server started")
 
             if not self.service_flag:
-                # the value that can be assigned to the following two variable is ( checking | ok | not balanced )
+                # the value that can be assigned to the following two variable
+                # is ( checking | ok | not balanced )
                 evaluation_check_data_balance = self.segregation_plot_controller.get_check_data_balance()
                 evaluation_check_input_coverage = self.segregation_plot_controller.get_check_input_coverage()
                 if evaluation_check_input_coverage == "no coverage":
-                    # if the coverage is not satisfied the process has to start from the beginning
-                    self.segregation_plot_controller.set_evaluation_check_data_balance("checking")
-                    self.segregation_plot_controller.set_evaluation_check_input_coverage("checking")
+                    # if the coverage is not satisfied the process has to start
+                    # from the beginning
+                    self.segregation_plot_controller.set_evaluation_check_data_balance(
+                        "checking")
+                    self.segregation_plot_controller.set_evaluation_check_input_coverage(
+                        "checking")
                     evaluation_check_data_balance = "checking"
                     evaluation_check_input_coverage = "checking"
 
@@ -64,7 +73,8 @@ class SegregationSystemOrchestrator:
                 print(f"[{self.__class__.__name__}]: Receiving data...")
 
                 while self.storage_controller.count() < self.limit_prepared_session:
-                    # the storage controller will retrive the data from the messageBus and will store into the db
+                    # the storage controller will retrive the data from the
+                    # messageBus and will store into the db
                     pass
 
                 print("Data correctly stored")
@@ -82,8 +92,10 @@ class SegregationSystemOrchestrator:
                         self.sender.send_to_messaging()
                         continue
 
-            if self.service_flag or (evaluation_check_data_balance == "ok" and evaluation_check_input_coverage != "ok"):
-                # here the human have checked that the data are correctly balanced
+            if self.service_flag or (
+                    evaluation_check_data_balance == "ok" and evaluation_check_input_coverage != "ok"):
+                # here the human have checked that the data are correctly
+                # balanced
 
                 # plot the checkInputCoverage graph
                 self.segregation_plot_controller.plot_check_input_coverage()
@@ -99,7 +111,8 @@ class SegregationSystemOrchestrator:
                         self.sender.send_to_messaging()
                         continue
 
-            if self.service_flag or (evaluation_check_data_balance == "ok" and evaluation_check_input_coverage == "ok"):
+            if self.service_flag or (
+                    evaluation_check_data_balance == "ok" and evaluation_check_input_coverage == "ok"):
                 # storageController.normalizeData()
 
                 # here the human have checked that the data are correctly balanced
@@ -113,8 +126,10 @@ class SegregationSystemOrchestrator:
                 self.storage_controller.remove_all()  # remove the sessions
 
                 # reset the evaluation in report files
-                self.segregation_plot_controller.set_evaluation_check_data_balance("checking")
-                self.segregation_plot_controller.set_evaluation_check_input_coverage("checking")
+                self.segregation_plot_controller.set_evaluation_check_data_balance(
+                    "checking")
+                self.segregation_plot_controller.set_evaluation_check_input_coverage(
+                    "checking")
 
 
 if __name__ == "__main__":

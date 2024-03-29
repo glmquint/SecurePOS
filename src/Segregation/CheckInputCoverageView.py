@@ -10,11 +10,11 @@ from src.Segregation.CheckInputCoverageModel import CheckInputCoverageModel
 class CheckInputCoverageView:
 
     def __init__(self, model):
-        self.__checkInputCoverageModel : CheckInputCoverageModel = model
+        self.__checkInputCoverageModel: CheckInputCoverageModel = model
 
     def plot_check_input_coverage_view(self):
 
-        pandas_dataset : pd.DataFrame = self.__checkInputCoverageModel.get_prepared_session_df()
+        pandas_dataset: pd.DataFrame = self.__checkInputCoverageModel.get_prepared_session_df()
 
         # we rename attributes for better readability on the plot
         labels = ['MeanAbsoluteDifferencingTransactionTimestamps',
@@ -23,7 +23,8 @@ class CheckInputCoverageView:
                   'MedianLatitude',
                   'MedianTargetIP',
                   'MedianDestIP']
-        assert len(labels) == len(pandas_dataset.columns), f"cannot rename different number of columns: {len(labels)} instead of {len(pandas_dataset.columns)}"
+        assert len(labels) == len(
+            pandas_dataset.columns), f"cannot rename different number of columns: {len(labels)} instead of {len(pandas_dataset.columns)}"
         pandas_dataset.columns = labels
 
         fig = go.Figure()
@@ -50,7 +51,8 @@ class CheckInputCoverageView:
             title="Coverage Report",
         )
 
-        fig.write_image(f"{os.path.dirname(__file__)}/Data/Plot/PlotCheckInputCoverage.png")
+        fig.write_image(
+            f"{os.path.dirname(__file__)}/Data/Plot/PlotCheckInputCoverage.png")
 
     @staticmethod
     def get_simulated_check_input_coverage():
@@ -67,5 +69,3 @@ class CheckInputCoverageView:
             evaluationCheckInputCoverage = jsonData.get("evaluation")
             checkInputCoverageFile.close()
             return evaluationCheckInputCoverage
-
-

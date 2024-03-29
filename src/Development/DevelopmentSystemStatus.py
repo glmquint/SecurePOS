@@ -43,10 +43,14 @@ class DevelopmentSystemStatus:
             self.should_validate = False
 
     def to_dict(self):
-        return dict(status=self.status, should_validate=self.should_validate,
-                    average_hyperparameters=self.average_hyperparameters,
-                    number_of_iterations=self.number_of_iterations, learning_set=self.learning_set.to_json(),
-                    best_classifier_name=self.best_classifier_name, best_validation_error=self.best_validation_error)
+        return dict(
+            status=self.status,
+            should_validate=self.should_validate,
+            average_hyperparameters=self.average_hyperparameters,
+            number_of_iterations=self.number_of_iterations,
+            learning_set=self.learning_set.to_json(),
+            best_classifier_name=self.best_classifier_name,
+            best_validation_error=self.best_validation_error)
 
     def save_status(self):
         with open(self.status_path, 'w') as json_file:

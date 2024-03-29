@@ -26,8 +26,9 @@ class DevelopmentSystemConfigurations:
         self.topics = data['topics']
         self.production_system_receiver = data['production_system_receiver']
         self.messaging_system_receiver = data['messaging_system_receiver']
-        self.hyperparameters = HyperParameterLimit(data['hyperparameters']['number_of_layers'],
-                                                   data['hyperparameters']['number_of_neurons'])
+        self.hyperparameters = HyperParameterLimit(
+            data['hyperparameters']['number_of_layers'],
+            data['hyperparameters']['number_of_neurons'])
         self.loss_threshold = data['loss_threshold']
         self.port = data['port']
         self.endpoint_url = data['endpoint_url']

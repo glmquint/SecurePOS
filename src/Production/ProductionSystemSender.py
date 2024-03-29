@@ -9,13 +9,15 @@ class ProductionSystemSender:
         self.message_url = message_url
         self.evaluation_url = evaluation_url
         self.client_url = client_url
-        #TODO: fix schema for message
-        self.messaging_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/MessageSchema.json",
-                                           self.message_url)
-        self.eval_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json",
-                                      self.evaluation_url)
-        self.client_sender = JSONSender(f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json",
-                                        self.client_url)
+        self.messaging_sender = JSONSender(
+            f"{os.path.dirname(__file__)}/../DataObjects/Schema/MessageSchema.json",
+            self.message_url)
+        self.eval_sender = JSONSender(
+            f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json",
+            self.evaluation_url)
+        self.client_sender = JSONSender(
+            f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json",
+            self.client_url)
 
     @monitorPerformance(should_sample_after=True)
     def sendToMessaging(self, message):

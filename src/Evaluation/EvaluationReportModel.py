@@ -4,32 +4,34 @@ from src.Storage.StorageController import StorageController
 
 
 class EvaluationReportModel:
-    def __init__(self,config):
+    def __init__(self, config):
         self.TotalErrorTollerated = config.tollerated_error
         self.TotalError = 0
         self.ConsecutiveErrorTollerated = config.tollerated_consecutive_error
         self.ConsecutiveError = 0
         self.tick_array = []
-        self.scontroller_label = StorageController({'name': 'evaluation', 'table_name': 'labels'},type(Label()))
-        self.scontroller_security = StorageController({'name': 'evaluation', 'table_name': 'security_labels'},type(Label()))
+        self.scontroller_label = StorageController(
+            {'name': 'evaluation', 'table_name': 'labels'}, type(Label()))
+        self.scontroller_security = StorageController(
+            {'name': 'evaluation', 'table_name': 'security_labels'}, type(Label()))
         self.sufficient_label_number = config.sufficient_label_number
         self.labels = []
 
-
-
     def retrieve(self):
-        retrieve = self.scontroller_label.retrieve_n_labels(self.sufficient_label_number)
+        retrieve = self.scontroller_label.retrieve_n_labels(
+            self.sufficient_label_number)
         return [retrieve[0], retrieve[1]]
 
-
     def removelabels(self):
-        #SQLITE has a trigger to delete the security labels.
-        self.scontroller_label.remove_joined_labels(self.sufficient_label_number)
+        # SQLITE has a trigger to delete the security labels.
+        self.scontroller_label.remove_joined_labels(
+            self.sufficient_label_number)
 
     def check_valid_labels(self):
         x = {x.uuid for x in self.labels[0]}
         y = {x.uuid for x in self.labels[1]}
-        difference = ([uid for uid in x.difference(y)],[uid for uid in y.difference(x)])
+        difference = ([uid for uid in x.difference(y)],
+                      [uid for uid in y.difference(x)])
         if len(difference[0]) != 0 or len(difference[1]) != 0:
             print(difference)
             print("Labels and Security Labels are not matching.Aborting.")
@@ -38,8 +40,8 @@ class EvaluationReportModel:
         return
 
     def sort_labels(self):
-        self.labels[0].sort(key= lambda x:x.uuid)
-        self.labels[1].sort(key= lambda x:x.uuid)
+        self.labels[0].sort(key=lambda x: x.uuid)
+        self.labels[1].sort(key=lambda x: x.uuid)
 
     def generatereport(self):
         self.labels = self.retrieve()
@@ -59,11 +61,11 @@ class EvaluationReportModel:
                 if not consecutive:
                     consecutive = True
                 consecutiverror = consecutiverror + 1
-                maxconsecutive= max(consecutiverror,maxconsecutive)
+                maxconsecutive = max(consecutiverror, maxconsecutive)
             else:
                 self.tick_array.append("V")
                 consecutive = False
-                maxconsecutive= max(consecutiverror,maxconsecutive)
+                maxconsecutive = max(consecutiverror, maxconsecutive)
                 consecutiverror = 0
         self.TotalError = totalerror
         self.ConsecutiveError = maxconsecutive

@@ -5,4 +5,4 @@ from src.util import Message
 
 s = EvaluationSystemSender()
 message = "Test messaging at:" + time.now()
-s.sendtomessaging(Message(msg = message))
+s.sendtomessaging(Message(msg=message))

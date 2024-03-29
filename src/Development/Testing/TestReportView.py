@@ -15,5 +15,5 @@ class TestReportView:
     def update(self):
         if os.path.exists(self.path_to_save):
             os.remove(self.path_to_save)
-        df = pd.DataFrame(self.model.to_dict(),index=[0])
+        df = pd.DataFrame(self.model.to_dict(), index=[0])
         df.to_csv(self.path_to_save, index=False)
