@@ -1,5 +1,4 @@
 import os
-from threading import Thread
 
 from src.DataObjects.Record import LocalizationSysRecord, NetworkMonitorRecord, TransactionCloudRecord, Record, Label
 from src.DataObjects.Session import RawSession
@@ -7,12 +6,31 @@ from src.JsonIO.JSONEndpoint import JSONEndpoint
 from src.JsonIO.Server import Server
 from src.MessageBus.MessageBus import MessageBus
 from src.Storage.StorageController import StorageController
-from src.util import log, monitorPerformance
+from src.util import monitorPerformance
 
 DATAOBJ_PATH = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
 
 
 class PreparationSysReceiver:
+    """
+    This class is responsible for receiving data from the preparation system and the client-side application.
+
+    The PreparationSysReceiver class initializes various components such as the Server and JSONEndpoint for receiving
+    records and raw sessions. These components are used to manage the receiving process,
+    including validating the data against a JSON schema and saving it to the storage or pushing it to the message bus.
+
+    Attributes:
+        raw_session_topic (str): Topic for raw sessions in the message bus.
+        storage_controller (StorageController): Manages storage-related operations.
+        message_bus (MessageBus): Facilitates communication between different components.
+        server (Server): Server for receiving data.
+        port (int): Port number for the server.
+
+    Methods:
+        receiveRecord(json_data): Receives a record, validates it, and saves it to the storage.
+        receiveRawSession(json_data): Receives a raw session, validates it, and pushes it to the message bus.
+        run(): Starts the server for receiving data.
+    """
     def __init__(
             self,
             config: dict,
@@ -62,7 +80,7 @@ class PreparationSysReceiver:
         elif "label" in json_data:
             record = Label(**json_data)
         else:
-            raise Exception("unkown record type")
+            raise Exception("unknown record type")
         if not self.storage_controller.save(record):
             raise Exception(f"Failed to save {record}")
 

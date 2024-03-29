@@ -1,17 +1,37 @@
 import ipaddress
-import os
 import statistics
 
 from src.DataObjects.Record import TransactionCloudRecord, LocalizationSysRecord, NetworkMonitorRecord, Label
 from src.DataObjects.Session import RawSession, PreparedSession
 from src.Ingestion.IngestionSystemSender import IngestionSystemSender
 from src.Ingestion.PhaseTracker import PhaseTracker
-from src.JsonIO.JSONSender import JSONSender
 from src.MessageBus.MessageBus import MessageBus
 from src.util import log
 
 
 class PreparedSessionCreator:
+    """
+    This class is responsible for creating prepared sessions from raw sessions.
+
+    The PreparedSessionCreator class receives raw sessions from the message bus, corrects missing samples,
+    detects and corrects absolute outliers, and extracts features to create a prepared session.
+    The prepared session is then sent to the Segregation System or the Production System.
+
+    Attributes:
+        config (dict): Configuration for the prepared session creator.
+        message_bus (MessageBus): Facilitates communication between different components.
+        raw_session_topic (str): Topic for raw sessions in the message bus.
+        phase_tracker (PhaseTracker): Tracks the phase of the ingestion process.
+        raw_session (RawSession): The raw session currently being processed.
+        prepared_session (PreparedSession): The prepared session created from the raw session.
+        sender (IngestionSystemSender): Sends prepared sessions to the ingestion system.
+
+    Methods:
+        run(): Continuously receives raw sessions, creates prepared sessions, and sends them to the ingestion system.
+        correctMissingSamples(): Corrects missing samples in the raw session.
+        detectAndCorrectAbsoluteOutliers(): Detects and corrects absolute outliers in the raw session.
+        extractFeatures(): Extracts features from the raw session to create a prepared session.
+    """
     def __init__(
             self,
             config,

@@ -4,12 +4,34 @@ from src.DataObjects.Record import Record, Label
 from src.DataObjects.Session import RawSession
 from src.Ingestion.IngestionSystemSender import IngestionSystemSender
 from src.Ingestion.PhaseTracker import PhaseTracker
-from src.JsonIO.JSONSender import JSONSender
 from src.Storage.StorageController import StorageController
-from src.util import log
 
 
 class RawSessionCreator:
+    """
+    This class is responsible for creating raw sessions from records.
+
+    The RawSessionCreator class retrieves records from the storage, checks if the number of records is sufficient,
+    and creates a raw session. It also marks missing samples and validates the raw session.
+    If the raw session is valid, it is sent to the Prepared Session creator
+
+    Attributes:
+        label (Label): The label of the raw session.
+        number_of_systems (int): The number of systems required for a raw session.
+        storage_controller (StorageController): Manages storage-related operations.
+        phase_tracker (PhaseTracker): Tracks the phase of the ingestion process.
+        ingestion_sys_sender (IngestionSystemSender): Sends raw sessions to the ingestion system.
+        max_uuid (str): The UUID with the maximum count of records.
+        raw_session (RawSession): The raw session currently being created.
+        missing_samples (set): The set of missing samples in the raw session.
+
+    Methods:
+        isNumberOfRecordsSufficient(): Checks if the number of records is sufficient for a raw session.
+        createRawSession(): Creates a raw session from records.
+        markMissingSamples(): Marks missing samples in the raw session.
+        isRawSessionValid(): Validates the raw session.
+        run(): Continuously creates and sends valid raw sessions to the ingestion system.
+    """
 
     def __init__(
             self,
