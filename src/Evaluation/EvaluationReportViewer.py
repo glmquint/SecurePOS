@@ -1,11 +1,37 @@
-"""report viewer module"""
 import os
 from datetime import datetime
 from PIL import Image, ImageDraw, ImageFont
 
 
 class EvaluationReportViewer:
-    """this is the main class"""
+    """
+        This class is responsible for visualizing the evaluation report. It initializes the viewer with a configuration,
+        generates a .png image of the report, and saves it.
+
+        Attributes:
+            width: The width of the image.
+            height: The height of the image.
+            second_column_offset: The offset for the second column in the image.
+            third_column_offset: The offset for the third column in the image.
+            format_date: The format for the date in the title.
+            format_timestamp: The format for the timestamp in the filename.
+            title: The title of the report.
+            row_id_x_offset: The x offset for the row id.
+            first_label_x_offset: The x offset for the first label.
+            second_label_x_offset: The x offset for the second label.
+            x0_rect: The x coordinate for the rectangle.
+            x1_rect_offset: The offset for the x1 coordinate of the rectangle.
+            row_offset: The offset for the row.
+            tick_x_offset: The x offset for the tick.
+            black: The color black.
+            green: The color green.
+            red: The color red.
+            font: The font used in the image.
+
+        Methods:
+            y_offset: Returns the y offset for a given y offset.
+            save_evaluation_result: Generates a .png image of the report and saves it.
+    """
 
     def __init__(self):
         self.width = 842
