@@ -1,9 +1,35 @@
-import json
-
 import pandas as pd
 
 
 class LearningSet:
+    """
+    A class used to represent a learning set in the development system.
+
+    Attributes
+    ----------
+    trainingSet : pd.DataFrame
+        The training set data.
+    validationSet : pd.DataFrame
+        The validation set data.
+    testSet : pd.DataFrame
+        The test set data.
+    trainingSetLabel : list[str]
+        The labels for the training set.
+    validationSetLabel : list[str]
+        The labels for the validation set.
+    testSetLabel : list[str]
+        The labels for the test set.
+
+    Methods
+    -------
+    __init__(self, dic: dict, from_json: bool = False)
+        Initializes the LearningSet class with a dictionary and a flag indicating whether the data is from JSON.
+    learning_set_from_json(self, dic: dict)
+        Converts the JSON data to a learning set.
+    to_json(self) -> dict
+        Converts the LearningSet instance to a JSON-compatible dictionary.
+    """
+    # class implementation...class LearningSet:
     trainingSet: pd.DataFrame = None
     validationSet: pd.DataFrame = None
     testSet: pd.DataFrame = None
@@ -11,10 +37,9 @@ class LearningSet:
     validationSetLabel: [str] = None
     testSetLabel: [str] = None
 
-    # maybe make a separated builder for json
-    def __init__(self, dic, fromJson=False):
-        if fromJson:
-            self.learningSetfromJson(dic)
+    def __init__(self, dic, from_json=False):
+        if from_json:
+            self.learning_set_from_json(dic)
             return
         self.trainingSet = dic['trainingSet']
         self.validationSet = dic['validationSet']
@@ -23,7 +48,7 @@ class LearningSet:
         self.validationSetLabel = dic['validationSetLabel']
         self.testSetLabel = dic['testSetLabel']
 
-    def learningSetfromJson(self, dic):
+    def learning_set_from_json(self, dic):
         self.trainingSet = pd.DataFrame(
             dic['trainingSet']['data'],
             columns=dic['trainingSet']['columns'])

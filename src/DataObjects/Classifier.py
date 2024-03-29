@@ -1,10 +1,36 @@
-import os
-
 import joblib
 from sklearn.neural_network import MLPClassifier
 
 
 class Classifier:
+    """
+    A class used to represent a classifier in the development system.
+
+    Attributes
+    ----------
+    name : str
+        The name of the classifier.
+    model : MLPClassifier
+        The model of the classifier.
+    number_of_neurons : int
+        The number of neurons in the classifier.
+    number_of_layers : int
+        The number of layers in the classifier.
+    number_of_iterations : int
+        The number of iterations for the classifier.
+
+    Methods
+    -------
+    __init__(self, number_of_neurons: int = 0, number_of_layers: int = 0, number_of_iterations: int = 0, name: str = "AverageClassifier")
+        Initializes the Classifier class with the number of neurons, layers, iterations, and name.
+    load_model(self, path: str)
+        Loads the model from the specified path.
+    save_model(self, path: str)
+        Saves the model to the specified path.
+    get_loss_curve(self)
+        Returns the loss curve of the model.
+    """
+    # class implementation...class Classifier:
     name: str = None
     model: MLPClassifier = None
     number_of_neurons: int = None

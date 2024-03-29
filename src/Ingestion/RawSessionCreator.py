@@ -71,7 +71,7 @@ class RawSessionCreator:
             return
         self.missing_samples = set()
         for record in self.raw_session.records:
-            self.missing_samples.update(record.getMissingSamples())
+            self.missing_samples.update(record.get_missing_samples())
 
     def isRawSessionValid(self) -> bool:
         if self.phase_tracker.isEvalPhase() and self.label is None:

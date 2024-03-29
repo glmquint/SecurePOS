@@ -113,7 +113,7 @@ class SegregationSystemConfig:
         return self.__messaging_system_port
 
     def get_messaging_system_endpoint(self):
-        return self.__messaging
+        return self.__messaging_system_endpoint
 
     def to_json(self) -> str:
         """

@@ -1,11 +1,33 @@
 import json
-from dataclasses import dataclass
-from datetime import datetime
-
+from typing import Optional
 
 class Record:
+    """
+    A class used to represent a record in the development system.
+
+    Attributes
+    ----------
+    uuid : str
+        The unique identifier of the record.
+
+    Methods
+    -------
+    __init__(self, **kwargs)
+        Initializes the Record class with a unique identifier.
+    to_json(self)
+        Converts the Record instance to a JSON-compatible dictionary.
+    to_row(self)
+        Converts the Record instance to a tuple.
+    clamp(self, key, value)
+        Raises an exception if the key is not in the instance's dictionary.
+    from_row(uuid='', objtype='', data='{}')
+        Deserializes a row into a Record instance or a subclass instance based on the objtype.
+    get_missing_samples(self)
+        Returns a list of keys for which the instance's dictionary has None values.
+    """
+    # class implementation...class Record:
     def __init__(self, **kwargs):
-        self.uuid: str = kwargs.get('uuid', None)
+        self.uuid: Optional[str] = kwargs.get('uuid', None)
 
     def to_json(self):
         return {
@@ -37,7 +59,7 @@ class Record:
             raise Exception("Cannot deserialize: unknown objtype")
         return Record(**json_data)
 
-    def getMissingSamples(self):
+    def get_missing_samples(self):
         return [k for k, v in self.__dict__.items() if v is None]
 
 
@@ -48,17 +70,39 @@ max_long = 180
 
 
 class LocalizationSysRecord(Record):
+    """
+    A subclass of the Record class used to represent a localization system record in the development system.
+
+    Attributes
+    ----------
+    location_latitude : float
+        The latitude of the location.
+    location_longitude : float
+        The longitude of the location.
+
+    Methods
+    -------
+    __init__(self, **kwargs)
+        Initializes the LocalizationSysRecord class with a unique identifier, latitude, and longitude.
+    to_json(self)
+        Converts the LocalizationSysRecord instance to a JSON-compatible dictionary.
+    get_outliers(self)
+        Returns a dictionary of attributes that are outside the valid range.
+    clamp(self, key, value)
+        Clamps the value of the specified attribute to its valid range.
+    """
+    # class implementation...class LocalizationSysRecord(Record):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.location_latitude: float = kwargs.get("location_latitude", None)
-        self.location_longitude: float = kwargs.get("location_longitude", None)
+        self.location_latitude: Optional[float] = kwargs.get("location_latitude", None)
+        self.location_longitude: Optional[float] = kwargs.get("location_longitude", None)
 
     def to_json(self):
         data = {"uuid": self.uuid, "location_latitude": self.location_latitude,
                 "location_longitude": self.location_longitude}
         return data
 
-    def getOutliers(self):
+    def get_outliers(self):
         return {
             k: v for k,
             v in self.__dict__.items() if k == 'location_latitude' and (
@@ -75,18 +119,18 @@ class LocalizationSysRecord(Record):
 class NetworkMonitorRecord(Record):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.target_ip: str = kwargs.get("target_ip", None)
-        self.dest_ip: str = kwargs.get("dest_ip", None)
+        self.target_ip: Optional[str] = kwargs.get("target_ip", None)
+        self.dest_ip: Optional[str] = kwargs.get("dest_ip", None)
 
     def to_json(self):
         data = {"uuid": self.uuid, "target_ip": self.target_ip,
                 "dest_ip": self.dest_ip}
         return data
 
-    def getOutliers(self):
-        return {k: v for k, v in self.__dict__.items() if not self.isValidIP(v)}
+    def get_outliers(self):
+        return {k: v for k, v in self.__dict__.items() if not self.is_valid_ip(v)}
 
-    def isValidIP(self, ip):
+    def is_valid_ip(self, ip):
         return ip.count('.') == 3 and all(
             [0 <= int(x) <= 255 for x in ip.split('.')])
 
@@ -97,6 +141,28 @@ class NetworkMonitorRecord(Record):
 
 
 class TransactionCloudRecord(Record):
+    """
+    A subclass of the Record class used to represent a transaction cloud record in the development system.
+
+    Attributes
+    ----------
+    timestamp : list[int]
+        The timestamps of the transactions.
+    amount : list[int]
+        The amounts of the transactions.
+
+    Methods
+    -------
+    __init__(self, **kwargs)
+        Initializes the TransactionCloudRecord class with a unique identifier, timestamps, and amounts.
+    to_json(self)
+        Converts the TransactionCloudRecord instance to a JSON-compatible dictionary.
+    get_outliers(self)
+        Returns a dictionary of attributes that are outside the valid range.
+    clamp(self, key, value)
+        Clamps the value of the specified attribute to its valid range.
+    """
+    # class implementation...class TransactionCloudRecord(Record):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.timestamp: [int] = kwargs.get("timestamp", None)
@@ -107,7 +173,7 @@ class TransactionCloudRecord(Record):
                 "amount": self.amount}
         return data
 
-    def getOutliers(self):
+    def get_outliers(self):
         return {
             'timestamp': [
                 i for i, x in enumerate(
@@ -125,12 +191,12 @@ class TransactionCloudRecord(Record):
             # found we search in the future
             # all valid indexes up to 'index' (not included)
             up_to_i = set(
-                [i for i in range(index) if i not in self.getOutliers()[key]])
+                [i for i in range(index) if i not in self.get_outliers()[key]])
             if len(up_to_i) == 0:
                 # all valid indexes from 'index' (not included) up to the last
                 # one (included)
                 down_to_i = set([i for i in range(
-                    len(self.__dict__[key]), index, -1) if i not in self.getOutliers()[key]])
+                    len(self.__dict__[key]), index, -1) if i not in self.get_outliers()[key]])
                 if len(down_to_i) == 0:
                     raise Exception(
                         f"Cannot interpolate: no valid index found in timeseries {key}")
@@ -141,13 +207,36 @@ class TransactionCloudRecord(Record):
 
 
 class Label(Record):
+    """
+    A subclass of the Record class used to represent a label in the development system.
+
+    Attributes
+    ----------
+    label : str
+        The label of the record.
+
+    Methods
+    -------
+    __init__(self, **kwargs)
+        Initializes the Label class with a unique identifier and a label.
+    to_row(self)
+        Converts the Label instance to a tuple.
+    from_row(self)
+        Deserializes a row into a Label instance.
+    to_json(self)
+        Converts the Label instance to a JSON-compatible dictionary.
+    get_outliers(self)
+        Returns a dictionary of attributes that are outside the valid range.
+    clamp(self, key, value)
+        Clamps the value of the specified attribute to its valid range.
+    """
+    # class implementation...class Label(Record):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.label: str = kwargs.get("label", None)
+        self.label: Optional[str] = kwargs.get("label", None)
 
     @staticmethod
     def to_row(obj):
-        # todo use get
         return tuple([obj.label, obj.uuid])
 
     @staticmethod
@@ -158,7 +247,7 @@ class Label(Record):
         data = {"uuid": self.uuid, "label": self.label}
         return data
 
-    def getOutliers(self):
+    def get_outliers(self):
         return {
             k: v for k,
             v in self.__dict__.items() if v not in [

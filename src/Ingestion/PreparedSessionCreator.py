@@ -62,7 +62,7 @@ class PreparedSessionCreator:
     @log
     def correctMissingSamples(self):
         for record in self.raw_session.records:
-            for key, value in record.getMissingSamples():
+            for key, value in record.get_missing_samples():
                 # get the last sample of the same type
                 record.__dict__[key] = [x for x in self.raw_session.records if x.__dict__.get(
                     key, None) is not None][-1].__dict__[key]
@@ -70,7 +70,7 @@ class PreparedSessionCreator:
     @log
     def detectAndCorrectAbsoluteOutliers(self):
         for record in self.raw_session.records:
-            for key, value in record.getOutliers().items():
+            for key, value in record.get_outliers().items():
                 # set the outlier the nearest upper/lower bound
                 record.clamp(key, value)
 

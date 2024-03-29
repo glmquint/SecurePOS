@@ -1,14 +1,32 @@
-import json
-from dataclasses import dataclass
-
 from src.DataObjects.Record import Record
-
+from typing import Optional
 
 class Session:
+    """
+    A base class used to represent a session in the development system.
+
+    This class is intended to be subclassed and does not provide any implementation.
+    """
     pass
 
 
 class RawSession(Session):
+    """
+    A subclass of the Session class used to represent a raw session in the development system.
+
+    Attributes
+    ----------
+    records : list[Record]
+        The records of the session.
+
+    Methods
+    -------
+    __init__(self, **kwargs)
+        Initializes the RawSession class with a list of records.
+    to_json(self)
+        Converts the RawSession instance to a JSON-compatible dictionary.
+    """
+    # class implementation...
     records: [Record]
 
     def __init__(self, **kwargs):
@@ -22,6 +40,58 @@ class RawSession(Session):
 
 
 class PreparedSession(Session):
+    """
+    A subclass of the Session class used to represent a prepared session in the development system.
+
+    Attributes
+    ----------
+    uuid : str
+        The unique identifier of the session.
+    mean_abs_diff_transaction : int
+        The mean absolute difference of transactions.
+    mean_abs_diff_transaction_amount : int
+        The mean absolute difference of transaction amounts.
+    median_longitude : float
+        The median longitude of the session.
+    median_latitude : float
+        The median latitude of the session.
+    median_target_ip : int
+        The median target IP address of the session.
+    median_dest_ip : int
+        The median destination IP address of the session.
+    label : str
+        The label of the session.
+
+    Methods
+    -------
+    __init__(self, **kwargs)
+        Initializes the PreparedSession class with a unique identifier, mean absolute differences, medians, and a label.
+    to_json(self)
+        Converts the PreparedSession instance to a JSON-compatible dictionary.
+    returnArray(self)
+        Returns the attributes of the PreparedSession instance as a list.
+    getUuid(self)
+        Returns the unique identifier of the PreparedSession instance.
+    getMeanAbsoluteDifferencingTransactionTimestamps(self)
+        Returns the mean absolute difference of transactions of the PreparedSession instance.
+    getMeanAbsoluteDifferencingTransactionAmount(self)
+        Returns the mean absolute difference of transaction amounts of the PreparedSession instance.
+    getMedianLongitude(self)
+        Returns the median longitude of the PreparedSession instance.
+    getMedianLatitude(self)
+        Returns the median latitude of the PreparedSession instance.
+    getMedianTargetIP(self)
+        Returns the median target IP address of the PreparedSession instance.
+    getMedianDestIP(self)
+        Returns the median destination IP address of the PreparedSession instance.
+    getLabel(self)
+        Returns the label of the PreparedSession instance.
+    to_row(self)
+        Converts the PreparedSession instance to a tuple.
+    from_row(x)
+        Deserializes a row into a PreparedSession instance.
+    """
+    # class implementation...
     '''
     CREATE TABLE PreparedSessions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,16 +107,16 @@ class PreparedSession(Session):
     '''
 
     def __init__(self, **kwargs):
-        self.uuid: str = kwargs.get("uuid", None)
-        self.mean_abs_diff_transaction: int = kwargs.get(
+        self.uuid: Optional[str] = kwargs.get("uuid", None)
+        self.mean_abs_diff_transaction: Optional[int] = kwargs.get(
             "mean_abs_diff_transaction", None)
-        self.mean_abs_diff_transaction_amount: int = kwargs.get(
+        self.mean_abs_diff_transaction_amount: Optional[int] = kwargs.get(
             "mean_abs_diff_transaction_amount", None)
-        self.median_longitude: float = kwargs.get("median_longitude", None)
-        self.median_latitude: float = kwargs.get("median_latitude", None)
-        self.median_target_ip: int = int(kwargs.get("median_target_ip", None))
-        self.median_dest_ip: int = int(kwargs.get("median_dest_ip", None))
-        self.label: str = kwargs.get("label", None)
+        self.median_longitude: Optional[float] = kwargs.get("median_longitude", None)
+        self.median_latitude: Optional[float] = kwargs.get("median_latitude", None)
+        self.median_target_ip: Optional[int] = int(kwargs.get("median_target_ip", None))
+        self.median_dest_ip: Optional[int] = int(kwargs.get("median_dest_ip", None))
+        self.label: Optional[str] = kwargs.get("label", None)
 
     def to_json(self):
         return {
@@ -59,7 +129,7 @@ class PreparedSession(Session):
             'median_dest_ip': self.median_dest_ip,
             'label': self.label}
 
-    def returnArray(self):
+    def return_array(self):
         return [
             self.uuid,
             self.mean_abs_diff_transaction,
@@ -70,28 +140,28 @@ class PreparedSession(Session):
             self.median_dest_ip,
             self.label]  # app logic heavily depends on label being last
 
-    def getUuid(self):
+    def get_uuid(self):
         return self.uuid
 
-    def getMeanAbsoluteDifferencingTransactionTimestamps(self):
+    def get_mean_absolute_differencing_transaction_timestamps(self):
         return self.mean_abs_diff_transaction
 
-    def getMeanAbsoluteDifferencingTransactionAmount(self):
+    def get_mean_absolute_differencing_transaction_amount(self):
         return self.mean_abs_diff_transaction_amount
 
-    def getMedianLongitude(self):
+    def get_median_longitude(self):
         return self.median_longitude
 
-    def getMedianLatitude(self):
+    def get_median_latitude(self):
         return self.median_latitude
 
-    def getMedianTargetIP(self):
+    def get_median_target_ip(self):
         return self.median_target_ip
 
-    def getMedianDestIP(self):
+    def get_median_dest_ip(self):
         return self.median_dest_ip
 
-    def getLabel(self):
+    def get_label(self):
         return self.label
 
     def to_row(self):

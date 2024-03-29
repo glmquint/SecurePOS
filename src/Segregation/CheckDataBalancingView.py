@@ -48,8 +48,8 @@ class CheckDataBalanceView:
         # count each label occurrence
         count_labels = dict(zip(labels, [0] * len(labels)))
         for prepared_session in prepared_session_list:
-            if prepared_session.getLabel() in count_labels:
-                count_labels[prepared_session.getLabel()] += 1
+            if prepared_session.get_label() in count_labels:
+                count_labels[prepared_session.get_label()] += 1
 
         # Set the width of the bars
         bar_width = 0.6

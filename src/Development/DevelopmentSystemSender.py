@@ -44,7 +44,7 @@ class DevelopmentSystemSender:
             status: DevelopmentSystemStatus):
         self.development_system_configurations = development_system_configurations
         self.messaging_sender = JSONSender(
-            f'{os.path.dirname(__file__)}/schema/MessageSchema.json',
+            f'{os.path.dirname(__file__)}/../DataObjects/Schema/MessageSchema.json',
             self.development_system_configurations.messaging_system_receiver)
         self.production_sender = FileSender(
             self.development_system_configurations.production_system_receiver)
