@@ -7,7 +7,26 @@ DATAOBJ_PATH = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
 
 
 class IngestionSystemSender:
-    def __init__(self, config: dict, is_dev_phase: bool):
+    """
+    This class is responsible for sending data to the ingestion system.
+
+    The ingestion_system_sender class initializes various components such as the JSONSender for labels, raw sessions,
+    and prepared sessions. These components are used to manage the sending process,
+    including validating the data against a JSON schema and sending it to the specified URL.
+
+    The sender methods are decorated with a performance monitor to sample execution time after the method is run.
+
+    Attributes:
+        label_sender (JSONSender): Sends labels to the ingestion system.
+        raw_session_sender (JSONSender): Sends raw sessions to the ingestion system.
+        prepared_session_sender (JSONSender): Sends prepared sessions to the ingestion system.
+
+    Methods:
+        send_label(label): Sends a label to the ingestion system.
+        send_raw_session(raw_session): Sends a raw session to the ingestion system.
+        send_prepared_session(prepared_session): Sends a prepared session to the ingestion system.
+    """
+    def __init__(self, config: dict, is_dev_phase: bool) -> None:
         self.label_sender: JSONSender = JSONSender(
             f"{DATAOBJ_PATH}/Label.json", config['label_receiver']['url'])
         self.raw_session_sender: JSONSender = JSONSender(
