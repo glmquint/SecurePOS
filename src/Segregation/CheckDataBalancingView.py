@@ -1,16 +1,34 @@
-import json
-import os
-import numpy as np
-import matplotlib.pyplot as plt
-from random import random
-import matplotlib
-matplotlib.use('Agg')
-
 from src.Segregation.CheckDataBalancingModel import CheckDataBalancingModel
 from src.DataObjects.Session import PreparedSession
 
+import json
+import os
+from random import random
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
+
+
+
 
 class CheckDataBalanceView:
+    """
+        View class responsible for visualizing data balance checks.
+
+        Attributes:
+        __tolerance_parameter (float): The tolerance parameter used for data balancing.
+        __check_data_balance_model (CheckDataBalancingModel): An instance of the data balancing
+                                                            model.
+
+        Methods:
+        plot_check_data_balance():
+            Plots the data balance using matplotlib based on the prepared session data.
+        get_simulated_check_data_balance() -> str:
+            Returns a simulated data balance status.
+        get_check_data_balance() -> str:
+            Retrieves and returns the evaluation state of the data balance check from a JSON file.
+    """
     __tolerance_parameter = 0
 
     def __init__(self, tolerace_parameter, model: CheckDataBalancingModel):
@@ -18,7 +36,9 @@ class CheckDataBalanceView:
         self.__check_data_balance_model: CheckDataBalancingModel = model
 
     def plot_check_data_balance(self):
-
+        """
+        Plots the data balance using matplotlib based on the prepared session data.
+        """
         # retrive data from the model
         prepared_session_list: [
             PreparedSession] = self.__check_data_balance_model.get_prepared_session_list()
