@@ -1,15 +1,4 @@
-import ipaddress
-from uuid import uuid1
-
-import sklearn.neural_network as skl
-
-
-from sklearn.neural_network import MLPClassifier
-from sklearn.preprocessing import StandardScaler
-from sklearn.pipeline import Pipeline
-
 from src.DataObjects.Record import Label
-
 
 class AttackRiskClassifier:
 
