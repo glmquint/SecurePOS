@@ -4,10 +4,11 @@ import os
 from src.JsonIO.JsonValidator import JSONValidator
 
 
-
 class EvaluationSystemConfig:
 
-    def __init__(self, path_config : str = f"{os.path.dirname(__file__)}/config/config.json"):
+    def __init__(
+            self,
+            path_config: str = f"{os.path.dirname(__file__)}/config/config.json"):
         self.sufficient_label_number = 0
         self.simulate_human_task = False
         self.state = 0
@@ -20,7 +21,7 @@ class EvaluationSystemConfig:
         self.messaging_port = 0
         self.load()
 
-    def write_state(self,state=0):
+    def write_state(self, state=0):
         with open(self.path_config, "r") as jsonFile:
             data = json.load(jsonFile)
 
@@ -30,7 +31,6 @@ class EvaluationSystemConfig:
             json.dump(data, jsonFile, indent=4)
 
         self.state = state
-
 
     def load(self):
         validator = JSONValidator(self.path_config_validator)

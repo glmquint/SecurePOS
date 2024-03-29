@@ -19,13 +19,18 @@ class TrainingOrchestrator:
     hyperparameters: HyperParameterLimit = None
     configurations: DevelopmentSystemConfigurations = None
 
-    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus,
-                 configurations: DevelopmentSystemConfigurations):
+    def __init__(
+            self,
+            status: DevelopmentSystemStatus,
+            report_controller: ReportController,
+            message_bus: MessageBus,
+            configurations: DevelopmentSystemConfigurations):
         self.message_bus = message_bus
         self.report_controller = report_controller
         self.status = status
         self.hyperparameters = configurations.hyperparameters
-        self.train_process = TrainProcess(self.status, self.message_bus, configurations)
+        self.train_process = TrainProcess(
+            self.status, self.message_bus, configurations)
         self.configurations = configurations
 
     def get_ai_export_response(self) -> int:
@@ -35,7 +40,8 @@ class TrainingOrchestrator:
             with open(f'{os.path.dirname(__file__)}/learning_result.json', 'r') as json_file:
                 ret_val = 0
                 data = json.load(json_file)
-                JSONValidator(f"{os.path.dirname(__file__)}/../schema/result_schema.json").validate_data(data)
+                JSONValidator(
+                    f"{os.path.dirname(__file__)}/../schema/result_schema.json").validate_data(data)
                 if data['result'] in [""]:
                     ret_val = -1  # AI expert has not filled the file
                 elif data['result'] in ["ok", "OK", "Ok", "oK"]:
@@ -79,14 +85,17 @@ class TrainingOrchestrator:
                 if self.configurations.stop_and_go:
                     response = self.get_ai_export_response()
                 else:
-                    response = random.randint(1, 1) # TODO: change me
+                    response = random.randint(1, 1)  # TODO: change me
                 if response < 0:
                     self.status.save_status()
                 elif response == 0:
                     self.status.status = "set_number_of_iterations"
-                    self.train_process.remove_classifiers(f'{os.path.dirname(__file__)}/../classifiers')
-                    self.train_process.remove_precedent_response(f'{os.path.dirname(__file__)}/learning_result')
-                    self.train_process.remove_precedent_response(f'{os.path.dirname(__file__)}/number_of_iterations')
+                    self.train_process.remove_classifiers(
+                        f'{os.path.dirname(__file__)}/../classifiers')
+                    self.train_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/learning_result')
+                    self.train_process.remove_precedent_response(
+                        f'{os.path.dirname(__file__)}/number_of_iterations')
                     if self.configurations.stop_and_go:
                         self.status.save_status()
                     else:

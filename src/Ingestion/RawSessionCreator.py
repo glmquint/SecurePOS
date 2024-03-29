@@ -8,15 +8,20 @@ from src.JsonIO.JSONSender import JSONSender
 from src.Storage.StorageController import StorageController
 from src.util import log
 
+
 class RawSessionCreator:
 
-    def __init__(self, config, storage_controller: StorageController, phase_tracker: PhaseTracker,
-                 sender : IngestionSystemSender) -> None:
-        self.label                  = None
-        self.number_of_systems      = config['number_of_systems']
-        self.storage_controller     = storage_controller
-        self.phase_tracker          = phase_tracker
-        self.ingestion_sys_sender   = sender
+    def __init__(
+            self,
+            config,
+            storage_controller: StorageController,
+            phase_tracker: PhaseTracker,
+            sender: IngestionSystemSender) -> None:
+        self.label = None
+        self.number_of_systems = config['number_of_systems']
+        self.storage_controller = storage_controller
+        self.phase_tracker = phase_tracker
+        self.ingestion_sys_sender = sender
 
     def isNumberOfRecordsSufficient(self) -> bool:
         uuid_with_max_count = self.storage_controller.isNumberOfRecordsSufficient()
@@ -26,11 +31,17 @@ class RawSessionCreator:
         return uuid_with_max_count[0][1] >= self.number_of_systems
 
     def createRawSession(self) -> None:
-        rows_with_max_count = self.storage_controller.retrieve_by_column('uuid', self.max_uuid)
-        self.raw_session = RawSession(records = [Record.from_row(**x) for x in rows_with_max_count])
+        rows_with_max_count = self.storage_controller.retrieve_by_column(
+            'uuid', self.max_uuid)
+        self.raw_session = RawSession(
+            records=[
+                Record.from_row(
+                    **x) for x in rows_with_max_count])
         assert self.raw_session is not None
         assert len(self.raw_session.records) > 0
-        label_records = [x for x in self.raw_session.records if type(x) == Label]
+        label_records = [
+            x for x in self.raw_session.records if isinstance(
+                x, Label)]
         self.label = label_records[-1] if len(label_records) > 0 else None
 
     def markMissingSamples(self) -> None:
@@ -43,9 +54,10 @@ class RawSessionCreator:
     def isRawSessionValid(self) -> bool:
         if self.phase_tracker.isEvalPhase() and self.label is None:
             return False
-        return all( # all missing samples ...
-            [any( # ... should have at least one valid sample ...
-                [r.__dict__.get(x, None) for r in self.raw_session.records] # ... across all records in the raw session
+        return all(  # all missing samples ...
+            [any(  # ... should have at least one valid sample ...
+                # ... across all records in the raw session
+                [r.__dict__.get(x, None) for r in self.raw_session.records]
             ) for x in self.missing_samples]
         )
 
@@ -64,4 +76,3 @@ class RawSessionCreator:
                 self.ingestion_sys_sender.send_label(self.label)
             self.ingestion_sys_sender.send_raw_session(self.raw_session)
             self.phase_tracker.increment()
-

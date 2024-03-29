@@ -6,7 +6,10 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 
 class ProductionSystemConfig:
-    def __init__(self, path_to_config, path_to_schema : str = f'{os.path.dirname(__file__)}/config/configSchema.json'):
+    def __init__(
+            self,
+            path_to_config,
+            path_to_schema: str = f'{os.path.dirname(__file__)}/config/configSchema.json'):
         # Open the configuration file and read the values
         try:
             with open(path_to_config, 'r') as file:
@@ -27,4 +30,3 @@ class ProductionSystemConfig:
     def __str__(self):
         return f"Monitoring Window: {self.monitoring_window},\nEvaluation Window: {self.evaluation_window},\n" \
                f"Client URL: {self.client_url},\nEvaluation URL: {self.evaluation_url}"
-

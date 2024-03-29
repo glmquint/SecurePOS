@@ -5,7 +5,10 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 
 class PreparationSystemConfig:
-    def __init__(self, config_path:str, schema_path:str = f"{os.path.dirname(__file__)}/../DataObjects/Schema/PreparationSystemConfigSchema.json"):
+    def __init__(
+            self,
+            config_path: str,
+            schema_path: str = f"{os.path.dirname(__file__)}/../DataObjects/Schema/PreparationSystemConfigSchema.json"):
         self.ingestion_sys_sender = None
         self.preparation_sys_receiver = None
         self.prepared_session_creator = None
@@ -18,6 +21,6 @@ class PreparationSystemConfig:
             data = json.load(f)
             self.init_from_json(data)
 
-    def init_from_json(self, json_data:dict):
+    def init_from_json(self, json_data: dict):
         self.validator.validate_data(json_data)
         self.__dict__ = json_data

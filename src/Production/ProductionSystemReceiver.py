@@ -12,9 +12,11 @@ class ProductionSystemReceiver:
         self.port = port
         self.system_bus = systemBus
         self.server = Server()
-        self.server.add_resource(JSONEndpoint, "/PreparedSession",
-                                 recv_callback=self.session_callback,
-                                json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/PreparedSessionSchema.json")
+        self.server.add_resource(
+            JSONEndpoint,
+            "/PreparedSession",
+            recv_callback=self.session_callback,
+            json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/PreparedSessionSchema.json")
         self.server.add_resource(FileEndpoint, "/Classifier",
                                  recv_callback=self.classifier_callback)
 
@@ -38,4 +40,3 @@ class ProductionSystemReceiver:
 
     def run(self):
         self.server.run(port=self.port)
-

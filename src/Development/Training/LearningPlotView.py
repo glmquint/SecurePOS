@@ -1,10 +1,9 @@
+from src.Development.Training.LearningPlotModel import LearningPlotModel
+import matplotlib.pyplot as plt
 import os
 
 import matplotlib
 matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-
-from src.Development.Training.LearningPlotModel import LearningPlotModel
 
 
 class LearningPlotView:
@@ -18,10 +17,16 @@ class LearningPlotView:
     def update(self):
         if os.path.exists(self.path_to_save):
             os.remove(self.path_to_save)
-        plt.plot(range(1, self.model.number_of_generations), self.model.loss_curve, label='Loss')
+        plt.plot(
+            range(
+                1,
+                self.model.number_of_generations),
+            self.model.loss_curve,
+            label='Loss')
         plt.xticks(range(1, self.model.number_of_generations))
         plt.xlabel('Number of generations')
         plt.ylabel('Loss')
-        plt.title(f'Learning plot (Loss threshold: {self.model.loss_threshold})')
+        plt.title(
+            f'Learning plot (Loss threshold: {self.model.loss_threshold})')
         plt.savefig(self.path_to_save)
         plt.close()

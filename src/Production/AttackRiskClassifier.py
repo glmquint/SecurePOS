@@ -33,7 +33,8 @@ class AttackRiskClassifier:
         except Exception as e:
             raise Exception(f"An error occurred, wrong data received: {e}")
         try:
-            attack_risk_label = self.attack_risk_classifier.predict([prepared_session_features])[0]
+            attack_risk_label = self.attack_risk_classifier.predict(
+                [prepared_session_features])[0]
             print(f"Attack risk label: {attack_risk_label}")
             return Label(label=attack_risk_label, uuid=prepared_session.uuid)
         except Exception as e:

@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource, Api
 from src.JsonIO.JsonValidator import JSONValidator
 
+
 class JSONEndpoint(Resource):
 
     def __init__(self, **kwargs):
@@ -23,4 +24,3 @@ class JSONEndpoint(Resource):
         except Exception as e:
             print(e, __name__)
             return "Bad Request", 400
-

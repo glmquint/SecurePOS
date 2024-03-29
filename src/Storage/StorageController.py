@@ -13,21 +13,23 @@ class StorageController:
 
     def __init__(self, dbConfig, obj_type, buffer_size=1):
         self.obj_type = obj_type
-        self.DBConnector = DBConnector(name=dbConfig['name'], table_name=dbConfig['table_name'])
+        self.DBConnector = DBConnector(
+            name=dbConfig['name'],
+            table_name=dbConfig['table_name'])
         self.count_updated = Event()
         self.count_updated.set()
         self.buffer_size = buffer_size
         self.buffer = []
-        self.timeout_flush_thread = Thread(target=self.timeout_flush, daemon=True)
+        self.timeout_flush_thread = Thread(
+            target=self.timeout_flush, daemon=True)
         self.timeout_flush_thread.start()
-
 
     @log
     def save(self, obj) -> bool:
         if not issubclass(type(obj), self.obj_type):
-            raise Exception(f'Invalid type, expected {self.obj_type} got {type(obj)}')
-        #row = [obj.to_row()]
-        #todo fix this to be parametric
+            raise Exception(
+                f'Invalid type, expected {self.obj_type} got {type(obj)}')
+        # row = [obj.to_row()]
         row = [self.obj_type.to_row(obj)]
         self.buffer.extend(row)
         if len(self.buffer) >= self.buffer_size:
@@ -64,7 +66,7 @@ class StorageController:
             return False
         return True
 
-    def remove_joined_labels(self,number:int) -> [type]:
+    def remove_joined_labels(self, number: int) -> [type]:
         try:
             self.DBConnector.remove_joined_labels(number)
             self.count_updated.set()
@@ -73,7 +75,7 @@ class StorageController:
             return False
         return True
 
-    def retrieve_n_labels(self,number:int,blocking=True) -> [type]:
+    def retrieve_n_labels(self, number: int, blocking=True) -> [type]:
         if blocking:
             self.wait_count_updated()
         try:
@@ -81,11 +83,11 @@ class StorageController:
             labels = []
             security_labels = []
             for x in joined_result:
-                l1 = Label(label=x[1],uuid=x[2])
+                l1 = Label(label=x[1], uuid=x[2])
                 l2 = Label(label=x[4], uuid=x[5])
                 labels.append(l1)
                 security_labels.append(l2)
-            result = [labels,security_labels]
+            result = [labels, security_labels]
         except Exception as e:
             print(e)
             with open("error.log", "a") as f:
@@ -93,11 +95,12 @@ class StorageController:
             return []
         return result
 
-    def retrieve_n(self, number:int,blocking=True) -> [type]:
+    def retrieve_n(self, number: int, blocking=True) -> [type]:
         if blocking:
             self.wait_count_updated()
         try:
-            result = [self.obj_type.from_row(x) for x in self.DBConnector.retrieve_n(number)]
+            result = [self.obj_type.from_row(
+                x) for x in self.DBConnector.retrieve_n(number)]
         except Exception as e:
             print(e)
             with open("error.log", "a") as f:
@@ -105,7 +108,7 @@ class StorageController:
             return []
         return result
 
-    def remove_n(self,number:int):
+    def remove_n(self, number: int):
         try:
             self.DBConnector.remove_n(number)
             self.count_updated.set()

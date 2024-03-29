@@ -11,23 +11,31 @@ from src.util import monitorPerformance
 
 
 class LabelReceiver:
-    def __init__(self,port = 0):
+    def __init__(self, port=0):
         self.port = port
         self.server = Server()
         self.mbus = MessageBus(["label", "sec_label"])
-        self.scontroller_label = StorageController({'name': 'evaluation', 'table_name': 'labels'},Label)
-        self.scontroller_security = StorageController({'name': 'evaluation', 'table_name': 'security_labels'},Label)
+        self.scontroller_label = StorageController(
+            {'name': 'evaluation', 'table_name': 'labels'}, Label)
+        self.scontroller_security = StorageController(
+            {'name': 'evaluation', 'table_name': 'security_labels'}, Label)
         return
 
     def receive(self):
-        self.server.add_resource(JSONEndpoint, "/evaluation_label", recv_callback=self.callback_f,
-                                 json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json")
-        self.server.add_resource(JSONEndpoint, "/evaluation_security_label", recv_callback=self.callback_s,
-                                 json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json")
+        self.server.add_resource(
+            JSONEndpoint,
+            "/evaluation_label",
+            recv_callback=self.callback_f,
+            json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json")
+        self.server.add_resource(
+            JSONEndpoint,
+            "/evaluation_security_label",
+            recv_callback=self.callback_s,
+            json_schema_path=f"{os.path.dirname(__file__)}/../DataObjects/Schema/Label.json")
         if self.port == 0:
             thread = Thread(target=self.server.run)
         else:
-            thread = Thread(target=self.server.run,args=[False,self.port])
+            thread = Thread(target=self.server.run, args=[False, self.port])
         thread.daemon = True
         thread.start()
 
@@ -40,7 +48,6 @@ class LabelReceiver:
         self.scontroller_security.save(data)
         self.mbus.pushTopic("sec_label", data)
 
-
     @monitorPerformance(should_sample_after=False)
     def callback_f(self, json_data):
         print("Received label.")
@@ -49,4 +56,3 @@ class LabelReceiver:
         print(data.label)
         self.scontroller_label.save(data)
         self.mbus.pushTopic("label", data)
-

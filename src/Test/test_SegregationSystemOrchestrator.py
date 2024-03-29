@@ -40,9 +40,9 @@ def send_label():
     i = 0
     while True:
         try:
-            r = requests.post(
-                'http://127.0.0.1:' + str(segregationSystemConfig.get_segregation_system_port()) + '/segregationSystem',
-                json=produce().__dict__)
+            r = requests.post('http://127.0.0.1:' +
+                              str(segregationSystemConfig.get_segregation_system_port()) +
+                              '/segregationSystem', json=produce().__dict__)
             if str(r.status_code) != str(200):
                 print("user non attivo")
             else:
@@ -56,7 +56,8 @@ def send_label():
 
 def test_run():
     thread2 = Thread(target=send_label)
-    # this will allow the main thread to exit even if the server is still running
+    # this will allow the main thread to exit even if the server is still
+    # running
 
     thread2.daemon = True
     thread2.start()
@@ -65,5 +66,6 @@ def test_run():
     segregation_system_orchestrator.run()
 
     assert True
+
 
 test_run()

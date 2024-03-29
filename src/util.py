@@ -17,11 +17,15 @@ def log(func):
         # get current time with milliseconds
         try:
             arg = [a.__dict__ for a in args]
-        except:
+        except BaseException:
             arg = args
         with open(f"{func.__name__}.log", 'a') as f:
-            f.write(f"[{time.time()}]: Calling {func.__name__} with args {arg} and kwargs {kwargs}\n")
-        print(" " * nesting_level + f"[{time.time():.7f}]: Calling {func.__name__} with args {arg} and kwargs {kwargs}")
+            f.write(
+                f"[{time.time()}]: Calling {func.__name__} with args {arg} and kwargs {kwargs}\n")
+        print(
+            " " *
+            nesting_level +
+            f"[{time.time():.7f}]: Calling {func.__name__} with args {arg} and kwargs {kwargs}")
         nesting_level += 1
         result = func(*args, **kwargs)
         nesting_level -= 1
@@ -57,7 +61,7 @@ def continous_sending():
     while True:
         performanceSample = message_bus.popTopic("performance_sample")
         requests.post(sampler_endpoint, json=performanceSample.to_json())
-        #print(f"not sending performance sample: {performanceSample.to_json()}")
+        # print(f"not sending performance sample: {performanceSample.to_json()}")
 
 
 message_bus = MessageBus(['performance_sample'])
@@ -80,10 +84,12 @@ def monitorPerformance(should_sample_after: bool):
             timestamp = int(timestamp * 10000000)
             sample = {"timestamp": timestamp,
                       "function_name": func.__name__,
-                      "class_name": str(args[0].__class__).split("'>", maxsplit=1)[0].split('.')[-1]}
+                      "class_name": str(args[0].__class__).split("'>",
+                                                                 maxsplit=1)[0].split('.')[-1]}
             performance_sample = PerformanceSample(**sample)
             # We push on a queue instead of sending directly to the endpoint to avoid blocking the executing thread
-            # A separate thread will continuously send the performance samples to the endpoint
+            # A separate thread will continuously send the performance samples
+            # to the endpoint
             message_bus.pushTopic("performance_sample", performance_sample)
             return result
 

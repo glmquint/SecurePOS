@@ -8,7 +8,10 @@ class ValidationReportView:
     path_to_save: str = None
     model: ValidationReportModel = None
 
-    def __init__(self, path: str, validation_report_model: ValidationReportModel):
+    def __init__(
+            self,
+            path: str,
+            validation_report_model: ValidationReportModel):
         self.path_to_save = f'{path}/Validation_Report.csv'
         self.model = validation_report_model
 

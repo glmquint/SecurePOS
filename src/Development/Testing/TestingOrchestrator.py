@@ -16,13 +16,18 @@ class TestingOrchestrator:
     message_bus: MessageBus = None
     configurations: DevelopmentSystemConfigurations = None
 
-    def __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus,
-                 configurations: DevelopmentSystemConfigurations):
+    def __init__(
+            self,
+            status: DevelopmentSystemStatus,
+            report_controller: ReportController,
+            message_bus: MessageBus,
+            configurations: DevelopmentSystemConfigurations):
         self.report_controller = report_controller
         self.message_bus = message_bus
         self.status = status
         self.configurations = configurations
-        self.training_process = TrainProcess(self.status, self.message_bus, self.configurations)
+        self.training_process = TrainProcess(
+            self.status, self.message_bus, self.configurations)
 
     def check_test_result(self) -> int:
         ret_val = -1
@@ -30,7 +35,8 @@ class TestingOrchestrator:
             with open(f'{os.path.dirname(__file__)}/test_result.json', 'r') as json_file:
                 ret_val = 0
                 data = json.load(json_file)
-                JSONValidator(f"{os.path.dirname(__file__)}/../schema/result_schema.json").validate_data(data)
+                JSONValidator(
+                    f"{os.path.dirname(__file__)}/../schema/result_schema.json").validate_data(data)
                 if data['result'] in [""]:
                     ret_val = -1
                 elif data['result'] in ["ok", "OK", "Ok"]:
@@ -51,7 +57,7 @@ class TestingOrchestrator:
                 if self.configurations.stop_and_go:
                     response = self.check_test_result()
                 else:
-                    response = random.randint(1, 1) # TODO: change to 0
+                    response = random.randint(1, 1)  # TODO: change to 0
                 if response < 0:
                     self.status.save_status()
                 elif response == 0:

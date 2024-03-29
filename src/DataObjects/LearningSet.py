@@ -4,15 +4,15 @@ import pandas as pd
 
 
 class LearningSet:
-    trainingSet        : pd.DataFrame   = None
-    validationSet      : pd.DataFrame   = None
-    testSet            : pd.DataFrame   = None
-    trainingSetLabel   : [str]          = None
-    validationSetLabel : [str]          = None
-    testSetLabel       : [str]          = None
+    trainingSet: pd.DataFrame = None
+    validationSet: pd.DataFrame = None
+    testSet: pd.DataFrame = None
+    trainingSetLabel: [str] = None
+    validationSetLabel: [str] = None
+    testSetLabel: [str] = None
 
     # maybe make a separated builder for json
-    def __init__(self, dic, fromJson = False):
+    def __init__(self, dic, fromJson=False):
         if fromJson:
             self.learningSetfromJson(dic)
             return
@@ -24,9 +24,15 @@ class LearningSet:
         self.testSetLabel = dic['testSetLabel']
 
     def learningSetfromJson(self, dic):
-        self.trainingSet = pd.DataFrame(dic['trainingSet']['data'], columns=dic['trainingSet']['columns'])
-        self.validationSet = pd.DataFrame(dic['validationSet']['data'], columns=dic['validationSet']['columns'])
-        self.testSet = pd.DataFrame(dic['testSet']['data'], columns=dic['testSet']['columns'])
+        self.trainingSet = pd.DataFrame(
+            dic['trainingSet']['data'],
+            columns=dic['trainingSet']['columns'])
+        self.validationSet = pd.DataFrame(
+            dic['validationSet']['data'],
+            columns=dic['validationSet']['columns'])
+        self.testSet = pd.DataFrame(
+            dic['testSet']['data'],
+            columns=dic['testSet']['columns'])
         self.trainingSetLabel = dic['trainingSetLabel']
         self.validationSetLabel = dic['validationSetLabel']
         self.testSetLabel = dic['testSetLabel']

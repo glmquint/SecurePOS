@@ -5,10 +5,11 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 
 class SegregationSystemConfig:
-    def __init__(self, config_path: str = f'{os.path.dirname(__file__)}/Configurations/segregationConfiguration.json',
-                 validate_path: str = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
-                                      f"/SegregationSystemConfigSchema.json"
-                 ):
+    def __init__(
+            self,
+            config_path: str = f'{os.path.dirname(__file__)}/Configurations/segregationConfiguration.json',
+            validate_path: str = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
+            f"/SegregationSystemConfigSchema.json"):
         json_parameter = None
         with open(config_path, 'r') as file:
             json_parameter = json.load(file)
@@ -16,21 +17,33 @@ class SegregationSystemConfig:
         validator = JSONValidator(validate_path)
         validator.validate_data(json_parameter)
 
-        self.__sufficient_session_number = json_parameter.get("sufficientSessionNumber")
-        self.__segregation_system_port = json_parameter.get("segregationSystemPort")
-        self.__segregation_system_endpoint = json_parameter.get("segregationSystemEndpoint")
-        self.__development_system_ip = json_parameter.get("developmentSystemIp")
-        self.__development_system_port = json_parameter.get("developmentSystemPort")
-        self.__development_system_endpoint = json_parameter.get("developmentSystemEndpoint")
-        self.__tolerance_data_balancing = json_parameter.get("toleranceDataBalancing")
+        self.__sufficient_session_number = json_parameter.get(
+            "sufficientSessionNumber")
+        self.__segregation_system_port = json_parameter.get(
+            "segregationSystemPort")
+        self.__segregation_system_endpoint = json_parameter.get(
+            "segregationSystemEndpoint")
+        self.__development_system_ip = json_parameter.get(
+            "developmentSystemIp")
+        self.__development_system_port = json_parameter.get(
+            "developmentSystemPort")
+        self.__development_system_endpoint = json_parameter.get(
+            "developmentSystemEndpoint")
+        self.__tolerance_data_balancing = json_parameter.get(
+            "toleranceDataBalancing")
         self.__service_flag = json_parameter.get("serviceFlag")
-        self.__percentage_training_split = json_parameter.get("percentageTrainingSplit")
-        self.__percentage_test_split = json_parameter.get("percentageTestSplit")
-        self.__percentage_validation_split = json_parameter.get("percentageValidationSplit")
+        self.__percentage_training_split = json_parameter.get(
+            "percentageTrainingSplit")
+        self.__percentage_test_split = json_parameter.get(
+            "percentageTestSplit")
+        self.__percentage_validation_split = json_parameter.get(
+            "percentageValidationSplit")
 
         self.__messaging_system_ip = json_parameter.get("messagingSystemIp")
-        self.__messaging__system_port = json_parameter.get("messagingSystemPort")
-        self.__messaging__system_endpoint = json_parameter.get("messagingSystemEndpoint")
+        self.__messaging__system_port = json_parameter.get(
+            "messagingSystemPort")
+        self.__messaging__system_endpoint = json_parameter.get(
+            "messagingSystemEndpoint")
 
     def get_sufficient_session_number(self):
         return self.__sufficient_session_number

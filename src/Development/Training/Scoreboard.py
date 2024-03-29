@@ -16,7 +16,12 @@ class Scoreboard:
         self.train_error = []
         self.validation_error = []
 
-    def insert_classifier(self, classifier: Classifier, mse: float, train_error: float, validation_error: float):
+    def insert_classifier(
+            self,
+            classifier: Classifier,
+            mse: float,
+            train_error: float,
+            validation_error: float):
         index = bisect.bisect(self.mse, mse)
         if len(self.mse) < self.limit:
             self.mse.insert(index, mse)

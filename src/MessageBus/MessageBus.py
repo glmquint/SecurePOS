@@ -35,4 +35,4 @@ if __name__ == "__main__":
     msg.pushTopic("a", 3)
     print(msg.popTopic("a"))
     print(msg.popTopic("a"))
-    print(msg.popTopic("a")) # would block
+    print(msg.popTopic("a"))  # would block

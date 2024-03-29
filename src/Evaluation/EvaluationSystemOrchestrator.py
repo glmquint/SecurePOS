@@ -22,7 +22,7 @@ class EvaluationSystemOrchestrator:
 
     def isnumberoflabelssufficient(self):
         return self.label_counter >= self.config.sufficient_label_number \
-               and self.security_label_counter >= self.config.sufficient_label_number
+            and self.security_label_counter >= self.config.sufficient_label_number
 
     def run(self):
         print("start")
@@ -56,10 +56,11 @@ class EvaluationSystemOrchestrator:
                     return
             else:
                 self.evaluation.getresult()
-                self.sender.sendtomessaging(Message(msg="Evaluation complete."))
+                self.sender.sendtomessaging(
+                    Message(msg="Evaluation complete."))
                 self.config.write_state(0)
         return
 
 
 if __name__ == "__main__":
-        EvaluationSystemOrchestrator().main()
+    EvaluationSystemOrchestrator().main()

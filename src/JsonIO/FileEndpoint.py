@@ -2,6 +2,7 @@ from flask import request
 from flask_restful import Resource, Api
 from src.JsonIO.JsonValidator import JSONValidator
 
+
 class FileEndpoint(Resource):
 
     def __init__(self, **kwargs):
@@ -14,4 +15,3 @@ class FileEndpoint(Resource):
             return "Expected file", 460
         self.recv_callback(file)
         return "OK", 200
-

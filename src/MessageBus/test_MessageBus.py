@@ -28,5 +28,7 @@ class TestMessageBus(TestCase):
         time.sleep(2)
 
         # Assert if the secondary thread is still alive, meaning it's blocked
-        self.assertTrue(secondary_thread.is_alive(), "Secondary thread is already dead")
+        self.assertTrue(
+            secondary_thread.is_alive(),
+            "Secondary thread is already dead")
         msg.pushTopic("a", 4)

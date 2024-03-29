@@ -4,17 +4,26 @@ from src.Segregation.CheckDataBalancingView import *
 
 class SegregationPlotController:
 
-    def __init__(self, storage_controller, check_data_balance_tolerance, limit_prepared_session):
+    def __init__(
+            self,
+            storage_controller,
+            check_data_balance_tolerance,
+            limit_prepared_session):
         self.__limit_prepared_session = limit_prepared_session
         self.__storage_controller = storage_controller
-        self.__check_data_balancing_model = CheckDataBalancingModel(storage_controller)
-        self.__check_data_balancing_view = CheckDataBalanceView(check_data_balance_tolerance, self.__check_data_balancing_model)
-        self.__check_input_coverage_model = CheckInputCoverageModel(storage_controller)
-        self.__check_input_coverage_view = CheckInputCoverageView(self.__check_input_coverage_model)
+        self.__check_data_balancing_model = CheckDataBalancingModel(
+            storage_controller)
+        self.__check_data_balancing_view = CheckDataBalanceView(
+            check_data_balance_tolerance, self.__check_data_balancing_model)
+        self.__check_input_coverage_model = CheckInputCoverageModel(
+            storage_controller)
+        self.__check_input_coverage_view = CheckInputCoverageView(
+            self.__check_input_coverage_model)
 
     def plot_data_balance(self):
         # retrieve data from the model
-        self.__check_data_balancing_model.retrive_prepared_session(self.__limit_prepared_session)
+        self.__check_data_balancing_model.retrive_prepared_session(
+            self.__limit_prepared_session)
         # pass data to the view to plot
         self.__check_data_balancing_view.plot_check_data_balance()
 
@@ -53,4 +62,3 @@ class SegregationPlotController:
                 f.close()
         except Exception as e:
             print(e)
-

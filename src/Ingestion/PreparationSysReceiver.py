@@ -11,15 +11,26 @@ from src.util import log, monitorPerformance
 
 DATAOBJ_PATH = f"{os.path.dirname(__file__)}/../DataObjects/Schema"
 
+
 class PreparationSysReceiver:
-    def __init__(self, config:dict, raw_session_topic:str, storage_controller:StorageController, message_bus:MessageBus):
-        self.raw_session_topic  = raw_session_topic
+    def __init__(
+            self,
+            config: dict,
+            raw_session_topic: str,
+            storage_controller: StorageController,
+            message_bus: MessageBus):
+        self.raw_session_topic = raw_session_topic
         self.storage_controller = storage_controller
-        self.message_bus        = message_bus
-        self.server             = Server()
-        self.port               = config['port']
+        self.message_bus = message_bus
+        self.server = Server()
+        self.port = config['port']
         for endpoint in config['endpoints']:
-            self.server.add_resource(JSONEndpoint, endpoint['endpoint'], recv_callback=self.__getattribute__(endpoint['callback']), json_schema_path=f"{DATAOBJ_PATH}/{endpoint['schema']}")
+            self.server.add_resource(
+                JSONEndpoint,
+                endpoint['endpoint'],
+                recv_callback=self.__getattribute__(
+                    endpoint['callback']),
+                json_schema_path=f"{DATAOBJ_PATH}/{endpoint['schema']}")
 
     @monitorPerformance(should_sample_after=False)
     def receiveRecord(self, json_data):
@@ -37,7 +48,8 @@ class PreparationSysReceiver:
             'amount': 'amount'
         }
         if any(k not in expected_key.keys() for k in json_data.keys()):
-            raise Exception(f"Expected {expected_key.keys()}, got {json_data.keys()}")
+            raise Exception(
+                f"Expected {expected_key.keys()}, got {json_data.keys()}")
         json_data = {expected_key[k]: v for k, v in json_data.items()}
         if 'uuid' not in json_data:
             raise Exception(f"Expected uuid, got {json_data}")
@@ -56,7 +68,10 @@ class PreparationSysReceiver:
 
     @monitorPerformance(should_sample_after=False)
     def receiveRawSession(self, json_data):
-        parsed_json_data = {'records': [Record.from_row(**record) for record in json_data['records']]}
+        parsed_json_data = {
+            'records': [
+                Record.from_row(
+                    **record) for record in json_data['records']]}
         raw_session = RawSession(**parsed_json_data)
         self.message_bus.pushTopic(self.raw_session_topic, raw_session)
 
