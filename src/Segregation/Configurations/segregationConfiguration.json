@@ -6,8 +6,8 @@
   "developmentSystemPort" : 5002,
   "developmentSystemEndpoint": "learning_set",
 
-  "messagingSystemIp" : 6000,
-  "messagingSystemPort" : "192.168.140.166",
+  "messagingSystemIp" : "192.168.140.166",
+  "messagingSystemPort" : 6000,
   "messagingSystemEndpoint" : "messaging_system",
 
   "toleranceDataBalancing" : 10,
