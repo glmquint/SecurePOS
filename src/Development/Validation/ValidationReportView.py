@@ -1,10 +1,27 @@
 import os
-
-from src.Development.Validation import ValidationReportModel
 import pandas as pd
+from src.Development.Validation import ValidationReportModel
 
 
 class ValidationReportView:
+    """
+    A class used to view the validation report in the development system.
+
+    Attributes
+    ----------
+    path_to_save : str
+        The path where the validation report will be saved.
+    model : ValidationReportModel
+        The model of the validation report.
+
+    Methods
+    -------
+    __init__(self, path: str, validation_report_model: ValidationReportModel)
+        Initializes the ValidationReportView class with a path and a validation report model.
+    update(self)
+        Updates the validation report view by saving the model to a CSV file.
+    """
+    # class implementation...class ValidationReportView:
     path_to_save: str = None
     model: ValidationReportModel = None
 

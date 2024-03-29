@@ -4,6 +4,48 @@ from src.JsonIO.JsonValidator import JSONValidator
 
 
 class DevelopmentSystemConfigurations:
+    """
+    A class used to represent the configurations for the development system.
+
+    Attributes
+    ----------
+    topics : list
+        A list of topics for the development system.
+    production_system_receiver : str
+        The receiver for the production system.
+    messaging_system_receiver : str
+        The receiver for the messaging system.
+    hyperparameters : HyperParameterLimit
+        The hyperparameters for the development system.
+    validator : JSONValidator
+        The validator for the JSON data.
+    loss_threshold : float
+        The loss threshold for the development system.
+    overfitting_tolerance : float
+        The overfitting tolerance for the development system.
+    generalization_tolerance : float
+        The generalization tolerance for the development system.
+    port : int
+        The port for the development system.
+    endpoint_url : str
+        The endpoint URL for the development system.
+    classifiers_limit : int
+        The limit for the classifiers in the development system.
+    stop_and_go : bool
+        The stop and go flag for the development system.
+
+    Methods
+    -------
+    __init__(self, schema_path: str)
+        Initializes the DevelopmentSystemConfigurations class.
+    update_config(self, data: dict, should_validate: bool = True)
+        Updates the configuration with the provided data.
+    load_config(self, path: str, should_validate: bool = False)
+        Loads the configuration from a JSON file.
+    to_dict(self)
+        Returns the configuration as a dictionary.
+    """
+    # class implementation...
     topics: [str] = None
     production_system_receiver: str = None
     messaging_system_receiver: str = None
@@ -38,7 +80,7 @@ class DevelopmentSystemConfigurations:
         self.stop_and_go = data['stop&go']
 
     def load_config(self, path: str, should_validate: bool = False):
-        with open(path, 'r') as json_file:
+        with open(path, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
             self.update_config(data, should_validate)
             print(f'[{self.__class__.__name__}]: configurations loaded successfully')
@@ -57,6 +99,3 @@ class DevelopmentSystemConfigurations:
             "classifiers_limit": self.classifiers_limit,
             "stop&go": self.stop_and_go
         }
-
-    def to_json(self):
-        return json.dumps(self.to_dict())

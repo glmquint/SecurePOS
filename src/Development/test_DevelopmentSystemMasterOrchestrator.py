@@ -7,6 +7,17 @@ from src.Development.DevelopmentSystemStatus import DevelopmentSystemStatus
 
 
 class TestDevelopmentSystemMasterOrchestrator(TestCase):
+    """
+    A class used to test the DevelopmentSystemMasterOrchestrator class in the development system.
+
+    Methods
+    -------
+    test_start(self)
+        Tests the start method of the DevelopmentSystemMasterOrchestrator class.
+    """
+    # class implementation...class
+    # TestDevelopmentSystemMasterOrchestrator(TestCase):
+
     def test_start(self):
         status = DevelopmentSystemStatus(
             f"{os.path.dirname(__file__)}/development_system_status.json",
