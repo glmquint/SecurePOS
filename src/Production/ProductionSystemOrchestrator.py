@@ -18,19 +18,21 @@ class ProductionSystemOrchestrator:
         if not config:
             config = ProductionSystemConfig(
                 f'{os.path.dirname(__file__)}/config/configSchema.json')
-        self.productionConfig = config
-        self.phaseTracker = PhaseTracker(
+        self.production_config = config
+        self.phase_tracker = PhaseTracker(
             {
-                "production_phase_duration": self.productionConfig.monitoring_window,
-                "evaluation_phase_duration": self.productionConfig.evaluation_window,
-                "phase": self.productionConfig.phase})
-        self.systemBus = MessageBus(["PreparedSession", "Classifier"])
-        self.prodSysRec = ProductionSystemReceiver(
-            self.productionConfig.server_port, self.systemBus)
+                "production_phase_duration": self.production_config.monitoring_window,
+                "evaluation_phase_duration": self.production_config.evaluation_window,
+                "phase": self.production_config.phase
+            }
+        )
+        self.system_bus = MessageBus(["PreparedSession", "Classifier"])
+        self.prod_sys_receiver = ProductionSystemReceiver(
+            self.production_config.server_port, self.system_bus)
         self.sender = ProductionSystemSender(
-            self.productionConfig.message_url,
-            self.productionConfig.evaluation_url,
-            self.productionConfig.client_url)
+            self.production_config.message_url,
+            self.production_config.evaluation_url,
+            self.production_config.client_url)
         try:
             # The absence of this file means we are in development phase
             self.classifier = joblib.load(
@@ -40,34 +42,33 @@ class ProductionSystemOrchestrator:
             self.classifier = None
 
     def main(self):
-        thread = Thread(target=self.prodSysRec.run)
+        thread = Thread(target=self.prod_sys_receiver.run)
         # this will allow the main thread to exit even if the server is still
         # running
         thread.daemon = True
         thread.start()
-        attackRiskClassifier = AttackRiskClassifier(
-            self.systemBus, self.classifier)
+        attack_risk_classifier = AttackRiskClassifier(
+            self.system_bus, self.classifier)
         while True:
             # if the classifier.sav is not present try to pop it from the
             # systemBus for synchronisation
             if self.classifier is None:
-                self.classifier = self.systemBus.popTopic("Classifier")
+                self.classifier = self.system_bus.popTopic("Classifier")
                 print(f"Classifier {self.classifier}")
                 self.sender.sendToMessaging(Message(msg="Classifier received"))
                 quit()
             try:
-                attack_risk_label = attackRiskClassifier.provideAttackRiskLabel()
+                attack_risk_label = attack_risk_classifier.provideAttackRiskLabel()
                 print(type(attack_risk_label))
             except Exception as e:
                 print(f"An error occurred: {e}")
                 continue
-            # TODO: fix schema for attack_risk_label
 
-            if self.phaseTracker.isEvalPhase():
+            if self.phase_tracker.isEvalPhase():
                 self.sender.sendToEvaluation(attack_risk_label)
                 print("Send to evaluation")
             self.sender.sendToClient(attack_risk_label)
-            self.phaseTracker.increment()
+            self.phase_tracker.increment()
             print("Send to client")
 
     def run(self):

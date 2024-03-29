@@ -4,8 +4,8 @@ from src.Storage.StorageController import StorageController
 
 class CheckDataBalancingModel:
 
-    def __init__(self, storageController):
-        self.__storage_controller: StorageController = storageController
+    def __init__(self, storage_controller):
+        self.__storage_controller: StorageController = storage_controller
         self.__prepared_session_list: [PreparedSession] = None
 
     def retrive_prepared_session(self, limit_prepared_session):
