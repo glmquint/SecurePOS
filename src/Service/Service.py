@@ -238,8 +238,8 @@ class Service:
         print("starting evaluation system...")
         self.evaluation_system = EvaluationSystemOrchestrator(config=EvaluationSystemConfig(
             f"{os.path.dirname(__file__)}/config/EvaluationSystemConfig.json"))
-        self.evaluation_system.evaluation.evaluationmodel.scontroller_label.remove_all()  # reset db
-        self.evaluation_system.evaluation.evaluationmodel.scontroller_security.remove_all()  # reset db
+        self.evaluation_system.evaluation.evaluation_model.scontroller_label.remove_all()  # reset db
+        self.evaluation_system.evaluation.evaluation_model.scontroller_security.remove_all()  # reset db
         Thread(
             target=self.evaluation_system.main,
             name="self.evaluation_system.main",
