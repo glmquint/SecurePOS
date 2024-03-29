@@ -21,10 +21,10 @@
       "type": "string"
     },
     "messagingSystemIp": {
-      "type": "integer"
+      "type": "string"
     },
     "messagingSystemPort": {
-      "type": "string"
+      "type": "integer"
     },
     "messagingSystemEndpoint": {
       "type": "string"
