@@ -99,9 +99,9 @@ class Service:
         self.df['timestamp'] = self.df[['ts1', 'ts2', 'ts3', 'ts4', 'ts5', 'ts6', 'ts7', 'ts8', 'ts9', 'ts10']].values.tolist()
         self.df.drop(columns=[f'ts{i}' for i in range(1, 11)], inplace=True)
         # shuffle samples
-        # self.df = self.df.sample(frac=1).reset_index(drop=True) # TODO: at the end, actually shuffle instead of sorting
+        self.df = self.df.sample(frac=1).reset_index(drop=True) # TODO: at the end, actually shuffle instead of sorting
         # sort over UUID
-        self.df = self.df.sort_values(by='UUID')
+        # self.df = self.df.sort_values(by='UUID')
 
     def start_clientside_server(self):
         # start the server on another thread
@@ -256,9 +256,10 @@ def wait_and_dump_perf_metrics():
 
 if __name__ == '__main__':
     service : Service = None
-    # test_development()
-    # wait_and_dump_perf_metrics()
-    test_production()
+    if 1 == 1:
+        test_development()
+    else:
+        test_production()
     wait_and_dump_perf_metrics()
     pass
 
