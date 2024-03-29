@@ -2,7 +2,18 @@ import queue
 
 
 class MessageBus:
+    """
+        This class is responsible for managing a message bus system. It initializes the message bus with
+        a list of topics, and provides methods to push to a topic, pop from a topic, and add a new topic.
 
+        Attributes:
+            messageQueues: A dictionary where the keys are the topics and the values are queue.Queue objects.
+
+        Methods:
+            pushTopic: Pushes a value to a specific topic.
+            popTopic: Pops a value from a specific topic.
+            addTopic: Adds a new topic to the message bus.
+    """
     def __init__(self, topics=list()):
         self.messageQueues = dict()
         for t in topics:
