@@ -1,3 +1,4 @@
+"""label receiver module"""
 import os
 from threading import Thread
 
@@ -11,6 +12,7 @@ from src.util import monitorPerformance
 
 
 class LabelReceiver:
+    """main class"""
     def __init__(self, port=0):
         self.port = port
         self.server = Server()
@@ -19,9 +21,9 @@ class LabelReceiver:
             {'name': 'evaluation', 'table_name': 'labels'}, Label)
         self.scontroller_security = StorageController(
             {'name': 'evaluation', 'table_name': 'security_labels'}, Label)
-        return
 
     def receive(self):
+        """receive function in another thread"""
         self.server.add_resource(
             JSONEndpoint,
             "/evaluation_label",
@@ -41,6 +43,7 @@ class LabelReceiver:
 
     @monitorPerformance(should_sample_after=False)
     def callback_s(self, json_data):
+        """"callback for the security labels"""
         data = Label(**json_data)
         print("Received security label.")
         print(data.uuid)
@@ -50,6 +53,7 @@ class LabelReceiver:
 
     @monitorPerformance(should_sample_after=False)
     def callback_f(self, json_data):
+        """"callback for the labels"""
         print("Received label.")
         data = Label(**json_data)
         print(data.uuid)

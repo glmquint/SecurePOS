@@ -1,3 +1,4 @@
+"""simple system sender tester"""
 from datetime import time
 
 from src.Evaluation.EvaluationSystemSender import EvaluationSystemSender

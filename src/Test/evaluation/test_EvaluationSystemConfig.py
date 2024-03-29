@@ -1,3 +1,4 @@
+"""simple test for the system config"""
 from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 
 conf = EvaluationSystemConfig()

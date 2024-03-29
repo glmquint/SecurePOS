@@ -1,18 +1,19 @@
-import time
+"""main class of the process"""
 
 
 from src.Evaluation.EvaluationReportController import EvaluationReportController
 from src.Evaluation.EvaluationSystemConfig import EvaluationSystemConfig
 from src.Evaluation.EvaluationSystemSender import EvaluationSystemSender
 from src.Evaluation.LabelReceiver import LabelReceiver
-from src.util import log, Message
+from src.util import Message
 
 
 class EvaluationSystemOrchestrator:
+    """main class"""
     def __init__(self, config: EvaluationSystemConfig = None):
         self.label_counter = 0
         self.security_label_counter = 0
-        self.simulateHumanTasks = False
+        self.simulate_human_task = False
         if not config:
             config = EvaluationSystemConfig()
         self.config = config
@@ -21,10 +22,12 @@ class EvaluationSystemOrchestrator:
         self.evaluation = EvaluationReportController(self.config)
 
     def isnumberoflabelssufficient(self):
+        """"check if labels are sufficient"""
         return self.label_counter >= self.config.sufficient_label_number \
             and self.security_label_counter >= self.config.sufficient_label_number
 
     def run(self):
+        """running function"""
         print("start")
         while not self.isnumberoflabelssufficient():
             self.receiver.mbus.popTopic("label")
@@ -35,9 +38,9 @@ class EvaluationSystemOrchestrator:
         self.label_counter = 0
         self.security_label_counter = 0
         print("Development phase done.")
-        return
 
     def main(self):
+        """main function"""
         self.config.load()
         self.receiver.receive()
         print("=====================================")
@@ -45,8 +48,8 @@ class EvaluationSystemOrchestrator:
             if self.config.state == 0:
                 try:
                     self.run()
-                except Exception as e:
-                    print(e)
+                except Exception as exc:
+                    print(exc)
                     continue
                 self.config.write_state(1)
                 if self.config.simulate_human_task:

@@ -1,3 +1,4 @@
+"""simple test for the orchestrator"""
 import os
 import uuid
 from random import randint, random
@@ -23,4 +24,3 @@ sender.send(Label(label="low", uuid=uid))
 uid = str(uuid.uuid4())
 sender.send(Label(label="moderate", uuid=uid))
 sender2.send(Label(label="high", uuid=uid))
-exit()
