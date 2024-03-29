@@ -1,4 +1,30 @@
 class ValidationRow:
+    """
+    A class used to model a row in the validation report in the development system.
+
+    Attributes
+    ----------
+    classifier_name : str
+        The name of the classifier.
+    MSE : float
+        The Mean Squared Error of the classifier.
+    validation_error : float
+        The validation error of the classifier.
+    training_error : float
+        The training error of the classifier.
+    number_of_layers : int
+        The number of layers in the classifier.
+    number_of_neurons : int
+        The number of neurons in the classifier.
+
+    Methods
+    -------
+    __init__(self, classifier_name: str, mse: float, validation_error: float, training_error: float, number_of_layers: int, number_of_neurons: int)
+        Initializes the ValidationRow class with classifier details.
+    to_dict(self)
+        Converts the validation row to a dictionary format.
+    """
+    # class implementation...class ValidationRow:
     classifier_name: str = None
     MSE: float = None
     validation_error: float = None

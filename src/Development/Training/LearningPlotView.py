@@ -1,12 +1,29 @@
 from src.Development.Training.LearningPlotModel import LearningPlotModel
 import matplotlib.pyplot as plt
 import os
-
 import matplotlib
 matplotlib.use('Agg')
 
 
 class LearningPlotView:
+    """
+    A class used to view the learning plot in the development system.
+
+    Attributes
+    ----------
+    path_to_save : str
+        The path where the learning plot will be saved.
+    model : LearningPlotModel
+        The model of the learning plot.
+
+    Methods
+    -------
+    __init__(self, filename: str, learning_plot_model: LearningPlotModel)
+        Initializes the LearningPlotView class with a filename and a learning plot model.
+    update(self)
+        Updates the learning plot view by saving the model to a PNG file.
+    """
+    # class implementation...class LearningPlotView:
     path_to_save: str = None
     model: LearningPlotModel = None
 

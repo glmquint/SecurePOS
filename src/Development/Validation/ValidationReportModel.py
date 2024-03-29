@@ -3,6 +3,22 @@ from src.Development.Validation.ValidationRow import ValidationRow
 
 
 class ValidationReportModel:
+    """
+    A class used to model the validation report in the development system.
+
+    Attributes
+    ----------
+    validation_rows : list of ValidationRow
+        The rows of the validation report.
+
+    Methods
+    -------
+    __init__(self, scoreboard: Scoreboard)
+        Initializes the ValidationReportModel class with a scoreboard.
+    to_dict(self)
+        Converts the validation rows to a dictionary format.
+    """
+    # class implementation...class ValidationReportModel:
     validation_rows: [ValidationRow] = None
 
     def __init__(self, scoreboard: Scoreboard):

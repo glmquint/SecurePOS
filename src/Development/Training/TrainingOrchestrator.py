@@ -12,6 +12,34 @@ from src.MessageBus.MessageBus import MessageBus
 
 
 class TrainingOrchestrator:
+    """
+    A class used to orchestrate the training process in the development system.
+
+    Attributes
+    ----------
+    message_bus : MessageBus
+        The message bus used for inter-process communication.
+    train_process : TrainProcess
+        The process responsible for the training of the classifiers.
+    report_controller : ReportController
+        The controller responsible for generating reports.
+    status : DevelopmentSystemStatus
+        The current status of the development system.
+    hyperparameters : HyperParameterLimit
+        The limits for the hyperparameters used in the training process.
+    configurations : DevelopmentSystemConfigurations
+        The configurations for the development system.
+
+    Methods
+    -------
+    __init__(self, status: DevelopmentSystemStatus, report_controller: ReportController, message_bus: MessageBus, configurations: DevelopmentSystemConfigurations)
+        Initializes the TrainingOrchestrator class with the status, report controller, message bus, and configurations.
+    get_ai_export_response(self) -> int
+        Gets the response from the AI expert.
+    start(self)
+        Starts the training process.
+    """
+    # class implementation...class TrainingOrchestrator:
     message_bus: MessageBus = None
     train_process: TrainProcess = None
     report_controller: ReportController = None
@@ -37,7 +65,7 @@ class TrainingOrchestrator:
         print(f'[{self.__class__.__name__}]: getting AI expert response')
         ret_val = -1
         try:
-            with open(f'{os.path.dirname(__file__)}/learning_result.json', 'r') as json_file:
+            with open(f'{os.path.dirname(__file__)}/learning_result.json', 'r', encoding='utf-8') as json_file:
                 ret_val = 0
                 data = json.load(json_file)
                 JSONValidator(
@@ -47,9 +75,9 @@ class TrainingOrchestrator:
                 elif data['result'] in ["ok", "OK", "Ok", "oK"]:
                     ret_val = 1
                     print(f'[{self.__class__.__name__}]: learning phase is ok')
-        except FileNotFoundError as e:  # create file so that AI expert can fill it
+        except FileNotFoundError:  # create file so that AI expert can fill it
             print('File learning_result.json not found, creating it...')
-            with open(f'{os.path.dirname(__file__)}/learning_result.json', 'w') as json_file:
+            with open(f'{os.path.dirname(__file__)}/learning_result.json', 'w', encoding='utf-8') as json_file:
                 print("Please insert your decision in learning_result.json")
                 json.dump({"result": ""}, json_file)
         finally:
@@ -85,7 +113,7 @@ class TrainingOrchestrator:
                 if self.configurations.stop_and_go:
                     response = self.get_ai_export_response()
                 else:
-                    response = random.randint(1, 1)  # TODO: change me
+                    response = random.randint(1, 1)  # response is always good
                 if response < 0:
                     self.status.save_status()
                 elif response == 0:
