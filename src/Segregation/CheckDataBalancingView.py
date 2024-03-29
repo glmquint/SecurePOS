@@ -1,32 +1,33 @@
-from src.Segregation.CheckDataBalancingModel import CheckDataBalancingModel
-from src.DataObjects.Session import PreparedSession
-import numpy as np
-import matplotlib.pyplot as plt
 import json
 import os
+import numpy as np
+import matplotlib.pyplot as plt
 from random import random
 import matplotlib
 matplotlib.use('Agg')
+
+from src.Segregation.CheckDataBalancingModel import CheckDataBalancingModel
+from src.DataObjects.Session import PreparedSession
 
 
 class CheckDataBalanceView:
     __tolerance_parameter = 0
 
-    def __init__(self, toleraceParameter, model: CheckDataBalancingModel):
-        self.__tolerance_parameter = toleraceParameter
+    def __init__(self, tolerace_parameter, model: CheckDataBalancingModel):
+        self.__tolerance_parameter = tolerace_parameter
         self.__check_data_balance_model: CheckDataBalancingModel = model
 
     def plot_check_data_balance(self):
 
         # retrive data from the model
-        preparedSessionList: [
+        prepared_session_list: [
             PreparedSession] = self.__check_data_balance_model.get_prepared_session_list()
 
         labels = ["normal", "moderate", "high"]
 
         # count each label occurrence
         count_labels = dict(zip(labels, [0] * len(labels)))
-        for prepared_session in preparedSessionList:
+        for prepared_session in prepared_session_list:
             if prepared_session.getLabel() in count_labels:
                 count_labels[prepared_session.getLabel()] += 1
 
@@ -46,8 +47,9 @@ class CheckDataBalanceView:
         percentage_diff = (abs(maximum - minimum) /
                            (maximum + minimum) / 2) * 100
 
-        string = 'Tolerance interal = ' + \
-            str(self.__tolerance_parameter) + " | Difference detected = " + str(round(percentage_diff, 2))
+        string = ('Tolerance interal = ' + str(self.__tolerance_parameter)
+                  + " | Difference detected = "
+                  + str(round(percentage_diff, 2)))
 
         plt.bar(bar_positions2, list(count_labels.values()), width=bar_width)
 
@@ -74,13 +76,13 @@ class CheckDataBalanceView:
         value = random()
         if value < 0.1:
             return "no"
-        else:
-            return "ok"
+        return "ok"
 
     @staticmethod
     def get_check_data_balance():
-        with open(f'{os.path.dirname(__file__)}/Data/checkDataBalanceReport.json', 'r') as checkDataBalanceFile:
-            jsonData = json.load(checkDataBalanceFile)
-            evaluationCheckDataBalance = jsonData.get("evaluation")
-            checkDataBalanceFile.close()
-            return evaluationCheckDataBalance
+        with (open(f'{os.path.dirname(__file__)}/Data/checkDataBalanceReport.json', 'r')
+              as check_data_balance_file):
+            json_data = json.load(check_data_balance_file)
+            evaluation_check_data_balance = json_data.get("evaluation")
+            check_data_balance_file.close()
+            return evaluation_check_data_balance

@@ -8,73 +8,71 @@ class LearningSetGenerator:
 
     def __init__(
             self,
-            trainPercentage,
-            testPercentage,
-            validationPercentage,
-            storageController,
-            limitPreparedSession):
-        self.__trainPercentage = trainPercentage
-        self.__testPercentage = testPercentage
-        self.__validationPercentage = validationPercentage
-        self.__storageController = storageController
-        self.__limitPreparedSession = limitPreparedSession
+            train_percentage,
+            test_percentage,
+            validation_percentage,
+            storage_controller,
+            limit_prepared_session):
+        self.__train_percentage = train_percentage
+        self.__test_percentage = test_percentage
+        self.__validation_percentage = validation_percentage
+        self.__storage_controller = storage_controller
+        self.__limit_prepared_session = limit_prepared_session
         self.leaning_set = None
 
     def generate_learning_set(self):
-        preparedSessionArray: [PreparedSession] = self.__storageController.retrieve_n(
-            self.__limitPreparedSession, True)
-        # cardinalityPreparedSession = self.__storageController.count(False)
-        # HACK: we should consider the eventuality that we receive new prepared
+        prepared_session_array: [PreparedSession] = self.__storage_controller.retrieve_n(
+            self.__limit_prepared_session, True)
         # sessions while we are processing the current ones
-        cardinalityPreparedSession = len(preparedSessionArray)
+        cardinality_prepared_session = len(prepared_session_array)
         assert len(
-            preparedSessionArray) == cardinalityPreparedSession, f"got unexpected cardinality for prepared session: {cardinalityPreparedSession} instead of {len(preparedSessionArray)}"
+            prepared_session_array) == cardinality_prepared_session, f"got unexpected cardinality for prepared session: {cardinality_prepared_session} instead of {len(prepared_session_array)}"
 
         # calculate train, test and validation splits
-        testSetCardinality = math.ceil(
-            cardinalityPreparedSession *
-            self.__testPercentage)
-        valSetCardinality = math.ceil(
-            cardinalityPreparedSession *
-            self.__validationPercentage)
-        trainingSetCardinality = cardinalityPreparedSession - \
-            testSetCardinality - valSetCardinality
+        test_set_cardinality = math.ceil(
+            cardinality_prepared_session *
+            self.__test_percentage)
+        val_set_cardinality = math.ceil(
+            cardinality_prepared_session *
+            self.__validation_percentage)
+        training_set_cardinality = cardinality_prepared_session - \
+            test_set_cardinality - val_set_cardinality
 
         # split the dataset into train, test and validation
-        trainingSet = preparedSessionArray[:trainingSetCardinality]
-        validationSet = preparedSessionArray[trainingSetCardinality:
-                                             trainingSetCardinality + testSetCardinality]
-        testSet = preparedSessionArray[trainingSetCardinality +
-                                       testSetCardinality:]
+        training_set = prepared_session_array[:training_set_cardinality]
+        validation_set = prepared_session_array[training_set_cardinality:
+                                             training_set_cardinality + test_set_cardinality]
+        test_set = prepared_session_array[training_set_cardinality +
+                                       test_set_cardinality:]
 
         # prepare the dictionaries to be converted into dataframes
-        cols = trainingSet[0].to_json().keys() - {'uuid'}
-        trainingSetArray = dict(zip(cols, [0] * len(cols)))
-        validationSetArray = dict(zip(cols, [0] * len(cols)))
-        testSetArray = dict(zip(cols, [0] * len(cols)))
+        cols = training_set[0].to_json().keys() - {'uuid'}
+        training_set_array = dict(zip(cols, [0] * len(cols)))
+        validation_set_array = dict(zip(cols, [0] * len(cols)))
+        test_set_array = dict(zip(cols, [0] * len(cols)))
         for col in cols:
-            trainingSetArray[col] = [v.to_json()[col] for v in trainingSet]
-            validationSetArray[col] = [v.to_json()[col] for v in validationSet]
-            testSetArray[col] = [v.to_json()[col] for v in testSet]
+            training_set_array[col] = [v.to_json()[col] for v in training_set]
+            validation_set_array[col] = [v.to_json()[col] for v in validation_set]
+            test_set_array[col] = [v.to_json()[col] for v in test_set]
 
         # target labels are stored on a separate array
-        trainingSetLabel = trainingSetArray.pop('label')
-        validationSetLabel = validationSetArray.pop('label')
-        testSetLabel = testSetArray.pop('label')
+        training_set_label = training_set_array.pop('label')
+        validation_set_label = validation_set_array.pop('label')
+        test_set_label = test_set_array.pop('label')
 
         # convert into named dataframes
-        trainingSetArray = pd.DataFrame(trainingSetArray)
-        validationSetArray = pd.DataFrame(validationSetArray)
-        testSetArray = pd.DataFrame(testSetArray)
+        training_set_array = pd.DataFrame(training_set_array)
+        validation_set_array = pd.DataFrame(validation_set_array)
+        test_set_array = pd.DataFrame(test_set_array)
 
         dic = dict()
-        dic['trainingSet'] = trainingSetArray
-        dic['validationSet'] = validationSetArray
-        dic['testSet'] = testSetArray
-        dic['trainingSetLabel'] = trainingSetLabel
-        dic['validationSetLabel'] = validationSetLabel
-        dic['testSetLabel'] = testSetLabel
+        dic['trainingSet'] = training_set_array
+        dic['validationSet'] = validation_set_array
+        dic['testSet'] = test_set_array
+        dic['trainingSetLabel'] = training_set_label
+        dic['validationSetLabel'] = validation_set_label
+        dic['testSetLabel'] = test_set_label
 
-        learningSet = LearningSet(dic, False)
+        learning_set = LearningSet(dic, False)
 
-        self.leaning_set = learningSet
+        self.leaning_set = learning_set
